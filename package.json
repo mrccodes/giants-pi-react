@@ -1,7 +1,7 @@
 {
-  "name": "@codelytv/vite-react_best_practices-template",
-  "author": "codelytv",
-  "license": "MIT",
+  "name": "giants-pi-react",
+  "author": "mrccodes",
+  "license": "",
   "private": true,
   "version": "1.0.0",
   "dependencies": {

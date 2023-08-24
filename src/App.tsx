@@ -1,12 +1,16 @@
-import Dashboard from "./sections/dashboard/dashboard";
+import { useState } from "react";
+import Dashboard from "./sections/dashboard/Dashboard";
+import TeamSelect from "./sections/teamSelect/TeamSelect";
 
 export function App() {
-
-	return (
+	const [teamId, setTeamId] = useState<string | null>(null);
+	return teamId ? (
 		<div className="GiantsPi">
-			<Dashboard>
+			<Dashboard teamId={teamId} clearTeamSelection={() => setTeamId(null)}>
 				<div>test</div>
 			</Dashboard>
 		</div>
+	) : (
+		<TeamSelect setTeamId={setTeamId} />
 	);
 }

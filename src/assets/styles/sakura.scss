@@ -1,9 +1,4 @@
-/* stylelint-disable */
-/* Sakura.css v1.4.1
- * ================
- * Minimal css theme.
- * Project: https://github.com/oxalorg/sakura/
- */
+@import '../../../index.css';
 /* Body */
 html {
   font-size: 62.5%;
@@ -15,8 +10,8 @@ body {
   line-height: 1.618;
   max-width: 38em;
   margin: auto;
-  color: #4a4a4a;
-  background-color: #f9f9f9;
+  color: #fafafa;
+  background-color: #07010f;
   padding: 13px;
 }
 
@@ -83,18 +78,18 @@ sup {
 }
 
 hr {
-  border-color: #1d7484;
+  border-color: #d1d1d1;
 }
 
 a {
   text-decoration: none;
-  color: #1d7484;
+  color: #6dc2ff;
 }
 a:visited {
-  color: #144f5a;
+  color: #6dc2ff;
 }
 a:hover {
-  color: #982c61;
+  color: #d1d1d1;
   border-bottom: 2px solid #4a4a4a;
 }
 

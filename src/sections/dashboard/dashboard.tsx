@@ -1,26 +1,32 @@
 import { useEffect, useState } from "react";
+
 import Button from "../../components/Button";
-import ErrorMessage from "../../components/ErrorMessage";
-import STLComponent from "../../components/STLComponent";
-import { teamLogos } from "../../data/teamLogos";
+import { ErrorMessage } from "../../components";
+import { STLComponent } from "../../components";
+import { MLBTeam } from "../../models";
 
 interface DashboardProps {
     children: React.ReactNode | React.ReactNode[];
-    teamId: string;
+    team: MLBTeam;
     clearTeamSelection: () => void;
 }
 
-const Dashboard = ({ children, teamId, clearTeamSelection }: DashboardProps) => {
-    const [logoPath, setLogoPath] = useState<string | null>(null);
+const Dashboard = ({ team, clearTeamSelection }: DashboardProps) => {
     const [error, setError] = useState<string | null>(null);
+    const logoPath = team.logo.logoPath;
 
     useEffect(() => {
-        const team = teamLogos.find(team => team.teamId === teamId);
-        team ? setLogoPath('/src/assets/teamLogos/' + team.filename) : setError('No logo exists for team.')
-    }, [])
-    return teamId === '137' ?  (
+        if (team.logo.logoPath === '') {
+            setError('Error initializing app for selected team.')
+        }
+
+        () => setError(null);
+    }, [team])
+
+
+    return team.id === '137' ?  (
         <div>
-            {logoPath && <STLComponent height={100} width={100} fileUrl={logoPath}/>}
+            {logoPath && <STLComponent  cameraOptions={team.camera} logoOptions={team.logo} height={100} width={100} fileUrl={logoPath}/>}
             {error && <ErrorMessage message={error}/>}
         </div>
     ) : (

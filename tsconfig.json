@@ -24,9 +24,6 @@
   },
   "include": [
     "src",
-    "tests",
-    "jest.config.js",
-    "cypress.config.ts",
-    "vite.config.ts"
-  ]
+    "tests", "electron.ts",
+     ]
 }

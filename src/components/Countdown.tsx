@@ -1,5 +1,5 @@
 import React, { useState, useEffect, HTMLProps } from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 import LoadingSpinner from './LoadingSpinner';
 
@@ -10,10 +10,12 @@ interface CountdownProps extends HTMLProps<HTMLDivElement> {
 
 const Countdown: React.FC<CountdownProps> = ({ targetDate, ...rest }) => {
   const [timeLeft, setTimeLeft] = useState<string>('');
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  targetDate = moment.utc(targetDate).tz(userTimeZone);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const now = moment();
+      const now = moment.utc().tz(userTimeZone);
       const timeDifference = targetDate.diff(now);
 
       if (timeDifference < 0) {
@@ -31,7 +33,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate, ...rest }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, [targetDate, userTimeZone]);
 
   return timeLeft ? (
     <div {...rest}>

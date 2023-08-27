@@ -5,6 +5,7 @@ const SOCKET_PORT = 4444;
 
 function Temp() {
   const [temp, setTemp] = useState<number | null>(null);
+  const [socketOpen, setSocketOpen] = useState<boolean>(false);
   useEffect(() => {
     const socket = io(`http://localhost:${SOCKET_PORT}`);
 
@@ -12,12 +13,17 @@ function Temp() {
       setTemp(newTemp);
     });
 
+    socket.on("connect", () => {
+        setSocketOpen(true);
+      });
+
     return () => {
       socket.disconnect();
+      setSocketOpen(false);
     };
   }, []);
 
-  return temp && temp >= 0 ? (
+  return socketOpen && temp && temp >= 0 ? (
   <div className="absolute top-0 right-0 ">
     {temp && <p className="text-slate-100">{temp}°C</p>}
     {temp >= 70 &&  <p className='text-red-500'>{temp}°C</p>}

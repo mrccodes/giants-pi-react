@@ -26,7 +26,7 @@ const TeamSelect = ({ onSelect }: TeamSelectProps) => {
             <h1 className="text-4xl mb-3 ">Welcome, select your team!</h1>
             <Dropdown onSelect={onTeamSelect} options={dropdownOptions}></Dropdown>
         </div>
-    ) : <LoadingSpinner />
+    ) : <LoadingSpinner size="fullscreen" className="h-screen items-center w-screen " />
 }
 
 const createMLBDropdownOptions = (teams: MLBTeam[]): DropdownOption[] => 

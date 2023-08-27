@@ -4,6 +4,7 @@ import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 
 import { CameraOptions, LogoOptions } from '../models';
 import { verifyVector3D } from '../utils';
+import { useThreeSetup } from '../hooks/useThreeSetup';
 
 /**
  * Props for the STLComponent.
@@ -31,14 +32,12 @@ interface STLComponentProps {
   style?: React.CSSProperties;
 }
 
-/**
- * A component to render an STL file using Three.js.
- */
-const STLComponent: React.FC<STLComponentProps> = ({ 
+
+const STLComponent = ({ 
   fileUrl, 
   height = window.innerHeight, 
   width = window.innerWidth,
-  lightColor,
+  lightColor = 0xffffff,
   cameraOptions: {
     cameraFov = 40,
     cameraPosition
@@ -51,65 +50,31 @@ const STLComponent: React.FC<STLComponentProps> = ({
     logoScale
   },
   style
-}) => {
-  const container = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const currentContainer = container.current;
-
+}: STLComponentProps) => {
+  const { container, camera, scene, renderer } = useThreeSetup({ height, width, lightColor, fov: cameraFov });
+  
+  React.useEffect(() => {
     const loader = new STLLoader();
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      cameraFov ?? 40, 
-      window.innerWidth / window.innerHeight, 
-      0.1, 
-      500
-    );
-
-    // look at the center of the scene
-    camera.lookAt(0, 0, 0)
-
-    // Adding an ambient light
-    const ambientLight = new THREE.AmbientLight(lightColor, 0.5); 
-    scene.add(ambientLight);
-
-    // Adding a directional light
-    const directionalLight = new THREE.DirectionalLight(lightColor, 0.5); 
-    directionalLight.position.set(0, 1, 1); 
-    scene.add(directionalLight);
-
-    const renderer = new THREE.WebGLRenderer();
-
-    // Set scene background color
-    renderer.setClearColor( 0x060c1d, 1 )
-
-    renderer.setSize(
-      width ?? window.innerWidth, 
-      height ?? window.innerHeight
-    );
-
+    const currentContainer = container.current;
     if (currentContainer) {
-      currentContainer.appendChild(renderer.domElement);
-
-      loader.load(logoPath, (geometry) => {
+      loader.load(fileUrl, (geometry) => {
         const material = new THREE.MeshBasicMaterial({ color: logoColor });
         const mesh = new THREE.Mesh(geometry, material);
 
         const group = new THREE.Group();
         group.add(mesh);
 
-        typeof logoScale === 'number' ? 
-          group.scale.set(logoScale, logoScale, logoScale) : 
-          group.scale.set(logoScale.x, logoScale.y, logoScale.z);
+        const logoScaleVector = verifyVector3D(logoScale);
 
-        group.rotation.x = defaultOrientation ;
-        scene.add(group);
-        
+        group.scale.set(logoScaleVector.x, logoScaleVector.y, logoScaleVector.z);
+        group.rotation.x = defaultOrientation;
 
         const cameraPositionVector = verifyVector3D(cameraPosition);
-        
-        camera.position.x =  cameraPositionVector.x;
-        camera.position.z = cameraPositionVector.y;
-        camera.position.y = cameraPositionVector.z;
+        camera.position.x = cameraPositionVector.x; 
+        camera.position.z = cameraPositionVector.z; 
+        camera.position.y = cameraPositionVector.y; 
+
+        scene.add(group);
 
         const animate = () => {
           requestAnimationFrame(animate);
@@ -119,27 +84,7 @@ const STLComponent: React.FC<STLComponentProps> = ({
         animate();
       });
     }
-
-    return () => { // Cleanup on unmount
-      if (currentContainer) {
-        while (currentContainer.firstChild) {
-          currentContainer.removeChild(currentContainer.firstChild);
-        }
-      }
-    };
-  }, [
-        fileUrl, 
-        cameraFov, 
-        cameraPosition, 
-        defaultOrientation, 
-        height, 
-        width, 
-        lightColor, 
-        logoColor, 
-        logoPath, 
-        logoScale, 
-        rotationSpeed
-      ]);
+  }, [logoPath, logoColor, logoScale, defaultOrientation, rotationSpeed, cameraPosition, camera, scene, renderer]); 
 
   return <div style={style} ref={container} />;
 };

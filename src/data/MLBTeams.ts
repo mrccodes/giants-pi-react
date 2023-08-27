@@ -11,7 +11,7 @@ export const MLBTeams: MLBTeam[] = [
         },
         name: 'San Francisco Giants',
         camera: {
-            cameraPosition: { x: 0, y: 10, z: 2 }
+            cameraPosition: { x: 0, y: 2, z: 10 }
         }
     }
 ]

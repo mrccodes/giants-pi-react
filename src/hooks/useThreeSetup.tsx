@@ -47,5 +47,5 @@ export const useThreeSetup = ({ width, height, lightColor, fov }: UseThreeSetupP
     };
   }, [width, height, lightColor]);
 
-  return {container, camera, scene, renderer};
+  return { container, camera, scene, renderer };
 };

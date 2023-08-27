@@ -2,10 +2,10 @@ import Button from "./Button";
 import Dropdown from "./Dropdown"
 import ErrorMessage from "./ErrorMessage"
 import STLComponent from "./STLComponent";
-import { STLComponentProps } from "./STLComponent";
 import LoadingSpinner from "./LoadingSpinner";
 import Countdown from "./Countdown";
 import Widget from "./Widget";
+import Temp from "./Temp";
 
 export {
     Button,
@@ -14,9 +14,6 @@ export {
     STLComponent,
     LoadingSpinner,
     Countdown,
-    Widget
-}
-
-export type {
-    STLComponentProps
+    Widget,
+    Temp
 }

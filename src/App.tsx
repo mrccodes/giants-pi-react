@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { ErrorMessage } from "./components";
+import { ErrorMessage, Temp } from "./components";
 import { Dashboard, TeamSelect } from "./sections";
 import { MLBTeam } from "./models";
 
@@ -21,6 +21,7 @@ export function App() {
 	if (error) {
 		return (
 			<div className="GiantsPi overflow-hidden">
+				<Temp />
 				<ErrorMessage message={error}/>
 			</div>
 		)
@@ -28,9 +29,13 @@ export function App() {
 
 	return team ? (
 		<div className="GiantsPi overflow-hidden">
+			<Temp />
 			<Dashboard team={team} />
 		</div>
 	) : (
-		<TeamSelect onSelect={setTeam} />
+		<>
+			<Temp />
+			<TeamSelect onSelect={setTeam} />
+		</>
 	);
 }

@@ -19,8 +19,9 @@
     "wait-on": "^7.0.1"
   },
   "scripts": {
-    "start-vite": "vite  --port 3000",
-    "start-electron": "DISPLAY=:0 electron ./electron.ts ",
+    "start:vite": "vite  --port 3000",
+    "start:electron": "DISPLAY=:0 electron ./electron.ts ",
+    "start:bash": "bash start.sh",
     "build": "vite  build",
     "test": "jest --watch",
     "cy:open": "cypress open",

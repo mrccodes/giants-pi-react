@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start Vite server
-npm run start-vite &
+npm run start:vite &
 vite_pid=$!
 
 # Wait for Vite to be accessible
@@ -13,7 +13,7 @@ done
 echo "Vite is ready! Starting Electron..."
 
 # Start Electron
-npm run start-electron
+npm run start:electron
 
 # Stop Vite server when Electron exits
 kill $vite_pid

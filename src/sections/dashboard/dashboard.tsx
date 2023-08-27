@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
 
-import Button from "../../components/Button";
-import { ErrorMessage } from "../../components";
-import { STLComponent } from "../../components";
+import { ErrorMessage, Widget } from "../../components";
 import { MLBTeam } from "../../models";
+import NextGameCountdown from "../nextGameCountdown/NextGameCountdown";
+import { TopSection } from "./TopSection";
 
 interface DashboardProps {
-    children: React.ReactNode | React.ReactNode[];
     team: MLBTeam;
-    clearTeamSelection: () => void;
 }
 
-const Dashboard = ({ team, clearTeamSelection }: DashboardProps) => {
+const Dashboard = ({ team }: DashboardProps) => {
     const [error, setError] = useState<string | null>(null);
-    const logoPath = team.logo.logoPath;
 
     useEffect(() => {
         if (team.logo.logoPath === '') {
@@ -24,17 +21,22 @@ const Dashboard = ({ team, clearTeamSelection }: DashboardProps) => {
     }, [team])
 
 
-    return team.id === '137' ?  (
+    return (
         <div>
-            {logoPath && <STLComponent  cameraOptions={team.camera} logoOptions={team.logo} height={100} width={100} fileUrl={logoPath}/>}
+            <TopSection team={team} />
+
+           {!error && <section 
+                id="main-content" 
+                className="grid grid-cols-3 grid-rows-4 gap-4 px-6"
+            >
+                <Widget>
+                    <NextGameCountdown className="text-slate-100 text-size-5xl font-extrabold" team={team}/>
+                </Widget>
+            </section>}
+
             {error && <ErrorMessage message={error}/>}
         </div>
-    ) : (
-        <div className="max-w-screen-xl text-center mx-auto">
-           <ErrorMessage message="Sorry, the dashboard for this team is still under development." />
-           <Button variant="outline" customClasses="mt-4" label="Back" onClick={clearTeamSelection}/>
-        </div>
-    )
+    );
 }
 
 export default Dashboard;

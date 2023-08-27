@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 
 interface UseThreeSetupProps {
@@ -15,13 +15,15 @@ interface UseThreeSetupReturnType {
     renderer: THREE.Renderer
 }
 
-export const useThreeSetup = ({ width, height, lightColor, fov }: UseThreeSetupProps): UseThreeSetupReturnType => {
+const useThreeSetup = ({ width, height, lightColor, fov }: UseThreeSetupProps): UseThreeSetupReturnType => {
   const container = useRef<HTMLDivElement>(null);
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(fov, width / height, 0.1, 500);
-  const renderer = new THREE.WebGLRenderer();
+  const scene = useMemo(() => new THREE.Scene(), []);
+  const camera = useMemo(() => new THREE.PerspectiveCamera(fov, width / height, 0.1, 500), [fov, width, height]);
+  const renderer = useMemo(() => new THREE.WebGLRenderer(), []);
+
 
   useEffect(() => {
+    const currentContainer = container.current;
     camera.lookAt(0, 0, 0);
 
     const ambientLight = new THREE.AmbientLight(lightColor, 0.5);
@@ -34,18 +36,23 @@ export const useThreeSetup = ({ width, height, lightColor, fov }: UseThreeSetupP
     renderer.setClearColor(0x060c1d, 1);
     renderer.setSize(width, height);
 
-    if (container.current) {
-      container.current.appendChild(renderer.domElement);
+    if (currentContainer) {
+      currentContainer.appendChild(renderer.domElement);
     }
 
     return () => {
-      if (container.current) {
-        while (container.current.firstChild) {
-          container.current.removeChild(container.current.firstChild);
+      if (currentContainer) {
+        while (currentContainer.firstChild) {
+          currentContainer.removeChild(currentContainer.firstChild);
         }
+
+        renderer.dispose();
       }
     };
-  }, [width, height, lightColor]);
+  }, [width, height, lightColor, camera, renderer, scene]);
 
-  return {container, camera, scene, renderer};
+  return { container, camera, scene, renderer };
 };
+
+
+export default useThreeSetup;

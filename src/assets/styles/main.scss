@@ -4,7 +4,7 @@
 /* Body */
 html {
   font-size: 24px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-family: Roboto, sans-serif;
 }
 
 body {
@@ -22,10 +22,10 @@ body {
     - The "html" attribute is exclud, because otherwise a bug in Chrome breaks the CSS
       hyphens property (https://github.com/elad2412/the-new-css-reset/issues/36)
  */
-*:where(:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)) {
-  all: unset;
-  display: revert;
-}
+// *:where(:not(html, iframe, canvas, img, svg, video, audio):not(svg *, symbol *)) {
+//   all: unset;
+//   display: revert;
+// }
 
 /* Preferred box-sizing value */
 *,

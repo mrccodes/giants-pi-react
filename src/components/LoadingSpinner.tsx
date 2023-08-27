@@ -1,11 +1,22 @@
+import { Jelly } from "@uiball/loaders";
+
 interface LoadingSpinnerProps {
-    style?: React.CSSProperties;
+    className?: string;
+    color?: string;
+    size?: number | 'fullscreen'; 
 }
-const LoadingSpinner: React.FC = ({ style }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ className, color = '#fff', size }: LoadingSpinnerProps) => {
+  const extendedClasses = `spinner-border text-slate-100 flex justify-center ${className}`
+
+  const getSize = (val: number | 'fullscreen' | undefined): number | undefined => 
+    val === 'fullscreen' ? window.innerWidth / 10 : val;
+  
+
   return (
-    <div className="d-flex justify-content-center align-items-center" style={style ?? { height: "100vh" }}>
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
+    <div>
+      <div className={extendedClasses} role="status">
+        <span className="sr-only">Loading...</span>
+        <Jelly size={getSize(size)} color={color}/>
       </div>
     </div>
   );

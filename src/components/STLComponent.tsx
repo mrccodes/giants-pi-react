@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 
 import { CameraOptions, LogoOptions } from '../models';
 import { verifyVector3D } from '../utils';
-import { useThreeSetup } from '../hooks/useThreeSetup';
+import { useThreeSetup } from '../hooks';
 
 /**
  * Props for the STLComponent.
  */
-interface STLComponentProps {
+export interface STLComponentProps {
   /** The URL of the STL file to be rendered. */
   fileUrl: string;
 
@@ -82,9 +82,28 @@ const STLComponent = ({
           renderer.render(scene, camera);
         };
         animate();
+
+
+        return () => {
+          scene.remove(group); 
+          material.dispose();  
+          geometry.dispose();  
+        };
       });
     }
-  }, [logoPath, logoColor, logoScale, defaultOrientation, rotationSpeed, cameraPosition, camera, scene, renderer]); 
+  }, [
+    logoPath, 
+    logoColor, 
+    logoScale, 
+    defaultOrientation, 
+    rotationSpeed, 
+    cameraPosition, 
+    camera, 
+    scene, 
+    renderer,
+    container,
+    fileUrl
+  ]); 
 
   return <div style={style} ref={container} />;
 };

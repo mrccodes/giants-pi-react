@@ -11,11 +11,21 @@ while ! curl -s http://localhost:3000/ > /dev/null; do
 done
 
 echo "Vite is ready! Starting socket server..."
+# Start Node server
+npm run start:socket &
+socket_pid=$!
 # Wait for Vite to be accessible
 echo "Waiting for Node to be ready..."
-while ! curl -s http://localhost:4444/ > /dev/null; do
+while true; do
+  echo -n -e '\x00' | nc -w 1 localhost 4444 > /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    echo "Port is open. Continuing..."
+    break
+  else
+    echo "Port is closed. Checking again in 1 second."
+  fi
   sleep 1
-done
+done 
 
 echo "Node server is ready! Starting Electron..."
 
@@ -24,3 +34,4 @@ npm run start:electron
 
 # Stop Vite server when Electron exits
 kill $vite_pid
+kill $socket_pid

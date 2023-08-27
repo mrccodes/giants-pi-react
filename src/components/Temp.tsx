@@ -24,7 +24,7 @@ function Temp() {
   }, []);
 
   return socketOpen && temp && temp >= 0 ? (
-  <div style={{height: '100px', width: '100px'}} className="absolute flex justify-center items-center top-0 right-0 text-4xl">
+  <div style={{ height: '100px', width: '100px' }} className="absolute flex justify-center items-center top-0 right-0 text-4xl">
     {temp && <p className="text-slate-100">{temp}°C</p>}
     {temp >= 70 &&  <p className='text-red-500'>{temp}°C</p>}
   </div>

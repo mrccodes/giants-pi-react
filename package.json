@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start-vite": "vite  --port 3000",
-    "start-electron": "DISPLAY=:0 electron ./electron.js ",
+    "start-electron": "DISPLAY=:0 electron ./electron.ts ",
     "build": "vite  build",
     "test": "jest --watch",
     "cy:open": "cypress open",

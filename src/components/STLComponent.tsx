@@ -1,6 +1,6 @@
 import React, { HTMLProps, useRef } from 'react';
 import * as THREE from 'three';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
+import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
 
 import { CameraOptions, LogoOptions } from '../models';
 import { verifyVector3D } from '../utils';
@@ -32,29 +32,29 @@ export interface STLComponentProps extends HTMLProps<HTMLDivElement> {
   style?: React.CSSProperties;
 }
 
-
-const STLComponent = ({ 
-  fileUrl, 
-  height = window.innerHeight, 
+const STLComponent = ({
+  fileUrl,
+  height = window.innerHeight,
   width = window.innerWidth,
   lightColor = 0xffffff,
-  cameraOptions: {
-    cameraFov = 40,
-    cameraPosition
-  },  
+  cameraOptions: { cameraFov = 40, cameraPosition },
   logoOptions: {
-    defaultOrientation = -Math.PI/2,
+    defaultOrientation = -Math.PI / 2,
     rotationSpeed = 0.025,
     logoPath,
     logoColor,
-    logoScale
+    logoScale,
   },
   style,
   ...rest
 }: STLComponentProps) => {
-  const { container, camera, scene, renderer } = useThreeSetup({ height, width, lightColor, fov: cameraFov });
-  const animationId = useRef<number | null>(null); 
-
+  const { container, camera, scene, renderer } = useThreeSetup({
+    height,
+    width,
+    lightColor,
+    fov: cameraFov,
+  });
+  const animationId = useRef<number | null>(null);
 
   React.useEffect(() => {
     const loader = new STLLoader();
@@ -69,13 +69,17 @@ const STLComponent = ({
 
         const logoScaleVector = verifyVector3D(logoScale);
 
-        group.scale.set(logoScaleVector.x, logoScaleVector.y, logoScaleVector.z);
+        group.scale.set(
+          logoScaleVector.x,
+          logoScaleVector.y,
+          logoScaleVector.z,
+        );
         group.rotation.x = defaultOrientation;
 
         const cameraPositionVector = verifyVector3D(cameraPosition);
-        camera.position.x = cameraPositionVector.x; 
-        camera.position.z = cameraPositionVector.z; 
-        camera.position.y = cameraPositionVector.y; 
+        camera.position.x = cameraPositionVector.x;
+        camera.position.z = cameraPositionVector.z;
+        camera.position.y = cameraPositionVector.y;
 
         scene.add(group);
 
@@ -86,28 +90,27 @@ const STLComponent = ({
         };
         animate();
 
-
         return () => {
-          animationId.current && cancelAnimationFrame(animationId.current); 
-          scene.remove(group); 
-          material.dispose();  
-          geometry.dispose();  
+          animationId.current && cancelAnimationFrame(animationId.current);
+          scene.remove(group);
+          material.dispose();
+          geometry.dispose();
         };
       });
     }
   }, [
-    logoPath, 
-    logoColor, 
-    logoScale, 
-    defaultOrientation, 
-    rotationSpeed, 
-    cameraPosition, 
-    camera, 
-    scene, 
+    logoPath,
+    logoColor,
+    logoScale,
+    defaultOrientation,
+    rotationSpeed,
+    cameraPosition,
+    camera,
+    scene,
     renderer,
     container,
-    fileUrl
-  ]); 
+    fileUrl,
+  ]);
 
   return <div {...rest} style={style} ref={container} />;
 };

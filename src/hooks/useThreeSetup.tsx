@@ -9,18 +9,25 @@ interface UseThreeSetupProps {
 }
 
 interface UseThreeSetupReturnType {
-    container: React.RefObject<HTMLDivElement>;
-    camera: THREE.Camera,
-    scene: THREE.Scene;
-    renderer: THREE.Renderer
+  container: React.RefObject<HTMLDivElement>;
+  camera: THREE.Camera;
+  scene: THREE.Scene;
+  renderer: THREE.Renderer;
 }
 
-const useThreeSetup = ({ width, height, lightColor, fov }: UseThreeSetupProps): UseThreeSetupReturnType => {
+const useThreeSetup = ({
+  width,
+  height,
+  lightColor,
+  fov,
+}: UseThreeSetupProps): UseThreeSetupReturnType => {
   const container = useRef<HTMLDivElement>(null);
   const scene = useMemo(() => new THREE.Scene(), []);
-  const camera = useMemo(() => new THREE.PerspectiveCamera(fov, width / height, 0.1, 500), [fov, width, height]);
+  const camera = useMemo(
+    () => new THREE.PerspectiveCamera(fov, width / height, 0.1, 500),
+    [fov, width, height],
+  );
   const renderer = useMemo(() => new THREE.WebGLRenderer(), []);
-
 
   useEffect(() => {
     const currentContainer = container.current;
@@ -53,6 +60,5 @@ const useThreeSetup = ({ width, height, lightColor, fov }: UseThreeSetupProps): 
 
   return { container, camera, scene, renderer };
 };
-
 
 export default useThreeSetup;

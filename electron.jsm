@@ -1,18 +1,21 @@
 const { app, BrowserWindow } = require('electron');
 
+const HOST = 'http://localhost';
+const VITE_PORT = 3000;
+
 let win;
 
 app.commandLine.appendSwitch('auto-hide-cursor');
 function createWindow() {
   win = new BrowserWindow({
-    frame: false, 
+    frame: false,
     kiosk: true,
     webPreferences: {
       nodeIntegration: false,
     },
   });
 
-  win.loadURL('http://localhost:3000'); // Your Vite server URL
+  win.loadURL(`${HOST}:${VITE_PORT}`);
 }
 
 app.whenReady().then(createWindow);

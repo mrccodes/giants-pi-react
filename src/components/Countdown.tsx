@@ -5,7 +5,6 @@ import LoadingSpinner from './LoadingSpinner';
 
 interface CountdownProps extends HTMLProps<HTMLDivElement> {
   targetDate: moment.Moment;
-
 }
 
 const Countdown: React.FC<CountdownProps> = ({ targetDate, ...rest }) => {
@@ -35,11 +34,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate, ...rest }) => {
     return () => clearInterval(interval);
   }, [targetDate, userTimeZone]);
 
-  return timeLeft ? (
-    <div {...rest}>
-      {timeLeft}
-    </div>
-  ) : <LoadingSpinner />;
+  return timeLeft ? <div {...rest}>{timeLeft}</div> : <LoadingSpinner />;
 };
 
 export default Countdown;

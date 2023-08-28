@@ -1,15 +1,15 @@
 
 
 
-#  MLB Dashboard
+#  ⚾️ MLB Dashboard
 
 An intuitive MLB dashboard that leverages the MLB Stats API, offering a real-time statistical deep-dive for any selected team, support for 3D-rendered logos, upcoming game countdown and live game updates.
 
 
-## 🌈 Tech Stack
+## 📚 Tech Stack
 
 - [TypeScript](https://www.typescriptlang.org)
-- [ESLint](https://eslint.org) and [Prettier](https://prettier.io) already configured with the [🤏 Codely's configuration](https://github.com/CodelyTV/eslint-config-codely)
+- [ESLint](https://eslint.org) and [Prettier](https://prettier.io) already configured with the [Codely's configuration](https://github.com/CodelyTV/eslint-config-codely)
 - [Jest](https://jestjs.io) with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) for the unit tests
 - [Cypress](https://www.cypress.io) with [Testing Library](https://testing-library.com/docs/cypress-testing-library) for the end-to-end tests
 - [GitHub Action Workflows](https://github.com/features/actions) set up to run tests and linting on push
@@ -46,11 +46,7 @@ An intuitive MLB dashboard that leverages the MLB Stats API, offering a real-tim
 
 ## 🔀 Related information
 
-This application uses the MLB Stats API to retrieve data owned by the MLB. All of the data rendered by this app is property of MLB/MLB Advanced Media. Please refer to their terms before using this application. 
+This application uses the MLB Stats API to retrieve data and render data that is property of MLB/MLB Advanced Media. Please refer to their terms [here](http://gdx.mlb.com/components/copyright.txt) before using this application. 
 
-> By using this application you
-The accounts, descriptions, data and presentation in the referring page (the "Materials") are proprietary content of MLB Advanced Media, L.P ("MLBAM").  
-Only individual, non-commercial, non-bulk use of the Materials is permitted and any other use of the Materials is prohibited without prior written authorization from MLBAM.  
-Authorized users of the Materials are prohibited from using the Materials in any commercial manner other than as expressly authorized by MLBAM.
 
-This application was generated using the [<⚡⚛️> Vite React Best Practices Template](https://github.com/CodelyTV/vite-react_best_practices-template). Feel free to check it out and star the repo! 🌟😊🙌
+This application was generated using the [<⚡⚛️> Vite React Best Practices Template](https://github.com/CodelyTV/vite-react_best_practices-template). Feel free to check it out and star the repo! 

@@ -46,4 +46,11 @@ An intuitive MLB dashboard that leverages the MLB Stats API, offering a real-tim
 
 ## 🔀 Related information
 
+This application uses the MLB Stats API to retrieve data owned by the MLB. All of the data rendered by this app is property of MLB/MLB Advanced Media. Please refer to their terms before using this application. 
+
+> By using this application you
+The accounts, descriptions, data and presentation in the referring page (the "Materials") are proprietary content of MLB Advanced Media, L.P ("MLBAM").  
+Only individual, non-commercial, non-bulk use of the Materials is permitted and any other use of the Materials is prohibited without prior written authorization from MLBAM.  
+Authorized users of the Materials are prohibited from using the Materials in any commercial manner other than as expressly authorized by MLBAM.
+
 This application was generated using the [<⚡⚛️> Vite React Best Practices Template](https://github.com/CodelyTV/vite-react_best_practices-template). Feel free to check it out and star the repo! 🌟😊🙌

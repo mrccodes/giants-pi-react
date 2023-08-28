@@ -1,7 +1,4 @@
-import useTeamSchedule from "./useTeamSchedule";
-import useThreeSetup from "./useThreeSetup";
+import useTeamSchedule from './useTeamSchedule';
+import useThreeSetup from './useThreeSetup';
 
-export {
-    useTeamSchedule,
-    useThreeSetup
-}
+export { useTeamSchedule, useThreeSetup };

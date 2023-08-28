@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run lint:fix
+git diff --exit-code || (echo "🚨 Code was formatted. Please add changes and commit again." && exit 1)
+

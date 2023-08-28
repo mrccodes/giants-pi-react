@@ -12,13 +12,10 @@ const Button: React.FC<ButtonProps> = ({
   customClasses,
   ...props
 }) => {
-  const defaultClasses =
-    `bg-stone-700 text-white border-stone-500 hover:bg-stone-500 focus:ring focus:ring-blue-200 ${customClasses}`;
-  const outlineClasses =
-    `text-stone-100 border-stone-600 border-solid bg-transparent hover:bg-stone-600 focus:ring focus:ring-blue-200  ${customClasses}`;
+  const defaultClasses = `bg-stone-700 text-white border-stone-500 hover:bg-stone-500 focus:ring focus:ring-blue-200 ${customClasses}`;
+  const outlineClasses = `text-stone-100 border-stone-600 border-solid bg-transparent hover:bg-stone-600 focus:ring focus:ring-blue-200  ${customClasses}`;
 
-  const classes =
-    variant === 'outline' ? outlineClasses : defaultClasses;
+  const classes = variant === 'outline' ? outlineClasses : defaultClasses;
 
   return (
     <button
@@ -31,4 +28,3 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 export default Button;
-

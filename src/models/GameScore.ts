@@ -1,8 +1,8 @@
-import TeamScore from "./TeamScore";
+import TeamScore from './TeamScore';
 
 interface GameScore {
-    selected: TeamScore;
-    opposing: TeamScore;
+  selected: TeamScore;
+  opposing: TeamScore;
 }
 
 export default GameScore;

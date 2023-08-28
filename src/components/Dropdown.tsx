@@ -8,10 +8,17 @@ interface DropdownProps {
   hideDefaultOption?: boolean;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, hideDefaultOption = false }) => {
-  const defaultValue: DropdownOption = hideDefaultOption ? options[0] : { value: 'select', label: 'Select Team' };
+const Dropdown: React.FC<DropdownProps> = ({
+  options,
+  onSelect,
+  hideDefaultOption = false,
+}) => {
+  const defaultValue: DropdownOption = hideDefaultOption
+    ? options[0]
+    : { value: 'select', label: 'Select Team' };
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<DropdownOption>(defaultValue);
+  const [selectedOption, setSelectedOption] =
+    useState<DropdownOption>(defaultValue);
 
   const handleSelect = (option: { value: string; label: string }) => {
     onSelect(option);
@@ -28,17 +35,18 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, hideDefaultOptio
         {selectedOption.label}
       </div>
       {isOpen && (
-        <div 
-            className="absolute z-10 mt-2 w-full border rounded shadow bg-slate-500 "
-            style={{ height: 'auto', overflowY: 'scroll' }}
+        <div
+          className="absolute z-10 mt-2 w-full border rounded shadow bg-slate-500 "
+          style={{ height: 'auto', overflowY: 'scroll' }}
         >
-            { !hideDefaultOption ?? 
-              (
-                <div key={'select'} className="text-base cursor-pointer p-2 hover:bg-gray-700" >
-                Select Team
-                </div>
-              )
-            }
+          {!hideDefaultOption ?? (
+            <div
+              key={'select'}
+              className="text-base cursor-pointer p-2 hover:bg-gray-700"
+            >
+              Select Team
+            </div>
+          )}
           {options.map((option, index) => (
             <div
               key={index}
@@ -53,7 +61,5 @@ const Dropdown: React.FC<DropdownProps> = ({ options, onSelect, hideDefaultOptio
     </div>
   );
 };
-
-
 
 export default Dropdown;

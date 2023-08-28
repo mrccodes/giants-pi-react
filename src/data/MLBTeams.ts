@@ -1,22 +1,21 @@
-import { MLBTeam } from "../models";
-
+import { MLBTeam } from '../models';
 
 export const MLBTeams: MLBTeam[] = [
-    {
-        id: '137',
-        logo: {
-            logoPath: 'src/assets/teamLogos/sf.stl',
-            logoColor: 0xfd5a1e,
-            logoScale: 0.06
-        },
-        name: 'San Francisco Giants',
-        camera: {
-            cameraPosition: { x: 0, y: 2, z: 10 }
-        }
-    }
-]
+  {
+    id: '137',
+    logo: {
+      logoPath: 'src/assets/teamLogos/sf.stl',
+      logoColor: 0xfd5a1e,
+      logoScale: 0.06,
+    },
+    name: 'San Francisco Giants',
+    camera: {
+      cameraPosition: { x: 0, y: 2, z: 10 },
+    },
+  },
+];
 
-// @TODO 
+// @TODO
 // constTeamsThatNeedSTLs: MLBTeam[] = [
 //     { name: 'Baltimore Orioles', teamId: '110', logo: {logoPath: '', logoColor: '', logoSCale: 0.05} },
 //     { name: 'Boston Red Sox', teamId: '111', logo: {logoPath: '', logoColor: '', logoSCale: 0.05} },
@@ -48,4 +47,3 @@ export const MLBTeams: MLBTeam[] = [
 //     { name: 'St. Louis Cardinals', teamId: '138', logo: {logoPath: '', logoColor: '', logoSCale: 0.05} },
 //     { name: 'Washington Nationals', teamId: '120', logo: {logoPath: '', logoColor: '', logoSCale: 0.05} }
 //   ];
-  

@@ -11,7 +11,7 @@ function Temp() {
     if (!PI) {
       console.log('VITE_PI enviroment variable undefined. Temperature monitoring disabled.');
       return;
-    };
+    }
     const socket = io(`http://localhost:${SOCKET_PORT}`, {
       reconnectionAttempts: 5
     });

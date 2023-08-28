@@ -7,7 +7,7 @@ export const MLBTeams: MLBTeam[] = [
         logo: {
             logoPath: 'src/assets/teamLogos/sf.stl',
             logoColor: 0xfd5a1e,
-            logoScale: 0.05 
+            logoScale: 0.06
         },
         name: 'San Francisco Giants',
         camera: {

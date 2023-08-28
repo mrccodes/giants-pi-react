@@ -24,8 +24,8 @@ export const getSchedule = async (
       }
 }
 
-export const checkForLiveGame = async (team: MLBTeam): Promise<Game | undefined> => {
-    const schedule = await getSchedule(team, moment(), moment());
+export const checkForLiveGame = async (team: MLBTeam, schedule?: GameDate[]): Promise<Game | undefined> => {
+    schedule = schedule ?? (await getSchedule(team, moment(), moment())).dates as GameDate[];
     const day = schedule[0] as GameDate;
     return day?.games.find(game => (game.status.abstractGameState === "Live"));
 }

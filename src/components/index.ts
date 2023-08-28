@@ -6,6 +6,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import Countdown from "./Countdown";
 import Widget from "./Widget";
 import Temp from "./Temp";
+import LiveGame from "./LiveGame";
 
 export {
     Button,
@@ -15,5 +16,6 @@ export {
     LoadingSpinner,
     Countdown,
     Widget,
-    Temp
+    Temp,
+    LiveGame
 }

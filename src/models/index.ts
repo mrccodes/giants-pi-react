@@ -4,6 +4,8 @@ import CameraOptions from "./CameraOptions"
 import LogoOptions from "./LogoOptions";
 import MLBTeam from "./MLBTeam";
 import { DropdownOption } from "./DropdownOption";
+import GameScore from "./GameScore";
+import TeamScore from "./TeamScore";
 
 export type {
     Vector3D,
@@ -11,5 +13,7 @@ export type {
     CameraOptions,
     LogoOptions,
     DropdownOption,
-    MLBTeam
+    MLBTeam,
+    GameScore,
+    TeamScore
 }

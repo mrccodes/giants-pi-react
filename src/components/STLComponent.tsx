@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { HTMLProps, useRef } from 'react';
 import * as THREE from 'three';
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
 
@@ -9,7 +9,7 @@ import { useThreeSetup } from '../hooks';
 /**
  * Props for the STLComponent.
  */
-export interface STLComponentProps {
+export interface STLComponentProps extends HTMLProps<HTMLDivElement> {
   /** The URL of the STL file to be rendered. */
   fileUrl: string;
 
@@ -49,10 +49,13 @@ const STLComponent = ({
     logoColor,
     logoScale
   },
-  style
+  style,
+  ...rest
 }: STLComponentProps) => {
   const { container, camera, scene, renderer } = useThreeSetup({ height, width, lightColor, fov: cameraFov });
-  
+  const animationId = useRef<number | null>(null); 
+
+
   React.useEffect(() => {
     const loader = new STLLoader();
     const currentContainer = container.current;
@@ -77,7 +80,7 @@ const STLComponent = ({
         scene.add(group);
 
         const animate = () => {
-          requestAnimationFrame(animate);
+          animationId.current = requestAnimationFrame(animate);
           mesh.rotation.z -= rotationSpeed;
           renderer.render(scene, camera);
         };
@@ -85,6 +88,7 @@ const STLComponent = ({
 
 
         return () => {
+          animationId.current && cancelAnimationFrame(animationId.current); 
           scene.remove(group); 
           material.dispose();  
           geometry.dispose();  
@@ -105,7 +109,7 @@ const STLComponent = ({
     fileUrl
   ]); 
 
-  return <div style={style} ref={container} />;
+  return <div {...rest} style={style} ref={container} />;
 };
 
 export default STLComponent;

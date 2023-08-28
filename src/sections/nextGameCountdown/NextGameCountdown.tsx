@@ -1,41 +1,43 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Game } from 'mlb-api';
 
-import { Countdown, ErrorMessage, LoadingSpinner } from '../../components';
-import { useTeamSchedule } from '../../hooks';
+import { Countdown, ErrorMessage } from '../../components';
 import { MLBTeam } from '../../models';
 import { findOpposingTeam } from '../../utils';
 
 interface NextGameCountdownProps extends React.HTMLProps<HTMLDivElement> {
     team: MLBTeam;
+    nextGame?: Game;
+    error?: string;
 }
-const NextGameCountdown = ({ team, ...rest }: NextGameCountdownProps) => {
-  const { liveGame, nextGame, loading, error } = useTeamSchedule(team);
-  const [opposingTeamError, setOpposingTeamError] = useState<string>('')
+const NextGameCountdown = ({ team, nextGame, error, ...rest }: NextGameCountdownProps) => {
+  const [opposingTeamName, setOpposingTeam] = useState<string | undefined>(undefined);
 
-  const formatOpposingTeam = (liveGame: Game, team: MLBTeam) => {
-    const opposing = findOpposingTeam(liveGame, team)?.team.name;
-    !opposing && setOpposingTeamError('Error finding opposing team for game')
-    return opposing ?? 'No Team Found';
-  }
+  useEffect(() => {
+    if (!nextGame) return;
 
-  return loading ?
-    <LoadingSpinner className='mx-auto my-0 h-full w-auto' /> : error || opposingTeamError ? 
-    <ErrorMessage message={error ?? opposingTeamError} /> :
-    <div {...rest}>
-      {liveGame && (
-        <p>Game against {formatOpposingTeam(liveGame, team)} is live now!</p>
-      )}
-      {!liveGame && nextGame && (
+    const opposingTeam = findOpposingTeam(nextGame, team);
+    setOpposingTeam(opposingTeam ? opposingTeam.team.name : undefined)
+  }, [nextGame, team])
+ 
+
+
+  return error ? <ErrorMessage message={error} /> :
+    nextGame ? 
+      <div {...rest}>
         <>
-          <p className='text-sm font-light'>Facing the {formatOpposingTeam(nextGame, team)} in...</p>
+          <p className='text-sm font-light mb-2'> 
+            {opposingTeamName ? `${team.name} VS ${opposingTeamName} in` : 'Next game starts in'}
+          </p>
           <Countdown
           className='text-4xl'
           targetDate={moment(nextGame.gameDate)} 
           />
         </>
-      )}
+   </div> : 
+   <div {...rest}>
+      <p>No upcoming games</p>
    </div>
 }
 

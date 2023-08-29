@@ -18,5 +18,12 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "tests", "electron.ts"]
+  "include": [
+    "src",
+    "tests",
+    "electron.ts",
+    "vitest.config.ts",
+    "cypress.config.ts",
+    "vite.config.ts"
+  ]
 }

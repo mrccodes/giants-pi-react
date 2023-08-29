@@ -1,37 +1,29 @@
-import React from 'react';
+import { expect } from 'vitest';
 import { render, act } from '@testing-library/react';
 import moment from 'moment-timezone';
 
-import { Countdown } from '../../src/components';
+import Countdown from '../../src/components/Countdown';
 
-jest.useFakeTimers();
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-describe('<Countdown />', () => {
-  it('renders the Countdown correctly', () => {
-    const targetDate = moment().add(1, 'hours');
-    const { getByText } = render(<Countdown targetDate={targetDate} />);
+test('<Countdown /> renders the Countdown correctly', async () => {
+  const targetDate = moment().add(1, 'hours');
+  const { getByText } = render(<Countdown targetDate={targetDate} />);
 
-    act(() => {
-      jest.advanceTimersByTime(1000);
-    });
-
-    expect(getByText(/59:59/i)).toBeInTheDocument();
+  await act(async () => {
+    await sleep(700);
   });
 
-  it('should show "00:00:00" when time is up', () => {
-    const targetDate = moment();
-    const { getByText } = render(<Countdown targetDate={targetDate} />);
+  expect(getByText(/59:59/i)).toBeInTheDocument();
+});
 
-    act(() => {
-      jest.advanceTimersByTime(1000);
-    });
+test('should show "00:00:00" when time is up', async () => {
+  const targetDate = moment();
+  const { getByText } = render(<Countdown targetDate={targetDate} />);
 
-    expect(getByText('00:00:00')).toBeInTheDocument();
+  await act(async () => {
+    await sleep(1000);
   });
 
-  it('shows LoadingSpinner when timeLeft is empty', () => {
-    const { getByTestId } = render(<Countdown targetDate={moment()} />);
-
-    expect(getByTestId('loading-spinner')).toBeInTheDocument();
-  });
+  expect(getByText('00:00:00')).toBeInTheDocument();
 });

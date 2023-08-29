@@ -9,3 +9,6 @@ fi
 
 npm run format
 git diff --exit-code || (echo "🚨 Code was formatted. Please add changes and commit again." && exit 1)
+
+
+echo "\n\nLGTM ✅ \n\n\nCommitting your code!\n\n"

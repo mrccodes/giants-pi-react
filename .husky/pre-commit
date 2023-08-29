@@ -7,3 +7,5 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+npm run format
+git diff --exit-code || (echo "🚨 Code was formatted. Please add changes and commit again." && exit 1)

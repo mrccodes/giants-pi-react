@@ -11,14 +11,14 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
 
       - name: Test
-        run: npx jest --config=jest.config.js
+        run: npx vitest run --config=vitest.config.ts
   e2e:
     runs-on: ubuntu-latest
 
@@ -27,7 +27,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: 'npm'
 
       - name: Install Dependencies
@@ -37,5 +37,5 @@ jobs:
         uses: cypress-io/github-action@v4
         with:
           build: npm run build
-          start: npm run start
-          wait-on: 'http://localhost:3000'
+          start: npm run start:vite
+          wait-on: 'http://[::1]:3000/' # https://github.com/cypress-io/github-action/issues/634

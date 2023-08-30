@@ -1,5 +1,6 @@
 import { STLComponent } from '../../components';
 import { MLBTeam } from '../../models';
+import { useScreenDimensions } from '../../hooks';
 
 interface TopSectionProps {
   team: MLBTeam;
@@ -8,6 +9,7 @@ interface TopSectionProps {
 export const TopSection = ({ team }: TopSectionProps) => {
   const logoPath = team.logo.logoPath;
   const defaultLogoHeightWidth = 100;
+  const { width } = useScreenDimensions();
 
   return (
     <section id="header" className="flex flex-col">
@@ -16,7 +18,7 @@ export const TopSection = ({ team }: TopSectionProps) => {
           cameraOptions={team.camera}
           logoOptions={team.logo}
           height={defaultLogoHeightWidth}
-          width={window.innerWidth}
+          width={width}
           fileUrl={logoPath}
           className="relative w-full mb-2"
         />

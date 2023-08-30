@@ -55,6 +55,7 @@ const STLComponent = ({
     fov: cameraFov,
   });
   const animationId = useRef<number | null>(null);
+  const groupMesh = useRef<THREE.Group | null>(null);
 
   React.useEffect(() => {
     const loader = new STLLoader();
@@ -63,10 +64,8 @@ const STLComponent = ({
       loader.load(fileUrl, (geometry) => {
         const material = new THREE.MeshBasicMaterial({ color: logoColor });
         const mesh = new THREE.Mesh(geometry, material);
-
         const group = new THREE.Group();
         group.add(mesh);
-
         const logoScaleVector = verifyVector3D(logoScale);
 
         group.scale.set(
@@ -81,7 +80,12 @@ const STLComponent = ({
         camera.position.z = cameraPositionVector.z;
         camera.position.y = cameraPositionVector.y;
 
+        if (groupMesh.current) {
+          scene.remove(groupMesh.current);
+        }
+
         scene.add(group);
+        groupMesh.current = group;
 
         const animate = () => {
           animationId.current = requestAnimationFrame(animate);
@@ -92,9 +96,11 @@ const STLComponent = ({
 
         return () => {
           animationId.current && cancelAnimationFrame(animationId.current);
-          scene.remove(group);
-          material.dispose();
-          geometry.dispose();
+          if (groupMesh.current) {
+            scene.remove(groupMesh.current);
+            material.dispose();
+            geometry.dispose();
+          }
         };
       });
     }
@@ -110,6 +116,8 @@ const STLComponent = ({
     renderer,
     container,
     fileUrl,
+    width,
+    height,
   ]);
 
   return <div {...rest} style={style} ref={container} />;

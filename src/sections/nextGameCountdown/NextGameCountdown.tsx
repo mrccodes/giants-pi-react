@@ -24,8 +24,7 @@ const NextGameCountdown = ({
   useEffect(() => {
     if (!nextGame) return;
 
-    const opposingTeam = findOpposingTeam(nextGame, team);
-    setOpposingTeam(opposingTeam ? opposingTeam.team.name : undefined);
+    setOpposingTeam(findOpposingTeam(nextGame, team)?.team.name);
   }, [nextGame, team]);
 
   return error ? (

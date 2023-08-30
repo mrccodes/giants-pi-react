@@ -5,6 +5,7 @@ import { MLBTeam } from '../../models';
 import NextGameCountdown from '../nextGameCountdown/NextGameCountdown';
 import { TopSection } from './TopSection';
 import { useTeamSchedule } from '../../hooks';
+import CurrentSeriesData from '../currentSeries/CurrentSeriesData';
 
 interface DashboardProps {
   team: MLBTeam;
@@ -15,6 +16,7 @@ const Dashboard = ({ team }: DashboardProps) => {
   const {
     liveGame,
     nextGame,
+    schedule,
     loading,
     error: scheduleError,
   } = useTeamSchedule(team);
@@ -26,6 +28,8 @@ const Dashboard = ({ team }: DashboardProps) => {
 
     () => setError(null);
   }, [team]);
+
+  const targetGame = liveGame ?? nextGame;
 
   return (
     <div>
@@ -39,17 +43,30 @@ const Dashboard = ({ team }: DashboardProps) => {
           <Widget loading={loading}>
             {liveGame ? (
               <LiveGame
-                className="text-slate-100 text-size-5xl font-extrabold"
+                className="font-extrabold"
                 game={liveGame}
                 team={team}
               />
             ) : (
               <NextGameCountdown
-                className="text-slate-100 text-size-5xl font-extrabold"
+                className="font-extrabold"
                 team={team}
                 nextGame={nextGame}
                 error={scheduleError}
               />
+            )}
+          </Widget>
+          <Widget>
+            {schedule && targetGame ? (
+              <CurrentSeriesData
+                schedule={schedule}
+                selectedTeam={team}
+                targetGame={targetGame}
+              />
+            ) : (
+              <div>
+                <p>No Current Series</p>
+              </div>
             )}
           </Widget>
         </section>

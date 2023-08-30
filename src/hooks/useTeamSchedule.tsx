@@ -9,7 +9,7 @@ import useLocalStorage from './useLocalStorage';
 
 interface useTeamScheduleReturnType {
   loading: boolean;
-  schedule: object | undefined;
+  schedule: GameDate[] | undefined;
   mostRecentGame: Game | undefined;
   nextGame: Game | undefined;
   liveGame: Game | undefined;
@@ -81,8 +81,15 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
         const today = schedule.data.find((day) =>
           moment(day.date).isSame(moment(), 'day'),
         );
-        if (today && gameStartedRecently(today)) {
-          // TODO increase number of hours if game is in overtime
+
+        const allGames: Game[] = [];
+        schedule.data.forEach((d) => d.games.forEach((g) => allGames.push(g)));
+        const liveGameFound = allGames.some(
+          (g) => g.status.abstractGameState === 'Live',
+        );
+
+        if (today && (gameStartedRecently(today) || liveGameFound)) {
+          console.log(today);
           setShouldCheckForLiveGame(true);
         }
       }

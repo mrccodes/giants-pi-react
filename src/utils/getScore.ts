@@ -2,10 +2,7 @@ import { Game } from 'mlb-api';
 
 import { GameScore, MLBTeam } from '../models';
 
-const getCurrentScore = (
-  game: Game,
-  selectedTeam: MLBTeam,
-): GameScore | null => {
+const getScore = (game: Game, selectedTeam: MLBTeam): GameScore | null => {
   const selected = Object.values(game.teams).find(
     (t) => t.team.name === selectedTeam.name,
   );
@@ -30,4 +27,4 @@ const getCurrentScore = (
   return null;
 };
 
-export default getCurrentScore;
+export default getScore;

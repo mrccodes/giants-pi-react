@@ -3,8 +3,9 @@ import { useState } from 'react';
 
 import { findOpposingTeam } from '../utils';
 import { GameScore, MLBTeam } from '../models';
-import getCurrentScore from '../utils/getCurrentScore';
+import { getScore } from '../utils';
 import abbreviateTeam from '../utils/abbreviateTeam';
+import Scorecard from './Scorecard';
 
 interface LiveGameProps extends React.HTMLProps<HTMLDivElement> {
   game: Game;
@@ -15,24 +16,18 @@ const LiveGame = ({ game, team, ...rest }: LiveGameProps) => {
   const [opposingTeamName] = useState<string | undefined>(
     findOpposingTeam(game, team)?.team.name,
   );
-  const [currentScore] = useState<GameScore | null>(
-    getCurrentScore(game, team),
-  );
+  const [currentScore] = useState<GameScore | null>(getScore(game, team));
 
   return (
     <div {...rest}>
       <div className="w-full text-center">{getText(opposingTeamName)}</div>
       {currentScore && (
-        <div className="grid-col-1">
-          <span className="flex mx-auto justify-evenly px-8 max-w-xs text-sm">
-            <p>{abbreviateTeam(currentScore.selected.teamName)}</p>
-            <p>{abbreviateTeam(currentScore.opposing.teamName)}</p>
-          </span>
-          <span className="flex justify-center text-3xl">
-            {currentScore.selected.score}&nbsp;-&nbsp;
-            {currentScore.opposing.score}
-          </span>
-        </div>
+        <Scorecard
+          selectedTeamName={abbreviateTeam(currentScore.selected.teamName)}
+          opposingTeamName={abbreviateTeam(currentScore.opposing.teamName)}
+          selectedTeamScore={currentScore.selected.score}
+          opposingTeamScore={currentScore.opposing.score}
+        />
       )}
     </div>
   );

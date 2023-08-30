@@ -11,7 +11,7 @@ const Widget = ({ children, className, loading }: WidgetProps) => {
     <div
       className={
         className ??
-        'border border-solid border-slate-100 px-4 py-3 rounded-md h-full'
+        'border border-solid border-slate-100 px-4 py-3 rounded-md h-full text-slate-100'
       }
     >
       {children}

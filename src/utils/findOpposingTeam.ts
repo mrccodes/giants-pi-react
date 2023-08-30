@@ -2,7 +2,7 @@ import { Game, Team } from 'mlb-api';
 
 import { MLBTeam } from '../models';
 
-export const findOpposingTeam = (
+const findOpposingTeam = (
   game: Game,
   selectedTeam: MLBTeam,
 ): Team | undefined => {
@@ -11,3 +11,5 @@ export const findOpposingTeam = (
   );
   return team;
 };
+
+export default findOpposingTeam;

@@ -21,6 +21,7 @@ export const getSchedule = async (
   )}`;
   try {
     const response = await axios.get(url);
+    console.log('fresh response', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching team schedule:', error);
@@ -34,7 +35,13 @@ export const checkForLiveGame = async (
 ): Promise<Game | undefined> => {
   schedule =
     schedule ??
-    ((await getSchedule(team, moment(), moment())).dates as GameDate[]);
+    ((
+      await getSchedule(
+        team,
+        moment().subtract(1, 'day'),
+        moment().add(1, 'day'),
+      )
+    ).dates as GameDate[]);
   const day = schedule[0] as GameDate;
   return day?.games.find((game) => game.status.abstractGameState === 'Live');
 };

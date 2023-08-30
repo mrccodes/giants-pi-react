@@ -7,6 +7,7 @@ import Countdown from './Countdown';
 import Widget from './Widget';
 import Temp from './Temp';
 import LiveGame from './LiveGame';
+import Scorecard from './Scorecard';
 
 export {
   Button,
@@ -18,4 +19,5 @@ export {
   Widget,
   Temp,
   LiveGame,
+  Scorecard,
 };

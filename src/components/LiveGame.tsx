@@ -43,7 +43,7 @@ export default LiveGame;
 const getText = (teamName: string | undefined): React.ReactNode =>
   teamName ? (
     <>
-      <p>Currently facing the ${teamName}</p>
+      <p>Currently facing the {teamName}</p>
       <p className="text-green-500">Live now!</p>
     </>
   ) : (

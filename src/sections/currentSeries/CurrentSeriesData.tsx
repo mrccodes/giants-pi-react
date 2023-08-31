@@ -23,7 +23,6 @@ const CurrentSeriesData = ({
     opposingTeamScore,
     seriesSchedule,
   } = useSeriesData(schedule, selectedTeam, targetGame);
-  console.log(seriesSchedule);
 
   return (
     <div>

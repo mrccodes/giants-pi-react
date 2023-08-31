@@ -53,7 +53,7 @@ const findSeries = (
   for (let i = seriesStartIdx; i <= seriesEndIdx; i++) {
     games.push(allGames[i]);
   }
-  console.log({ games });
+
   return games;
 };
 

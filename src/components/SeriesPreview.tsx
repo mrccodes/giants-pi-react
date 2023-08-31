@@ -9,7 +9,6 @@ interface SeriesPreviewProps {
   series: Game[];
 }
 export const SeriesPreview = ({ selectedTeam, series }: SeriesPreviewProps) => {
-  console.log(series);
   return (
     <div className="rounded overflow-hidden">
       {series.map((g, index) => {

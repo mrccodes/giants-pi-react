@@ -89,7 +89,6 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
         );
 
         if (today && (gameStartedRecently(today) || liveGameFound)) {
-          console.log(today);
           setShouldCheckForLiveGame(true);
         }
       }

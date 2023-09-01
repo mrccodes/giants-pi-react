@@ -2,6 +2,12 @@ import { Game } from 'mlb-api';
 
 import { GameScore, MLBTeam } from '../models';
 
+/**
+ * Gets a both selected team and opposing teams score
+ * @param game game to check score of
+ * @param selectedTeam team whos score to check
+ * @returns GameScore
+ */
 const getScore = (game: Game, selectedTeam: MLBTeam): GameScore | null => {
   const selected = Object.values(game.teams).find(
     (t) => t.team.name === selectedTeam.name,

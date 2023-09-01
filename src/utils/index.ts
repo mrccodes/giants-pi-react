@@ -6,7 +6,9 @@ import abbreviateTeam from './abbreviateTeam';
 import findOpposingTeam from './findOpposingTeam';
 import getWinner from './getWinner';
 import getScore from './getScore';
-
+import reduceScheduleToGames from './reduceScheduleToGames';
+import findEndOfPreviousSeriesGame from './findEndOfPreviousSeriesGame';
+import sortGamesByDate from './sortGamesByDate';
 export {
   verifyVector3D,
   findRelevantGames,
@@ -16,4 +18,7 @@ export {
   abbreviateTeam,
   getWinner,
   getScore,
+  reduceScheduleToGames,
+  findEndOfPreviousSeriesGame,
+  sortGamesByDate,
 };

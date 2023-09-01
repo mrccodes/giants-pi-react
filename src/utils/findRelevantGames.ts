@@ -1,8 +1,10 @@
 import { GameDate, Game } from 'mlb-api';
 import moment from 'moment';
 
+import reduceScheduleToGames from './reduceScheduleToGames';
+
 /**
- *
+ * Finds relevant games on the schedule (next upcoming game and most recently completed game)
  * @param dates GameDate[]
  * @returns most recently finished game and the next game yet to begin
  */
@@ -14,27 +16,22 @@ const findRelevantGames = (
 
   const current = moment();
 
-  const sorted = dates.sort((a, b) =>
-    moment(a.date).isBefore(moment(b.date)) ? -1 : 1,
-  );
+  const allGames = reduceScheduleToGames(dates);
 
-  for (const day of sorted) {
-    if (day.games.length > 0) {
-      for (const game of day.games) {
-        const gameTime = moment(game.gameDate);
+  for (const game of allGames) {
+    const gameTime = moment(game.gameDate);
 
-        if (!mostRecentGame && current.isAfter(gameTime)) {
-          mostRecentGame = game;
-        }
+    // Since array is sorted, ovverrite each completed game until no more are found
+    if (
+      current.isAfter(gameTime) &&
+      game.status.abstractGameState === 'Final'
+    ) {
+      mostRecentGame = game;
+    }
 
-        if (!nextGame && current.isBefore(gameTime)) {
-          nextGame = game;
-        }
-
-        if (mostRecentGame && nextGame) {
-          return { mostRecentGame, nextGame };
-        }
-      }
+    // Set next game as the first game found that begins after current time
+    if (!nextGame && current.isBefore(gameTime)) {
+      nextGame = game;
     }
   }
 

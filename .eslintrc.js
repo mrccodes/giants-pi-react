@@ -30,6 +30,7 @@ module.exports = {
           'react-dom/client',
           'three/examples/jsm/loaders/STLLoader',
           '@mui/icons-material/Error',
+          'lodash/*',
         ],
       },
     ],

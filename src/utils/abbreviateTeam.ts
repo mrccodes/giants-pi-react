@@ -1,3 +1,11 @@
+/**
+ * Gets the official team names abbreviation
+ * @param name official name of the team
+ * @returns abbreviation
+ *
+ * @example
+ * const abb = abbreviateTeam('San Francisco Giants') // returns 'SF'
+ */
 const abbreviateTeam = (name: string): string => {
   return teamMap[name];
 };

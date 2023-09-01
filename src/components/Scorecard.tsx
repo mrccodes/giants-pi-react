@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface ScorecardProps {
+interface ScorecardProps extends React.HTMLProps<HTMLDivElement> {
   selectedTeamName: string;
   opposingTeamName: string;
   selectedTeamScore: number;
@@ -12,9 +12,17 @@ const Scorecard = ({
   opposingTeamName,
   selectedTeamScore,
   opposingTeamScore,
+  className,
+  ...rest
 }: ScorecardProps) => {
   return (
-    <div className="flex justify-center gap-2 text-center content-center flex-wrap">
+    <div
+      {...rest}
+      className={
+        'flex justify-center gap-2 text-center content-center flex-wrap ' +
+        className
+      }
+    >
       <p className="text-sm self-center">{selectedTeamName}</p>
       <div className="flex text-3xl gap-2 self-center">
         <span>{selectedTeamScore}</span>

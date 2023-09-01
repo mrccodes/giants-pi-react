@@ -51,7 +51,10 @@ const updateTimer = (
   }
 
   const duration = moment.duration(timeDifference);
-  const hours = String(duration.hours()).padStart(2, '0');
+  const hours = String(duration.hours() + duration.days() * 24).padStart(
+    2,
+    '0',
+  );
   const minutes = String(duration.minutes()).padStart(2, '0');
   const seconds = String(duration.seconds()).padStart(2, '0');
   return `${hours}:${minutes}:${seconds}`;

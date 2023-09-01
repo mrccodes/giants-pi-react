@@ -6,6 +6,7 @@ import { GameScore, MLBTeam } from '../models';
 import { getScore } from '../utils';
 import abbreviateTeam from '../utils/abbreviateTeam';
 import Scorecard from './Scorecard';
+import Widget from './Widget';
 
 interface LiveGameProps extends React.HTMLProps<HTMLDivElement> {
   game: Game;
@@ -18,9 +19,22 @@ const LiveGame = ({ game, team, ...rest }: LiveGameProps) => {
   );
   const [currentScore] = useState<GameScore | null>(getScore(game, team));
 
+  let borderColor: 'border-green-600' | 'border-red-600' | undefined;
+  if (!currentScore) {
+    borderColor = undefined;
+  } else {
+    borderColor =
+      currentScore.selected.score > currentScore.opposing.score
+        ? 'border-green-600'
+        : currentScore.selected.score > currentScore.opposing.score
+        ? 'border-red-600'
+        : undefined;
+  }
   return (
-    <div {...rest}>
-      <div className="w-full text-center">{getText(opposingTeamName)}</div>
+    <Widget borderColor={borderColor} {...rest}>
+      <div className="w-full text-center font-extrabold">
+        {getText(opposingTeamName)}
+      </div>
       {currentScore && (
         <Scorecard
           selectedTeamName={abbreviateTeam(currentScore.selected.teamName)}
@@ -29,7 +43,7 @@ const LiveGame = ({ game, team, ...rest }: LiveGameProps) => {
           opposingTeamScore={currentScore.opposing.score}
         />
       )}
-    </div>
+    </Widget>
   );
 };
 
@@ -39,7 +53,7 @@ const getText = (teamName: string | undefined): React.ReactNode =>
   teamName ? (
     <>
       <p>Currently facing the {teamName}</p>
-      <p className="text-green-500">Live now!</p>
+      <p className="text-green-500 py-2">Live now!</p>
     </>
   ) : (
     'Game is live now!'

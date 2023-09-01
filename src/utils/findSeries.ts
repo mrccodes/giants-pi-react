@@ -1,18 +1,22 @@
 import { Game, GameDate } from 'mlb-api';
 
-import { findOpposingTeam } from './index';
+import { findOpposingTeam, reduceScheduleToGames } from './index';
 import { MLBTeam } from '../models';
 
+/**
+ *
+ * @param schedule collection of game dates
+ * @param selectedTeam team user has selected
+ * @param targetGame game to find series of
+ * @returns all games in the series that the target game is in
+ */
 const findSeries = (
   schedule: GameDate[],
   selectedTeam: MLBTeam,
   targetGame: Game,
 ): Game[] => {
-  const allGames: Game[] = [];
   const games: Game[] = [];
-  schedule.forEach((day) => {
-    day.games.forEach((g) => allGames.push(g));
-  });
+  const allGames: Game[] = reduceScheduleToGames(schedule);
 
   const targetGameIdx = allGames.findIndex(
     (g) => g.gameGuid === targetGame.gameGuid,
@@ -20,7 +24,7 @@ const findSeries = (
 
   if (targetGameIdx < 0) {
     console.error(
-      'useScheduleData -> Out of bounds target game passed to findSeries',
+      'findSeries -> Out of bounds target game passed to findSeries',
     );
     return [];
   }
@@ -29,6 +33,7 @@ const findSeries = (
   let seriesEndIdx: number | null = null;
   const targetTeam = findOpposingTeam(targetGame, selectedTeam);
 
+  // search backwards from target game until a game with different opposing team is found
   for (let i = targetGameIdx; i >= 0; i--) {
     const opp = findOpposingTeam(allGames[i], selectedTeam);
     if (opp?.team.name !== targetTeam?.team.name) {
@@ -37,6 +42,7 @@ const findSeries = (
     }
   }
 
+  // search forwards from target game until a game with different opposing team is found
   for (let i = targetGameIdx; i < allGames.length; i++) {
     const opp = findOpposingTeam(allGames[i], selectedTeam);
     if (opp?.team.name !== targetTeam?.team.name) {
@@ -45,15 +51,16 @@ const findSeries = (
     }
   }
 
+  // Since we default to 1 week past to 1 week future schedule, this shouldnt happen
   if (seriesStartIdx === null || seriesEndIdx === null) {
-    console.error('useScheduleData -> Error finding series start/end');
+    console.error('findSeries -> Error finding series start/end');
     return [];
   }
 
   for (let i = seriesStartIdx; i <= seriesEndIdx; i++) {
     games.push(allGames[i]);
   }
-  console.log({ games });
+
   return games;
 };
 

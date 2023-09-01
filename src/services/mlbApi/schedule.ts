@@ -21,7 +21,6 @@ export const getSchedule = async (
   )}`;
   try {
     const response = await axios.get(url);
-    console.log('fresh response', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching team schedule:', error);
@@ -29,19 +28,25 @@ export const getSchedule = async (
   }
 };
 
+/**
+ * MLB api stat wrapper function to fetch a teams current schedule and return the currently live game, if any
+ */
 export const checkForLiveGame = async (
+  /**
+   * The team to fetch the schedule for
+   */
   team: MLBTeam,
+  /**
+   * Optionally use a prefetched schedule
+   */
   schedule?: GameDate[],
+  /**
+   * Optionall pass an update schedule function to update state when the request is made for the schedule
+   */
+  updateSchedule?: (s: GameDate[]) => void,
 ): Promise<Game | undefined> => {
-  schedule =
-    schedule ??
-    ((
-      await getSchedule(
-        team,
-        moment().subtract(1, 'day'),
-        moment().add(1, 'day'),
-      )
-    ).dates as GameDate[]);
-  const day = schedule[0] as GameDate;
+  schedule = schedule ?? ((await getSchedule(team)).dates as GameDate[]);
+  updateSchedule && updateSchedule(schedule);
+  const day = schedule.find((day) => moment(day.date).isSame(moment(), 'd'));
   return day?.games.find((game) => game.status.abstractGameState === 'Live');
 };

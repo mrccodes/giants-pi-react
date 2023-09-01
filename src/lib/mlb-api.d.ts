@@ -67,4 +67,10 @@ declare module 'mlb-api' {
     totalGamesInProgress: number;
     totalItems: number;
   }
+  interface CompletedGameStatus extends GameStatus {
+    abstractGameState: 'Final';
+  }
+  export interface CompletedGame extends Game {
+    status: CompletedGameStatus;
+  }
 }

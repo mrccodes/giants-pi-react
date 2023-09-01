@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { ErrorMessage, LiveGame, Widget } from '../../components';
-import { MLBTeam } from '../../models';
-import NextGameCountdown from '../nextGameCountdown/NextGameCountdown';
-import { TopSection } from './TopSection';
-import { useTeamSchedule } from '../../hooks';
-import CurrentSeriesData from '../currentSeries/CurrentSeriesData';
+import { ErrorMessage, LiveGame, Widget } from '../components';
+import { MLBTeam } from '../models';
+import NextGameCountdown from './NextGameCountdown';
+import { CurrentSeries, PreviousSeries } from './index';
+import { useTeamSchedule } from '../hooks';
 
 interface DashboardProps {
   team: MLBTeam;
@@ -29,12 +28,8 @@ const Dashboard = ({ team }: DashboardProps) => {
     () => setError(null);
   }, [team]);
 
-  const targetGame = liveGame ?? nextGame;
-
   return (
     <div>
-      <TopSection team={team} />
-
       {!error && (
         <section
           id="main-content"
@@ -57,17 +52,20 @@ const Dashboard = ({ team }: DashboardProps) => {
             )}
           </Widget>
           <Widget>
-            {schedule && targetGame ? (
-              <CurrentSeriesData
-                schedule={schedule}
-                selectedTeam={team}
-                targetGame={targetGame}
-              />
-            ) : (
-              <div>
-                <p>No Current Series</p>
-              </div>
-            )}
+            <CurrentSeries
+              schedule={schedule}
+              team={team}
+              nextGame={nextGame}
+              liveGame={liveGame}
+            />
+          </Widget>
+          <Widget>
+            <PreviousSeries
+              schedule={schedule}
+              team={team}
+              nextGame={nextGame}
+              liveGame={liveGame}
+            />
           </Widget>
         </section>
       )}

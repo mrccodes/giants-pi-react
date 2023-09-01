@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Game, GameDate } from 'mlb-api';
 import moment from 'moment';
+import isEqual from 'lodash/isEqual';
 
 import { MLBTeam } from '../models';
 import { checkForLiveGame, getSchedule } from '../services/mlbApi';
-import { findRelevantGames } from '../utils';
+import { findRelevantGames, reduceScheduleToGames } from '../utils';
 import useLocalStorage from './useLocalStorage';
 
 interface useTeamScheduleReturnType {
@@ -37,6 +38,18 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     boolean | null
   >(null);
 
+  const updateStoredSchedule = useCallback(
+    (newSchedule: GameDate[]) => {
+      if (!isEqual(newSchedule, schedule?.data)) {
+        setSchedule({
+          data: newSchedule,
+          lastChecked: moment().toISOString(),
+        });
+      }
+    },
+    [schedule?.data, setSchedule],
+  );
+
   useEffect(() => {
     if (!shouldCheckForLiveGame || !schedule) {
       return;
@@ -44,7 +57,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     const fetchData = () => {
       // Only set loading state if initial load
       liveGame === null && setLoading(true);
-      checkForLiveGame(team)
+      checkForLiveGame(team, undefined, updateStoredSchedule)
         .then((res) => setLiveGame(res))
         .catch((err) => setError(err))
         .finally(() => setLoading(false));
@@ -53,7 +66,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     fetchData();
     const intervalId = setInterval(fetchData, 60000);
     return () => clearInterval(intervalId);
-  }, [shouldCheckForLiveGame, schedule, liveGame, team]);
+  }, [shouldCheckForLiveGame, schedule, liveGame, team, updateStoredSchedule]);
 
   useEffect(() => {
     const fetchData = () => {
@@ -64,10 +77,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
             const gameDates: GameDate[] = res.dates;
             const { nextGame, mostRecentGame } = findRelevantGames(gameDates);
 
-            setSchedule({
-              data: gameDates,
-              lastChecked: moment().toISOString(),
-            });
+            updateStoredSchedule(gameDates);
             setNextGame(nextGame);
             setMostRecentGame(mostRecentGame);
           })
@@ -82,8 +92,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
           moment(day.date).isSame(moment(), 'day'),
         );
 
-        const allGames: Game[] = [];
-        schedule.data.forEach((d) => d.games.forEach((g) => allGames.push(g)));
+        const allGames: Game[] = reduceScheduleToGames(schedule.data);
         const liveGameFound = allGames.some(
           (g) => g.status.abstractGameState === 'Live',
         );
@@ -97,7 +106,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     fetchData();
     const intervalId = setInterval(fetchData, 60000);
     return () => clearInterval(intervalId);
-  }, [team, schedule, setSchedule]);
+  }, [team, schedule, setSchedule, updateStoredSchedule]);
 
   return {
     loading,

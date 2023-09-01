@@ -1,22 +1,24 @@
 import { Game, GameDate } from 'mlb-api';
 
-import { MLBTeam } from '../../models';
-import { abbreviateTeam } from '../../utils';
-import { Scorecard } from '../../components';
-import { SeriesPreview } from '../../components/SeriesPreview';
-import { useSeriesData } from '../../hooks';
+import { MLBTeam } from '../models';
+import { abbreviateTeam } from '../utils';
+import { Scorecard } from '.';
+import { SeriesPreview } from './SeriesPreview';
+import { useSeriesData } from '../hooks';
 
-interface CurrentSeriesDataProps {
+interface SeriesDataProps {
   schedule: GameDate[];
   selectedTeam: MLBTeam;
   targetGame: Game;
+  label: string;
 }
 
-const CurrentSeriesData = ({
+const SeriesData = ({
   schedule,
   selectedTeam,
   targetGame,
-}: CurrentSeriesDataProps) => {
+  label,
+}: SeriesDataProps) => {
   const {
     selectedTeamScore,
     opposingTeamName,
@@ -26,7 +28,7 @@ const CurrentSeriesData = ({
 
   return (
     <div>
-      <p className="text-center text-xl">Current Series</p>
+      <p className="text-center text-xl">{label}</p>
       <Scorecard
         selectedTeamName={abbreviateTeam(selectedTeam.name)}
         opposingTeamName={abbreviateTeam(opposingTeamName)}
@@ -38,4 +40,4 @@ const CurrentSeriesData = ({
   );
 };
 
-export default CurrentSeriesData;
+export default SeriesData;

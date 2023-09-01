@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Game } from 'mlb-api';
 
-import { Countdown, ErrorMessage } from '../../components';
-import { MLBTeam } from '../../models';
-import { findOpposingTeam } from '../../utils';
+import { Countdown, ErrorMessage } from '../components';
+import { MLBTeam } from '../models';
+import { findOpposingTeam } from '../utils';
 
 interface NextGameCountdownProps extends React.HTMLProps<HTMLDivElement> {
   team: MLBTeam;

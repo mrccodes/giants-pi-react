@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 
-import { Dropdown, LoadingSpinner } from '../../components';
-import { MLBTeams } from '../../data';
-import { DropdownOption, MLBTeam } from '../../models';
+import { Dropdown, LoadingSpinner } from '../components';
+import { MLBTeams } from '../data';
+import { DropdownOption, MLBTeam } from '../models';
 
 interface TeamSelectProps {
   onSelect:

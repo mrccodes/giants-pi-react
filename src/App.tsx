@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ErrorMessage, Temp } from './components';
-import { Dashboard, TeamSelect } from './sections';
+import { AppHeader, Dashboard, TeamSelect } from './sections';
 import { MLBTeam } from './models';
 
 export function App() {
@@ -22,6 +22,7 @@ export function App() {
     return (
       <div className="GiantsPi overflow-hidden">
         <Temp />
+        {team && <AppHeader team={team} />}
         <ErrorMessage message={error} />
       </div>
     );
@@ -30,6 +31,7 @@ export function App() {
   return team ? (
     <div className="GiantsPi overflow-hidden">
       <Temp />
+      {team && <AppHeader team={team} />}
       <Dashboard team={team} />
     </div>
   ) : (

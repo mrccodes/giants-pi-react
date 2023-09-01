@@ -1,6 +1,6 @@
 import { Game, GameDate } from 'mlb-api';
 
-import { findOpposingTeam } from './index';
+import { findOpposingTeam, reduceScheduleToGames } from './index';
 import { MLBTeam } from '../models';
 
 const findSeries = (
@@ -8,11 +8,8 @@ const findSeries = (
   selectedTeam: MLBTeam,
   targetGame: Game,
 ): Game[] => {
-  const allGames: Game[] = [];
   const games: Game[] = [];
-  schedule.forEach((day) => {
-    day.games.forEach((g) => allGames.push(g));
-  });
+  const allGames: Game[] = reduceScheduleToGames(schedule);
 
   const targetGameIdx = allGames.findIndex(
     (g) => g.gameGuid === targetGame.gameGuid,
@@ -20,7 +17,7 @@ const findSeries = (
 
   if (targetGameIdx < 0) {
     console.error(
-      'useScheduleData -> Out of bounds target game passed to findSeries',
+      'findSeries -> Out of bounds target game passed to findSeries',
     );
     return [];
   }
@@ -46,7 +43,7 @@ const findSeries = (
   }
 
   if (seriesStartIdx === null || seriesEndIdx === null) {
-    console.error('useScheduleData -> Error finding series start/end');
+    throw new Error('findSeries -> Error finding series start/end');
     return [];
   }
 

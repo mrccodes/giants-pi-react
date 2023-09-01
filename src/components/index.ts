@@ -8,6 +8,7 @@ import Widget from './Widget';
 import Temp from './Temp';
 import LiveGame from './LiveGame';
 import Scorecard from './Scorecard';
+import SeriesData from './SeriesData';
 
 export {
   Button,
@@ -20,4 +21,5 @@ export {
   Temp,
   LiveGame,
   Scorecard,
+  SeriesData,
 };

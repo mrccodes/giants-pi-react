@@ -1,6 +1,15 @@
-import NextGameCountdown from './nextGameCountdown/NextGameCountdown';
-import TeamSelect from './teamSelect/TeamSelect';
-import Dashboard from './dashboard/Dashboard';
-import CurrentSeriesData from './currentSeries/CurrentSeriesData';
+import TeamSelect from './TeamSelect';
+import Dashboard from './Dashboard';
+import AppHeader from './AppHeader';
+import NextGameCountdown from './NextGameCountdown';
+import PreviousSeries from './PreviousSeries';
+import CurrentSeries from './CurrentSeries';
 
-export { NextGameCountdown, TeamSelect, Dashboard, CurrentSeriesData };
+export {
+  AppHeader,
+  PreviousSeries,
+  CurrentSeries,
+  NextGameCountdown,
+  TeamSelect,
+  Dashboard,
+};

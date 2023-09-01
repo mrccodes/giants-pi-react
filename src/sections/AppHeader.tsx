@@ -1,12 +1,12 @@
-import { STLComponent } from '../../components';
-import { MLBTeam } from '../../models';
-import { useScreenDimensions } from '../../hooks';
+import { STLComponent } from '../components';
+import { MLBTeam } from '../models';
+import { useScreenDimensions } from '../hooks';
 
-interface TopSectionProps {
+interface AppHeaderProps {
   team: MLBTeam;
 }
 
-export const TopSection = ({ team }: TopSectionProps) => {
+const AppHeader = ({ team }: AppHeaderProps) => {
   const logoPath = team.logo.logoPath;
   const defaultLogoHeightWidth = 100;
   const { width } = useScreenDimensions();
@@ -37,3 +37,5 @@ export const TopSection = ({ team }: TopSectionProps) => {
     </section>
   );
 };
+
+export default AppHeader;

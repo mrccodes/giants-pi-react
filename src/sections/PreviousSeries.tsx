@@ -1,6 +1,6 @@
 import { Game, GameDate } from 'mlb-api';
 
-import { SeriesData } from '../components';
+import { SeriesData, Widget } from '../components';
 import { MLBTeam } from '../models';
 import { findEndOfPreviousSeriesGame, reduceScheduleToGames } from '../utils';
 
@@ -21,9 +21,9 @@ const PreviousSeries = ({
 
   if (!currentGame || !schedule) {
     return (
-      <div>
+      <Widget>
         <p>No Recent Series</p>
-      </div>
+      </Widget>
     );
   }
 

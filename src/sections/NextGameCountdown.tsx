@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import { Game } from 'mlb-api';
 
-import { Countdown, ErrorMessage } from '../components';
+import { Countdown, ErrorMessage, Widget } from '../components';
 import { MLBTeam } from '../models';
 import { findOpposingTeam } from '../utils';
 
@@ -30,7 +30,7 @@ const NextGameCountdown = ({
   return error ? (
     <ErrorMessage message={error} />
   ) : nextGame ? (
-    <div {...rest}>
+    <Widget {...rest}>
       <>
         <p className="text-sm font-light mb-2">
           {opposingTeamName
@@ -42,11 +42,11 @@ const NextGameCountdown = ({
           targetDate={moment(nextGame.gameDate)}
         />
       </>
-    </div>
+    </Widget>
   ) : (
-    <div {...rest}>
+    <Widget {...rest}>
       <p>No upcoming games</p>
-    </div>
+    </Widget>
   );
 };
 

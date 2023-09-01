@@ -1,6 +1,6 @@
 import { Game, GameDate } from 'mlb-api';
 
-import { SeriesData } from '../components';
+import { SeriesData, Widget } from '../components';
 import { MLBTeam } from '../models';
 
 interface CurrentSeriesProps {
@@ -25,9 +25,11 @@ const CurrentSeries = ({
       label="Current Series"
     />
   ) : (
-    <div>
-      <p>No Current Series</p>
-    </div>
+    <Widget>
+      <div>
+        <p>No Current Series</p>
+      </div>
+    </Widget>
   );
 };
 

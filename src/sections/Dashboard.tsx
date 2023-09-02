@@ -5,6 +5,7 @@ import { MLBTeam } from '../models';
 import NextGameCountdown from './NextGameCountdown';
 import { CurrentSeries, PreviousSeries } from './index';
 import { useTeamSchedule } from '../hooks';
+import Boxscore from '../components/Boxscore';
 
 interface DashboardProps {
   team: MLBTeam;
@@ -17,6 +18,7 @@ const Dashboard = ({ team }: DashboardProps) => {
     nextGame,
     schedule,
     loading,
+    mostRecentGame,
     error: scheduleError,
   } = useTeamSchedule(team);
 
@@ -43,6 +45,9 @@ const Dashboard = ({ team }: DashboardProps) => {
   ) : (
     <Wrapper>
       <>
+        {mostRecentGame && (
+          <Boxscore gamePk={mostRecentGame.gamePk.toString()} />
+        )}
         {liveGame ? (
           <LiveGame game={liveGame} team={team} />
         ) : (
@@ -74,7 +79,7 @@ const Wrapper = ({ children }: PropsWithChildren) => {
     <div>
       <section
         id="main-content"
-        className="grid grid-cols-3 grid-rows-3 gap-4 px-6"
+        className="grid lg:grid-cols-3 lg:grid-rows-3 md:grid-cols-1 lg:grid-rows-auto gap-4 px-6"
       >
         {children}
       </section>

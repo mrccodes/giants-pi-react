@@ -9,6 +9,7 @@ import getScore from './getScore';
 import reduceScheduleToGames from './reduceScheduleToGames';
 import findEndOfPreviousSeriesGame from './findEndOfPreviousSeriesGame';
 import sortGamesByDate from './sortGamesByDate';
+import { isLiveFeedData } from './typechecks';
 export {
   verifyVector3D,
   findRelevantGames,
@@ -21,4 +22,5 @@ export {
   reduceScheduleToGames,
   findEndOfPreviousSeriesGame,
   sortGamesByDate,
+  isLiveFeedData,
 };

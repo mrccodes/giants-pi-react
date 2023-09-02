@@ -18,7 +18,7 @@ const Dashboard = ({ team }: DashboardProps) => {
     nextGame,
     schedule,
     loading,
-    mostRecentGame,
+    // mostRecentGame,
     error: scheduleError,
   } = useTeamSchedule(team);
 
@@ -45,9 +45,7 @@ const Dashboard = ({ team }: DashboardProps) => {
   ) : (
     <Wrapper>
       <>
-        {mostRecentGame && (
-          <Boxscore gamePk={mostRecentGame.gamePk.toString()} />
-        )}
+        {nextGame && <Boxscore gamePk={nextGame.gamePk.toString()} />}
         {liveGame ? (
           <LiveGame game={liveGame} team={team} />
         ) : (

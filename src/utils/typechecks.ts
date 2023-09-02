@@ -2,6 +2,7 @@
 
 import {
   AMPM,
+  ActionPlayEvent,
   BaseData,
   BasicStatus,
   Count,
@@ -14,12 +15,16 @@ import {
   LiveInningData,
   LiveTeamData,
   LiveTeamDataPlayer,
+  NoPitchPlayEvent,
   Person,
+  PickoffPlayEvent,
   PitchData,
   PitchPlayEvent,
+  PitcherActionPlayEvent,
   PlayByInning,
   PlayData,
   PlayEvent,
+  PlayEventBase,
   Player,
   Position,
   Record,
@@ -27,12 +32,14 @@ import {
   RunnerData,
   SeasonStats,
   SpringLeague,
+  StepoffPlayEvent,
   TeamFullData,
   TeamScoreData,
   UsedRemaining,
   VenueExtended,
 } from 'mlb-api';
-import { isValidElement } from 'react';
+
+import { DEBUG_MODE } from '../config';
 
 export const isLiveFeedData = (obj: any): obj is LiveFeedData => {
   if (!obj || typeof obj !== 'object') return false;
@@ -41,14 +48,20 @@ export const isLiveFeedData = (obj: any): obj is LiveFeedData => {
   const metaDataValid = isMetaData(obj?.metaData);
   const liveDataValid = isLiveData(obj?.liveData);
 
-  !gameDataValid && console.log('Invalid game data')
-  !metaDataValid && console.log('Invalid meta data')
-  !liveDataValid && console.log('Invalid live data')
+  !gameDataValid &&
+    DEBUG_MODE &&
+    console.error('Invalid game data passed: \n', obj?.gameData);
+  !metaDataValid &&
+    DEBUG_MODE &&
+    console.error('Invalid meta data passed: \n', obj?.metaData);
+  !liveDataValid &&
+    DEBUG_MODE &&
+    console.error('Invalid live data passed: \n', obj?.liveData);
 
   return (
     typeof obj?.copyright === 'string' &&
-     gameDataValid &&
-     metaDataValid &&
+    gameDataValid &&
+    metaDataValid &&
     liveDataValid
   );
 };
@@ -63,11 +76,12 @@ const isLiveData = (obj: any): obj is LiveFeedData['liveData'] => {
     obj.boxscore.teams?.away &&
     isLiveTeamData(obj.boxscore.teams.home) &&
     isLiveTeamData(obj.boxscore.teams.away) &&
-    obj?.decisions &&
-    obj.decisions?.winner &&
-    obj.decisions?.loser &&
-    isPerson(obj.decisions.winner) &&
-    isPerson(obj.decisions.loser) &&
+    (!obj?.decisions ||
+      (obj?.decisions &&
+        obj.decisions?.winner &&
+        obj.decisions?.loser &&
+        isPerson(obj.decisions.winner) &&
+        isPerson(obj.decisions.loser))) &&
     obj?.leaders &&
     // when possible refine these
     typeof obj.leaders?.hitDistance === 'object' &&
@@ -76,55 +90,64 @@ const isLiveData = (obj: any): obj is LiveFeedData['liveData'] => {
     isLinescore(obj?.linescore) &&
     obj?.plays &&
     Array.isArray(obj.plays?.allPlays) &&
-    obj.plays.allPlays.every(isPlayData) 
-    // isPlayData(obj.plays?.currentPlay) &&
-    // Array.isArray(obj.plays?.playsByInning) &&
-    // obj.plays.playsByinning.every(isPlayByInning) &&
-    // isNumberArray(obj.plays?.scoringPlays)
+    // @TODO Gather all type possibilities for play types (probably wont be used anyway)
+    obj.plays.allPlays.every(isPlayData) &&
+    isPlayData(obj.plays?.currentPlay) &&
+    Array.isArray(obj.plays?.playsByInning) &&
+    obj.plays?.playsByInning.every(isPlayByInning) &&
+    isNumberArray(obj.plays?.scoringPlays)
   );
 };
 
 const isPlayByInning = (obj: any): obj is PlayByInning => {
   if (!obj || typeof obj !== 'object') return false;
 
-  return (
+  const isValid =
     isNumberArray(obj?.bottom) &&
     typeof obj?.endIndex === 'number' &&
-    Array.isArray(obj?.hits) &&
-    obj.hits.every(isHit) &&
+    typeof obj?.hits === 'object' &&
+    Array.isArray(obj?.hits?.home) &&
+    Array.isArray(obj?.hits?.away) &&
+    obj.hits.home.every(isHit) &&
+    obj.hits.away.every(isHit) &&
     typeof obj?.startIndex === 'number' &&
-    isNumberArray(obj?.top)
-  );
+    isNumberArray(obj?.top);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPlayByInning -> invalid object passed \n\n', obj);
+  return isValid;
 };
 const isHit = (obj: any): obj is Hit => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  return (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     isPerson(obj?.batter) &&
     obj?.coordinates &&
     typeof obj.coordinates?.x === 'number' &&
     typeof obj.coordinates?.y === 'number' &&
     typeof obj?.description === 'string' &&
-    typeof obj?.description === 'string' &&
     typeof obj?.inning === 'number' &&
     isPerson(obj?.pitcher) &&
     obj?.team &&
-    isYN(obj?.team?.allStarStatus) &&
-    typeof obj?.team?.id === 'string' &&
-    typeof obj?.team?.name === 'string' &&
-    isSpringLeague(obj?.springLeague) &&
-    typeof obj?.type === 'string'
-  );
+    isYN(obj.team?.allStarStatus) &&
+    typeof obj.team?.id === 'number' &&
+    typeof obj.team?.name === 'string' &&
+    isSpringLeague(obj.team?.springLeague) &&
+    typeof obj?.type === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isHit -> invalid object passed \n\n', obj);
+  return isValid;
 };
 
 const isPlayData = (obj: any): obj is PlayData => {
-  const isValid = (
+  const isValid =
     typeof obj?.about?.atBatIndex === 'number' &&
     typeof obj?.about?.captivatingIndex === 'number' &&
     typeof obj?.about?.endTime === 'string' &&
     typeof obj?.about?.halfInning === 'string' &&
     typeof obj?.about?.hasOut === 'boolean' &&
-    typeof obj?.about?.hasReview === 'boolean' &&
+    (!obj.about?.hasReview || typeof obj?.about?.hasReview === 'boolean') &&
     typeof obj?.about?.inning === 'number' &&
     typeof obj?.about?.isComplete === 'boolean' &&
     typeof obj?.about?.isScoringPlay === 'boolean' &&
@@ -156,17 +179,18 @@ const isPlayData = (obj: any): obj is PlayData => {
     typeof obj?.result?.type === 'string' &&
     Array.isArray(obj?.runnerIndex) &&
     Array.isArray(obj?.runners) &&
-    obj?.runners.every(isRunnerData)
-  );
+    obj?.runners.every(isRunnerData);
 
-  !isValid && console.error('isPlayData -> Error: Invalid object passed \n\n', obj)
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPlayData -> Error: Invalid object passed \n\n', obj);
   return isValid;
 };
 
 const isLinescore = (
   obj: any,
 ): obj is LiveFeedData['liveData']['linescore'] => {
-  const isValid =  (
+  const isValid =
     typeof obj?.balls === 'number' &&
     typeof obj?.currentInning === 'number' &&
     typeof obj?.currentInningOrdinal === 'string' &&
@@ -199,45 +223,49 @@ const isLinescore = (
     typeof obj?.scheduledInnings === 'number' &&
     typeof obj?.strikes === 'number' &&
     isTeamScoreData(obj?.teams?.home) &&
-    isTeamScoreData(obj?.teams?.away)
-  );
-  !isValid && console.error('isLinescore -> Error: Invalid object passed \n\n', obj)
+    isTeamScoreData(obj?.teams?.away);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isLinescore -> Error: Invalid object passed \n\n', obj);
 
   return isValid;
 };
 
 const isTeamScoreData = (obj: any): obj is TeamScoreData => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  let isValid = (
+  let isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj?.hits === 'number' &&
     typeof obj?.errors === 'number' &&
-    typeof obj?.leftOnBase === 'number'
-  );
+    typeof obj?.leftOnBase === 'number';
 
-  if (obj?.runs &&  typeof obj?.runs !== 'number') {
+  if (obj?.runs && typeof obj?.runs !== 'number') {
     isValid = false;
   }
 
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isTeamScoreData -> Error: Invalid object passed \n\n', obj);
   return isValid;
 };
 const isLiveInningData = (obj: any): obj is LiveInningData => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  const isValid = (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj?.num === 'number' &&
     typeof obj?.ordinalNum === 'string' &&
     isTeamScoreData(obj?.home) &&
-    isTeamScoreData(obj?.away)
-  );
-  !isValid && console.error('isLiveInningData -> Error: Invalid object passed \n\n', obj)
-return isValid;
+    isTeamScoreData(obj?.away);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isLiveInningData -> Error: Invalid object passed \n\n', obj);
+  return isValid;
 };
 
 const isGameData = (obj: any): obj is LiveFeedData['gameData'] => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  return (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     Array.isArray(obj?.alerts) &&
     isDatetime(obj?.datetime) &&
     isFlags(obj?.flags) &&
@@ -259,35 +287,47 @@ const isGameData = (obj: any): obj is LiveFeedData['gameData'] => {
     obj?.weather &&
     typeof obj?.weather?.condition === 'string' &&
     typeof obj?.weather?.temp === 'string' &&
-    typeof obj?.weather?.wind === 'string' 
-  );
+    typeof obj?.weather?.wind === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isGameData -> Error: Invalid object passed \n\n', obj);
+  return isValid;
 };
 
 export const isGameStatus = (input: any): input is GameStatus => {
-  return (
+  const isValid =
+    input &&
+    typeof input === 'object' &&
     typeof input.abstractGameCode === 'string' &&
     typeof input.abstractGameState === 'string' &&
     typeof input.codedGameState === 'string' &&
     typeof input.detailedState === 'string' &&
     typeof input.startTimeTBD === 'boolean' &&
-    typeof input.statusCode === 'string'
-  );
+    typeof input.statusCode === 'string';
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isGameStatus -> Error: Invalid object passed \n\n', input);
+  return isValid;
 };
 
 const isGameDataReview = (
   obj: any,
 ): obj is LiveFeedData['gameData']['review'] => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  return (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     isUsedRemaining(obj?.home) &&
     isUsedRemaining(obj?.away) &&
-    typeof obj?.hasChallenges === 'boolean'
-  );
+    typeof obj?.hasChallenges === 'boolean';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isGameDatReview -> Error: Invalid object passed \n\n', obj);
+  return isValid;
 };
 
 export const isTeamFullData = (input: any): input is TeamFullData => {
-  let isValid = (
+  const isValid =
     typeof input.abbreviation === 'string' &&
     typeof input.active === 'boolean' &&
     isYN(input.allStarStatus) &&
@@ -309,7 +349,7 @@ export const isTeamFullData = (input: any): input is TeamFullData => {
     typeof input.record.leagueGamesBack === 'string' &&
     isRecordWithTies(input.record.leagueRecord) &&
     typeof input.record.losses === 'number' &&
-    // typeof input.record.records === 'object' &&
+    typeof input.record.records === 'object' &&
     typeof input.record.sportGamesBack === 'string' &&
     typeof input.record.springLeagueGamesBack === 'string' &&
     typeof input.record.wildCardGamesBack === 'string' &&
@@ -324,56 +364,73 @@ export const isTeamFullData = (input: any): input is TeamFullData => {
     typeof input.springVenue.link === 'string' &&
     typeof input.teamCode === 'string' &&
     typeof input.teamName === 'string' &&
-    isBaseData(input.venue)
-  );
-    !isValid && console.error('isTeamFullData -> Error: Invalid object passed \n\n', input)
+    isBaseData(input.venue);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isTeamFullData -> Error: Invalid object passed \n\n', input);
   return isValid;
 };
 
 const isUsedRemaining = (input: any): input is UsedRemaining => {
-  return typeof input.used === 'number' && typeof input.remaining === 'number';
+  const isValid =
+    typeof input.used === 'number' && typeof input.remaining === 'number';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isUsedRemaining -> Error: invalid obj passed \n\n', input);
+  return isValid;
 };
 
 const isGameDataMoundVisits = (
   obj: any,
 ): obj is LiveFeedData['gameData']['moundVisits'] => {
-  return isUsedRemaining(obj.home) && isUsedRemaining(obj.away);
+  const isValid = isUsedRemaining(obj.home) && isUsedRemaining(obj.away);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error(
+      'isGameDataMoundVisits -> Error: invalid obj passed \n\n',
+      obj,
+    );
+  return isValid;
 };
 
 const isRecord = (obj: any): obj is Record => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  const isValid =  (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj?.wins === 'number' &&
     typeof obj?.losses === 'number' &&
-    typeof obj?.pct === 'string'
-  );
-  !isValid && console.error('isRecord -> Error: invalid obj passed \n\n', obj)
+    typeof obj?.pct === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isRecord -> Error: invalid obj passed \n\n', obj);
   return isValid;
 };
 
 const isRecordWithTies = (obj: any): obj is RecordWithTies => {
   const isValid = typeof obj?.ties === 'number' && isRecord(obj);
-  !isValid && console.error('isRecordWithTies -> Error: invalid obj passed \n\n', obj)
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isRecordWithTies -> Error: invalid obj passed \n\n', obj);
   return isValid;
 };
 
 const isDatetime = (obj: any): obj is LiveFeedData['gameData']['datetime'] => {
   if (!obj || typeof obj !== 'object') return false;
-  const isValid = (
+  const isValid =
     typeof obj?.dateTime === 'string' &&
     typeof obj?.originalDate === 'string' &&
     typeof obj?.officialDate === 'string' &&
     typeof obj?.time === 'string' &&
     isAMPM(obj?.ampm) &&
-    isDayNight(obj?.dayNight) 
-  )
-  !isValid && console.log('isDateTime -> Error: invalid object passed\n ', obj)
+    isDayNight(obj?.dayNight);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isDateTime -> Error: invalid object passed\n ', obj);
   return isValid;
 };
 
 const isLiveFeedGame = (input: any): input is LiveFeedGame => {
-  return (
+  const isValid =
     typeof input.calendarEventID === 'string' &&
     isYN(input.doubleHeader) &&
     typeof input.gameNumber === 'number' &&
@@ -382,37 +439,58 @@ const isLiveFeedGame = (input: any): input is LiveFeedGame => {
     typeof input.season === 'string' &&
     typeof input.seasonDisplay === 'string' &&
     isYN(input.tiebreaker) &&
-    typeof input.type === 'string'
-  );
+    typeof input.type === 'string';
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isLiveFeedGame -> Error: invalid object passed\n ', input);
+  return isValid;
 };
 
 const isGameInfo = (
   input: any,
 ): input is LiveFeedData['gameData']['gameInfo'] => {
-  return (
-    typeof input.attendance === 'number' &&
-    typeof input.firstPitch === 'string' &&
-    typeof input.gameDurationMinutes === 'number'
-  );
+  const isValid =
+    (!input.attendance || typeof input.attendance === 'number') &&
+    (!input.gameDurationMinutes ||
+      typeof input.gameDurationMinutes === 'number') &&
+    typeof input.firstPitch === 'string';
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isGameInfo -> Error: invalid object passed\n ', input);
+  return isValid;
 };
 
 const isAMPM = (obj: any): obj is AMPM => {
-  if (!obj || typeof obj !== 'string') return false;
-  return obj === 'AM' || obj === 'PM';
+  const isValid =
+    obj && typeof obj === 'string' && (obj === 'AM' || obj === 'PM');
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isAMPM -> Error: invalid object passed\n ', obj);
+  return isValid;
 };
 
-const isYN = (input: any): input is 'Y' | 'N' => input === 'Y' || input === 'N';
+const isYN = (input: any): input is 'Y' | 'N' => {
+  const isValid = input === 'Y' || input === 'N';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isYN -> Error: invalid object passed\n ', input);
+
+  return isValid;
+};
 
 const isPerson = (obj: any): obj is Person => {
   if (!obj || typeof obj !== 'object') return false;
-  const isValid = (
+  const isValid =
     typeof obj.fullName === 'string' &&
     typeof obj.link === 'string' &&
-    typeof obj.id === 'number'
-  );
+    typeof obj.id === 'number';
 
-    !isValid && console.error('isPerson -> Error: invalid object passed\n', obj)
-  return isValid
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPerson -> Error: invalid object passed\n', obj);
+  return isValid;
 };
 
 const isPlayers = (input: any): input is { [key: string]: Player } => {
@@ -427,7 +505,7 @@ const isPlayers = (input: any): input is { [key: string]: Player } => {
 const isPlayer = (input: any): input is Player => {
   const batSide = input?.batSide;
 
-  let isValid = (
+  let isValid =
     typeof input?.active === 'boolean' &&
     (batSide?.code === 'L' || batSide?.code === 'R' || batSide?.code === 'S') &&
     (batSide?.description === 'Left' ||
@@ -460,78 +538,103 @@ const isPlayer = (input: any): input is Player => {
     isPosition(input?.primaryPosition) &&
     typeof input?.strikeZoneBottom === 'number' &&
     typeof input?.strikeZoneTop === 'number' &&
-    typeof input?.weight === 'number' 
-    );
-    if (
-      (input?.nickName && typeof input.nickName !== 'string') ||
-      (input?.useName && typeof input.useName !== 'string') ||
-      (input?.useLastName && typeof input.useLastName !== 'string') ||
-      (input?.pronunciation && typeof input.pronunciation !== 'string') ||
-      (input?.nameMatrilineal && typeof input.nameMatrilineal !== 'string') ||
-      (input?.draftYear && typeof input.draftYear !== 'number') ||
-      (input?.birthStateProvince &&  typeof input?.birthStateProvince !== 'string') ||
-      (input?.middleName &&     typeof input?.middleName !== 'string')
-      ) {
-      isValid = false;
-    }
+    typeof input?.weight === 'number';
+  if (
+    (input?.nickName && typeof input.nickName !== 'string') ||
+    (input?.useName && typeof input.useName !== 'string') ||
+    (input?.useLastName && typeof input.useLastName !== 'string') ||
+    (input?.pronunciation && typeof input.pronunciation !== 'string') ||
+    (input?.nameMatrilineal && typeof input.nameMatrilineal !== 'string') ||
+    (input?.draftYear && typeof input.draftYear !== 'number') ||
+    (input?.birthStateProvince &&
+      typeof input?.birthStateProvince !== 'string') ||
+    (input?.middleName && typeof input?.middleName !== 'string')
+  ) {
+    isValid = false;
+  }
 
-  !isValid && console.error('isPlayer -> Error: invalid object passed \n\n', input)
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPlayer -> Error: invalid object passed \n\n', input);
   return isValid;
 };
 
 const isBasicStatus = (obj: any): obj is BasicStatus => {
-  if (!obj || typeof obj !== 'object') return false;
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj?.code === 'string' &&
+    typeof obj?.description === 'string';
 
-  return typeof obj?.code === 'string' && typeof obj?.description === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isBasicStatus -> Error: invalid object passed \n\n', obj);
+  return isValid;
 };
 
 const isPosition = (obj: any): obj is Position => {
   if (!obj || typeof obj !== 'object') return false;
-  const isValid = (
+  const isValid =
     typeof obj?.abbreviation === 'string' &&
     typeof obj?.code === 'string' &&
     typeof obj?.name === 'string' &&
-    typeof obj?.type === 'string'
-  );
-    !isValid && console.error('isPosition -> invalid object passed/n', obj)
+    typeof obj?.type === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPosition -> invalid object passed/n', obj);
   return isValid;
 };
 
 const isBaseData = (obj: any): obj is BaseData => {
   if (!obj || typeof obj !== 'object') return false;
 
-  const isValid = (
+  const isValid =
     typeof obj?.id === 'number' &&
     typeof obj?.name === 'string' &&
-    typeof obj?.link === 'string'
-  );
-  !isValid && console.error('isBaseData -> Error: Invalid object passed \n\n', obj)
+    typeof obj?.link === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isBaseData -> Error: Invalid object passed \n\n', obj);
   return isValid;
 };
 
 const isDayNight = (obj: any): obj is AMPM => {
-  if (!obj || typeof obj !== 'string') return false;
-  return obj === 'day' || obj === 'night';
+  const isValid =
+    obj && typeof obj === 'string' && (obj === 'day' || obj === 'night');
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isDayNight -> Error: Invalid object passed \n\n', obj);
+  return isValid;
 };
 
 const isFlags = (obj: any): obj is LiveFeedData['gameData']['flags'] => {
-  if (!obj || typeof obj !== 'object') return false;
-  return (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj.awayTeamNoHitter === 'boolean' &&
     typeof obj.awayTeamPerfectGame === 'boolean' &&
     typeof obj.homeTeamNoHitter === 'boolean' &&
-    typeof obj.homeTeamPerfectGame === 'boolean'
-  );
+    typeof obj.homeTeamPerfectGame === 'boolean';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isFlags -> Error: Invalid object passed \n\n', obj);
+  return isValid;
 };
 
 const isSpringLeague = (obj: any): obj is SpringLeague => {
-  const isValid = obj && typeof obj === 'object' && typeof obj?.abbreviation === 'string' && isBaseData(obj);
-  !isValid && console.error('isSpringLeague -> Error: Invalid object passed \n\n', obj)
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj?.abbreviation === 'string' &&
+    isBaseData(obj);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isSpringLeague -> Error: Invalid object passed \n\n', obj);
   return isValid;
 };
 
 const isVenueExtended = (obj: any): obj is VenueExtended => {
-  const isValid =  (
+  const isValid =
     typeof obj?.active === 'boolean' &&
     typeof obj?.season === 'string' &&
     obj?.fieldInfo &&
@@ -561,21 +664,25 @@ const isVenueExtended = (obj: any): obj is VenueExtended => {
     typeof obj.timeZone.offset === 'number' &&
     typeof obj.timeZone.offsetAtGameTime === 'number' &&
     typeof obj.timeZone.tz === 'string' &&
-    isBaseData(obj)
-  );
-  !isValid && console.error('isVenueExtended -> invalid object passed \n\n', obj)
+    isBaseData(obj);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isVenueExtended -> invalid object passed \n\n', obj);
 
-  return isValid; 
+  return isValid;
 };
 
 const isLiveTeamDataPlayers = (obj: any): obj is LiveTeamData['players'] => {
-  if (typeof obj !== 'object' || obj === null) return false;
+  let isValid = true;
+  if (!obj || typeof obj !== 'object') {
+    isValid = false;
+  }
 
   for (const key in obj) {
     const player = obj[key];
 
     if (
-      typeof player?.gameStatus?.isCurrentBatter !== 'boolean' ||
+      (isValid && typeof player?.gameStatus?.isCurrentBatter !== 'boolean') ||
       typeof player?.gameStatus?.isCurrentPitcher !== 'boolean' ||
       typeof player?.gameStatus?.isOnBench !== 'boolean' ||
       typeof player?.gameStatus?.isSubstitute !== 'boolean' ||
@@ -587,23 +694,32 @@ const isLiveTeamDataPlayers = (obj: any): obj is LiveTeamData['players'] => {
       !isLiveTeamDataPlayerStats(player?.stats) ||
       !isBasicStatus(player?.status)
     ) {
-      console.error('isLiveTeamDataPlayers -> invalid object passed \n\n', obj)
-      return false;
+      isValid = false;
+      DEBUG_MODE &&
+        console.error(
+          'isLiveTeamDataPlayers -> invalid object passed \n\n',
+          obj,
+        );
+      return isValid;
     }
   }
-  return true;
+  return isValid;
 };
 
 const isLiveTeamData = (obj: any): obj is LiveTeamData => {
-  if (typeof obj !== 'object' || !obj) return false;
-  const isValid = (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     isLiveTeamDataPlayers(obj?.players) &&
     isNumberArray(obj?.batters) &&
     isNumberArray(obj?.battingOrder) &&
     isNumberArray(obj?.bench) &&
     isNumberArray(obj?.bullpen) &&
     Array.isArray(obj?.info) &&
-    obj.info.every((v: any) => typeof v?.title === 'string' && isLabelValueArray(v?.fieldList)) &&
+    obj.info.every(
+      (v: any) =>
+        typeof v?.title === 'string' && isLabelValueArray(v?.fieldList),
+    ) &&
     isLabelValueArray(obj?.note) &&
     isNumberArray(obj?.pitchers) &&
     isLiveTeamDataPlayers(obj?.players) &&
@@ -612,15 +728,16 @@ const isLiveTeamData = (obj: any): obj is LiveTeamData => {
     typeof obj?.team?.id === 'number' &&
     typeof obj?.team?.link === 'string' &&
     typeof obj?.team?.name === 'string' &&
-    isSpringLeague(obj?.team?.springLeague)
-  );
-  !isValid && console.error('isLiveTeamData -> Error: invalid object passed \n\n ', obj)
+    isSpringLeague(obj?.team?.springLeague);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isLiveTeamData -> Error: invalid object passed \n\n ', obj);
 
   return isValid;
 };
 
 const isSeasonStats = (obj: any): obj is SeasonStats => {
-  const isValid = (
+  const isValid =
     typeof obj?.batting?.atBats === 'number' &&
     typeof obj?.batting?.atBatsPerHomeRun === 'string' &&
     typeof obj?.batting?.avg === 'string' &&
@@ -653,7 +770,6 @@ const isSeasonStats = (obj: any): obj is SeasonStats => {
     typeof obj?.batting?.strikeOuts === 'number' &&
     typeof obj?.batting?.totalBases === 'number' &&
     typeof obj?.batting?.triples === 'number' &&
-
     typeof obj?.fielding?.assists === 'number' &&
     typeof obj?.fielding?.caughtStealing === 'number' &&
     typeof obj?.fielding?.chances === 'number' &&
@@ -664,7 +780,6 @@ const isSeasonStats = (obj: any): obj is SeasonStats => {
     typeof obj?.fielding?.putOuts === 'number' &&
     typeof obj?.fielding?.stolenBasePercentage === 'string' &&
     typeof obj?.fielding?.stolenBases === 'number' &&
-
     typeof obj?.pitching?.airOuts === 'number' &&
     typeof obj?.pitching?.atBats === 'number' &&
     typeof obj?.pitching?.balks === 'number' &&
@@ -722,17 +837,17 @@ const isSeasonStats = (obj: any): obj is SeasonStats => {
     typeof obj?.pitching?.whip === 'string' &&
     typeof obj?.pitching?.wildPitches === 'number' &&
     typeof obj?.pitching?.winPercentage === 'string' &&
-    typeof obj?.pitching?.wins === 'number'
-  );
+    typeof obj?.pitching?.wins === 'number';
 
   if (!isValid) {
-    console.error('isSeasonStats -> invalid object passed/n', obj);
+    DEBUG_MODE &&
+      console.error('isSeasonStats -> invalid object passed/n', obj);
   }
   return isValid;
 };
 
 const isRunnerData = (obj: any): obj is RunnerData => {
-  return (
+  const isValid =
     Array.isArray(obj?.credits) &&
     obj?.credits.every(isCredit) &&
     typeof obj?.details?.event === 'string' &&
@@ -743,7 +858,8 @@ const isRunnerData = (obj: any): obj is RunnerData => {
     typeof obj?.details?.playIndex === 'number' &&
     typeof obj?.details?.rbi === 'boolean' &&
     (obj?.details?.responsiblePitcher === null ||
-      isPerson(obj?.details?.responsiblePitcher)) &&
+      (typeof obj?.details?.responsiblePitcher?.id === 'number' &&
+        typeof obj?.details?.responsiblePitcher?.link === 'string')) &&
     isPerson(obj?.details?.runner) &&
     typeof obj?.details?.teamUnearned === 'boolean' &&
     (obj?.movement?.end === null || typeof obj?.movement?.end === 'string') &&
@@ -752,49 +868,73 @@ const isRunnerData = (obj: any): obj is RunnerData => {
       typeof obj?.movement?.originBase === 'string') &&
     (obj?.movement?.outBase === null ||
       typeof obj?.movement?.outBase === 'string') &&
-    typeof obj?.movement?.outNumber === 'number' &&
-    (obj?.movement?.start === null || typeof obj?.movement?.start === 'string')
-  );
+    (obj?.movement?.outNumber === null ||
+      typeof obj?.movement?.outNumber === 'number') &&
+    (obj?.movement?.start === null || typeof obj?.movement?.start === 'string');
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isRunnerData -> invalid object passed/n', obj);
+
+  return isValid;
 };
 
-// Your function for stats, if it's just unknown objects right now
 const isLiveTeamDataPlayerStats = (
   obj: any,
 ): obj is LiveTeamDataPlayer['stats'] => {
-  return (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj?.fielding === 'object' &&
     typeof obj?.batting === 'object' &&
-    typeof obj?.pitching === 'object'
-  );
+    typeof obj?.pitching === 'object';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isLiveTeamDataPlayerStats -> invalid object passed/n', obj);
+
+  return isValid;
 };
 
 const isMetaData = (obj: any): obj is LiveFeedData['metaData'] => {
-  return (
+  const isValid =
     Array.isArray(obj?.gameEvents) &&
     obj.gameEvents.every((item: any) => typeof item === 'string') &&
     Array.isArray(obj?.logicalEvents) &&
     obj.logicalEvents.every((item: any) => typeof item === 'string') &&
     typeof obj?.timeStamp === 'string' &&
-    typeof obj?.wait === 'number'
-  );
+    typeof obj?.wait === 'number';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isMetaData -> invalid object passed/n', obj);
+
+  return isValid;
 };
 
 const isLabelValueArray = (obj: any): obj is LabelValue[] => {
-  if (!Array.isArray(obj)) return false;
   if (obj.length === 0) return true;
 
   const isLabelValPair =
+    Array.isArray(obj) &&
     obj.length > 0 &&
     obj.every((value: any) => {
       return isLabelValue(value);
     });
-    !isLabelValPair && console.error('isLabelValueArray -> Error: invalid value passed \n\n', obj)
+  !isLabelValPair &&
+    DEBUG_MODE &&
+    console.error('isLabelValueArray -> Error: invalid value passed \n\n', obj);
   return isLabelValPair;
 };
 const isLabelValue = (obj: any): obj is LabelValue[] => {
-  if (typeof obj !== 'object' || !obj) return false;
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    typeof obj?.value === 'string' &&
+    typeof obj?.label === 'string';
 
-  return typeof obj?.value === 'string' && typeof obj?.label === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isLabelValue -> Error: Invalid value passed \n\n', obj);
+  return isValid;
 };
 
 const isNumberArray = (obj: any): obj is number[] => {
@@ -808,7 +948,8 @@ const isNumberArray = (obj: any): obj is number[] => {
 
     return isStringArray;
   } else {
-    console.error('isNumberArray -> Error: Invalid value passed \n\n', obj)
+    DEBUG_MODE &&
+      console.error('isNumberArray -> Error: Invalid value passed \n\n', obj);
     return false;
   }
 };
@@ -816,44 +957,218 @@ const isNumberArray = (obj: any): obj is number[] => {
 const isCount = (obj: any): obj is Count => {
   if (!obj || typeof obj !== 'object') return false;
 
-  return (
+  const isValid =
     typeof obj?.balls === 'number' &&
     typeof obj?.strikes === 'number' &&
-    typeof obj?.outs === 'number'
-  );
-};
-const isPlayEvent = (obj: any): obj is PlayEvent => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  let isValid = (
-    isCount(obj?.count) &&
-    typeof obj?.endTime === 'string' &&
-    typeof obj?.index === 'number' &&
-    typeof obj?.isPitch === 'boolean' &&
-    // obj?.player &&
-    // typeof obj.player?.id === 'number' &&
-    // typeof obj.player?.link === 'string' &&
-    typeof obj?.startTime === 'string' &&
-    obj?.type
-  );
-
-  switch (obj.type) {
-    case 'pitch':
-      isValid = isPitchPlayEvent(obj)
-  }
-  !isValid && console.error('isPlayEvent -> Error: Invalid object passed \n\n', obj)
+    typeof obj?.outs === 'number';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isCount -> Error: Invalid object passed \n\n', obj);
 
   return isValid;
 };
 
+const isPlayEventBase = (obj: any): obj is PlayEventBase => {
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    isCount(obj?.count) &&
+    typeof obj?.endTime === 'string' &&
+    typeof obj?.index === 'number' &&
+    typeof obj?.isPitch === 'boolean' &&
+    typeof obj?.startTime === 'string' &&
+    obj?.type;
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPlayEventBase -> Error: Invalid object passed \n\n', obj);
+
+  return isValid;
+};
+const isPlayEvent = (obj: any): obj is PlayEvent => {
+  let isValid: boolean;
+  switch (obj.type) {
+    case 'pitch':
+      isValid = isPitchPlayEvent(obj);
+      !isValid &&
+        DEBUG_MODE &&
+        console.error(
+          'isPlayEvent -> type: "pitch" ->  Error: Invalid object passed \n\n',
+          obj,
+        );
+      return isValid;
+    case 'stepoff':
+      isValid = isStepoffPlayEvent(obj);
+      !isValid &&
+        DEBUG_MODE &&
+        console.error(
+          'isPlayEvent -> type: "stepoff" ->  Error: Invalid object passed \n\n',
+          obj,
+        );
+      return isValid;
+    case 'pickoff':
+      isValid = isPickoffPlayEvent(obj);
+      !isValid &&
+        DEBUG_MODE &&
+        console.error(
+          'isPlayEvent -> type: "pickoff" ->  Error: Invalid object passed \n\n',
+          obj,
+        );
+      return isValid;
+    case 'no_pitch':
+      isValid = isNoPitchPlayEvent(obj);
+      !isValid &&
+        DEBUG_MODE &&
+        console.error(
+          'isPlayEvent -> type: "no_pitch" ->  Error: Invalid object passed \n\n',
+          obj,
+        );
+      return isValid;
+    case 'action':
+      isValid = isActionPlayEvent(obj);
+      !isValid &&
+        DEBUG_MODE &&
+        console.error(
+          'isPlayEvent -> type: "action" ->  Error: Invalid object passed \n\n',
+          obj,
+        );
+      return isValid;
+    default:
+      DEBUG_MODE &&
+        console.error(
+          `isPlayEvent -> Error: invalid objected passed, unknown value for type: \n\n`,
+          obj,
+        );
+      return false;
+  }
+};
+
+const isActionPlayEvent = (obj: any): obj is ActionPlayEvent => {
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    obj?.type === 'action' &&
+    (!obj?.player ||
+      (typeof obj?.player === 'object' &&
+        typeof obj.player?.id === 'number' &&
+        typeof obj.player?.link === 'string')) &&
+    typeof obj?.details === 'object' &&
+    typeof obj.details?.awayScore === 'number' &&
+    typeof obj.details?.description === 'string' &&
+    typeof obj.details?.event === 'string' &&
+    typeof obj.details?.eventType === 'string' &&
+    typeof obj.details?.hasReview === 'boolean' &&
+    typeof obj.details?.homeScore === 'number' &&
+    typeof obj.details?.isOut === 'boolean' &&
+    typeof obj.details?.isScoringPlay === 'boolean' &&
+    isPlayEventBase(obj);
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error(
+      'isActionPlayEvent -> Error: Invalid object passed \n\n',
+      obj,
+    );
+  return isValid;
+};
+
+const isPitcherActionPlayEvent = (obj: any): obj is PitcherActionPlayEvent => {
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    obj?.details &&
+    typeof obj.details?.description === 'string' &&
+    typeof obj.details?.code === 'string' &&
+    typeof obj.details?.disengagementNum === 'number' &&
+    typeof obj.details?.fromCatcher === 'boolean' &&
+    typeof obj.details?.hasReview === 'boolean' &&
+    typeof obj.details?.isOut === 'boolean' &&
+    isPlayEventBase(obj);
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error(
+      'isPitcherActionPlayEvent -> Error: Invalid object passed \n\n',
+      obj,
+    );
+
+  return isValid;
+};
+
+const isStepoffPlayEvent = (obj: any): obj is StepoffPlayEvent => {
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    obj?.type === 'stepoff' &&
+    isPitcherActionPlayEvent(obj) &&
+    isPlayEventBase(obj);
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error(
+      'isStepoffPlayEvent -> Error: Invalid object passed \n\n',
+      obj,
+    );
+  return isValid;
+};
+const isPickoffPlayEvent = (obj: any): obj is PickoffPlayEvent => {
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    obj?.type === 'pickoff' &&
+    isPitcherActionPlayEvent(obj) &&
+    isPlayEventBase(obj);
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error(
+      'isPickoffPlayEvent -> Error: Invalid object passed \n\n',
+      obj,
+    );
+  return isValid;
+};
+
+const isNoPitchPlayEvent = (obj: any): obj is NoPitchPlayEvent => {
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
+    obj?.type === 'no_pitch' &&
+    typeof obj?.playId === 'string' &&
+    typeof obj?.details === 'object' &&
+    typeof obj.details?.code === 'string' &&
+    (!obj.detials?.call || isBasicStatus(obj.details?.call)) &&
+    (!obj.detials?.hasReview || typeof obj.details?.hasReview === 'boolean') &&
+    (!obj.details?.isBall || typeof obj.details.isBall === 'boolean') &&
+    (!obj.details?.isInPlay || typeof obj.details.isInPlay === 'boolean') &&
+    (!obj.details?.isOut || typeof obj.details.isOut === 'boolean') &&
+    (!obj.details?.disengagementNum ||
+      typeof obj.details.disengagementNum === 'number') &&
+    (!obj.detials?.isStrike || typeof obj.details?.isStrike === 'boolean') &&
+    (!obj.detials?.violation ||
+      (typeof obj.details?.violation === 'object' &&
+        typeof obj.details.violation?.type === 'string' &&
+        typeof obj.details.violation?.description === 'string' &&
+        typeof obj.details.violation?.player === 'object' &&
+        typeof obj.details.violation.player?.id === 'number' &&
+        typeof obj.details.violation.player?.fullName === 'string')) &&
+    isPlayEventBase(obj);
+
+  !isValid &&
+    DEBUG_MODE &&
+    console.error(
+      'isNoPitchPlayEvent -> Error: Invalid object passed \n\n',
+      obj,
+    );
+  return isValid;
+};
+
 const isPitchPlayEvent = (obj: any): obj is PitchPlayEvent => {
-  if (!obj || typeof obj !== 'object') return false;
-
-
-  const isValid = (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     obj?.type === 'pitch' &&
     typeof obj?.playId === 'string' &&
     typeof obj?.pitchNumber === 'number' &&
+    typeof obj?.pitchData === 'object' &&
     isPitchData(obj?.pitchData) &&
     typeof obj?.details === 'object' &&
     isBasicStatus(obj.details?.call) &&
@@ -865,28 +1180,30 @@ const isPitchPlayEvent = (obj: any): obj is PitchPlayEvent => {
     typeof obj.details?.isStrike === 'boolean' &&
     isBasicStatus(obj.details.type) &&
     typeof obj.details?.isOut === 'boolean' &&
-    typeof obj.details?.hasReview === 'boolean'
-  )
-
+    typeof obj.details?.hasReview === 'boolean' &&
+    isPlayEventBase(obj);
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPitchPlayEvent -> Error: invalid object passed /n/n', obj);
   return isValid;
-}
+};
 
 const isPitchData = (obj: any): obj is PitchData => {
-  if (!obj || typeof obj !== 'object') return false;
-
-
-  const isValid = (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj?.startSpeed === 'number' &&
     typeof obj?.endSpeed === 'number' &&
     typeof obj?.strikeZoneTop === 'number' &&
     typeof obj?.strikeZoneBottom === 'number' &&
     typeof obj?.coordinates === 'object' &&
+    typeof obj.coordinates?.aX === 'number' &&
     typeof obj.coordinates?.aY === 'number' &&
     typeof obj.coordinates?.aZ === 'number' &&
-    typeof obj.coordinates?.pfxX === 'number' &&
-    typeof obj.coordinates?.pfxZ === 'number' &&
     typeof obj.coordinates?.pX === 'number' &&
     typeof obj.coordinates?.pZ === 'number' &&
+    typeof obj.coordinates?.pfxX === 'number' &&
+    typeof obj.coordinates?.pfxZ === 'number' &&
     typeof obj.coordinates?.vX0 === 'number' &&
     typeof obj.coordinates?.vY0 === 'number' &&
     typeof obj.coordinates?.vZ0 === 'number' &&
@@ -895,7 +1212,6 @@ const isPitchData = (obj: any): obj is PitchData => {
     typeof obj.coordinates?.x0 === 'number' &&
     typeof obj.coordinates?.y0 === 'number' &&
     typeof obj.coordinates?.z0 === 'number' &&
-    typeof obj.coordinates?.aX === 'number' &&
     typeof obj?.breaks === 'object' &&
     typeof obj.breaks?.breakAngle === 'number' &&
     typeof obj.breaks?.breakLength === 'number' &&
@@ -903,36 +1219,32 @@ const isPitchData = (obj: any): obj is PitchData => {
     typeof obj.breaks?.breakVertical === 'number' &&
     typeof obj.breaks?.breakVerticalInduced === 'number' &&
     typeof obj.breaks?.breakHorizontal === 'number' &&
-    typeof obj.breaks?.spinRate === 'number' &&
-    typeof obj.breaks?.spinDirection === 'number' &&
+    (!obj.break?.spinRate || typeof obj.breaks?.spinRate === 'number') &&
+    (!obj.break?.spinDirection ||
+      typeof obj.breaks?.spinDirection === 'number') &&
     typeof obj?.zone === 'number' &&
     typeof obj?.typeConfidence === 'number' &&
-    typeof obj?.playTime === 'number' &&
-    typeof obj?.extension === 'number' 
-  )
-  
-  !isValid && console.log('isPitchData -> Error: invalid object passed /n/n', obj)
-  return isValid;
-}
+    typeof obj?.plateTime === 'number' &&
+    (!obj?.extension || typeof obj?.extension === 'number');
 
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isPitchData -> Error: invalid object passed /n/n', obj);
+  return isValid;
+};
 
 const isCredit = (obj: any): obj is Credit => {
-  if (!obj || typeof obj !== 'object') return false;
-
-  return (
+  const isValid =
+    obj &&
+    typeof obj === 'object' &&
     typeof obj?.credit === 'string' &&
     isPosition(obj?.position) &&
     obj?.player &&
-    typeof obj.player?.id === 'string' &&
-    typeof obj.player?.link === 'string'
-  );
+    typeof obj.player?.id === 'number' &&
+    typeof obj.player?.link === 'string';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isCredit -> Error: invalid object passed /n/n', obj);
+
+  return isValid;
 };
-
-
-// const isLiveFeedGame = (obj: any): obj is TYPE => {
-// if (!obj || typeof obj !== 'EXPECTED_TYPE') return false;
-
-//   return (
-
-//   )
-// }

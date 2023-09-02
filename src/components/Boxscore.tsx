@@ -19,9 +19,6 @@ const Boxscore = ({ gamePk, ...rest }: BoxscoreProps) => {
     init();
   }, [gamePk]);
 
-  useEffect(() => {
-    boxscore && console.log(boxscore);
-  }, [boxscore]);
   return boxscore ? (
     <Widget className="overflow-hidden">{JSON.stringify(boxscore)}</Widget>
   ) : (

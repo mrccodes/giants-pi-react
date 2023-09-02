@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
+import { PI_MODE } from '../config';
+
 const SOCKET_PORT = 4444;
-const PI = import.meta.env.VITE_PI;
 
 function Temp() {
   const [temp, setTemp] = useState<number | null>(null);
   const [socketOpen, setSocketOpen] = useState<boolean>(false);
   useEffect(() => {
-    if (!PI) {
-      console.log(
-        'VITE_PI enviroment variable undefined. Temperature monitoring disabled.',
-      );
+    if (!PI_MODE) {
       return;
     }
     const socket = io(`http://localhost:${SOCKET_PORT}`, {

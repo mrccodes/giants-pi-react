@@ -204,7 +204,7 @@ declare module 'mlb-api' {
       winPercentage: string;
       wins: number;
     };
-  };
+  }
 
   interface TeamFullData {
     abbreviation: string;
@@ -228,7 +228,7 @@ declare module 'mlb-api' {
       leagueGamesBack: string;
       leagueRecord: RecordWithTies;
       losses: number;
-      records: Object;
+      records: object;
       sportGamesBack: string;
       springLeaguesGamesBack: string;
       wildCardGamesBack: string;
@@ -390,90 +390,140 @@ declare module 'mlb-api' {
     outs: number;
   }
 
-  
   interface PlayEventBase {
     count: Count;
-    // details: {
-    //   awayScore: number;
-    //   description: string;
-    //   event: string;
-    //   eventType: string;
-    //   hasReview: boolean;
-    //   homeScore: number;
-    //   isOut: boolean;
-    //   isScoringPlay: boolean;
-    // };
     endTime: string;
     index: number;
     isPitch: boolean;
-    player: {
-      id: number;
-      link: string;
-    };
+    playId: string;
     playId: string;
     startTime: string;
-    
+    type: string;
   }
 
   interface PitchData {
-    startSpeed: number,
-    endSpeed: number,
-    strikeZoneTop: number,
-    strikeZoneBottom: number,
+    startSpeed: number;
+    endSpeed: number;
+    strikeZoneTop: number;
+    strikeZoneBottom: number;
     coordinates: {
-        aY: number,
-        aZ: number,
-        pfxX: number,
-        pfxZ: number,
-        pX: number,
-        pZ: number,
-        vX0: number,
-        vY0: number,
-        vZ0: number,
-        x: number,
-        y: number,
-        x0: number,
-        y0: number,
-        z0: number,
-        aX: number8
-    },
+      aY: number;
+      aZ: number;
+      pfxX: number;
+      pfxZ: number;
+      pX: number;
+      pZ: number;
+      vX0: number;
+      vY0: number;
+      vZ0: number;
+      x: number;
+      y: number;
+      x0: number;
+      y0: number;
+      z0: number;
+      aX: number8;
+    };
     breaks: {
-        breakAngle: number ,
-        breakLength: number ,
-        breakY: number ,
-        breakVertical: number ,
-        breakVerticalInduced: number ,
-        breakHorizontal: number ,
-        spinRate: number ,
-        spinDirection: number 
-    },
-    zone: number
-    typeConfidence: number,
-    plateTime: number,
-    extension: number
+      breakAngle: number;
+      breakLength: number;
+      breakY: number;
+      breakVertical: number;
+      breakVerticalInduced: number;
+      breakHorizontal: number;
+      spinRate?: number;
+      spinDirection?: number;
+    };
+    zone: number;
+    typeConfidence: number;
+    plateTime: number;
+    extension?: number;
   }
-  
+
   interface PitchPlayEvent extends PlayEventBase {
     type: 'pitch';
     playId: string;
     pitchNumber: number;
-    pitchData:  PitchData;
+    pitchData: PitchData;
     details: {
-        call: BasicStatus,
-        description: string,
-        code: string,
-        ballColor: string,
-        trailColor: string,
-        isInPlay: boolean,
-        isStrike: boolean,
-        isBall: boolean,
-        type: BasicStatus,
-        isOut: boolean,
-        hasReview: boolean
-    } 
+      ballColor: string;
+      call: BasicStatus;
+      code: string;
+      description: string;
+      hasReview: boolean;
+      isBall: boolean;
+      isInPlay: boolean;
+      isOut: boolean;
+      isStrike: boolean;
+      type: BasicStatus;
+      trailColor: string;
+    };
   }
 
-  type PlayEvent = PitchPlayEvent;
+  interface NoPitchPlayEvent extends PlayEventBase {
+    type: 'no_pitch';
+    details: {
+      call: BasicStatus;
+      code: string;
+      description: string;
+      hasReview: boolean;
+      isBall: boolean;
+      isInPlay: boolean;
+      isOut: boolean;
+      isStrike?: boolean;
+      violation?: {
+        type: string;
+        description: string;
+        player: {
+          id: number;
+          link: string;
+        };
+      };
+    };
+  }
+
+  interface ActionPlayEvent extends PlayEventBase {
+    type: 'action';
+    player?: {
+      id: string;
+      link: string;
+    };
+    details: {
+      awayScore: number;
+      description: string;
+      event: string;
+      eventType: string;
+      hasReview: boolean;
+      homeScore: number;
+      isOut: boolean;
+      isScoringPlay: boolean;
+    };
+  }
+
+  export interface PitcherActionPlayEvent extends PlayEventBase {
+    details: {
+      description: string;
+      code: string;
+      disengagementNum: number;
+      fromCatcher: boolean;
+      hasReview: boolean;
+      isOut: boolean;
+    };
+  }
+
+  export interface StepoffPlayEvent extends PitcherActionPlayEvent {
+    type: 'stepoff';
+  }
+
+  export interface PickoffPlayEvent extends PitcherActionPlayEvent {
+    type: 'pickoff';
+  }
+
+  export type PlayEvent =
+    | PitchPlayEvent
+    | NoPitchPlayEvent
+    | ActionPlayEvent
+    | StepoffPlayEvent
+    | PickoffPlayEvent;
 
   interface TeamScoreData {
     hits: number;
@@ -549,7 +599,7 @@ declare module 'mlb-api' {
       endTime: string;
       halfInning: string;
       hasOut: boolean;
-      hasReview: boolean;
+      hasReview?: boolean;
       inning: number;
       isComplete: boolean;
       isScoringPlay: boolean;
@@ -621,9 +671,9 @@ declare module 'mlb-api' {
       };
       game: LiveFeedGame;
       gameInfo: {
-        attendance: number;
+        attendance?: number;
         firstPitch: string;
-        gameDurationMinutes: number;
+        gameDurationMinutes?: number;
       };
       moundVisits: {
         home: UsedRemaining;
@@ -673,7 +723,7 @@ declare module 'mlb-api' {
         officials: Official[];
         info: LabelValue[];
       };
-      decisions: {
+      decisions?: {
         winner: Person;
         loser: Person;
       };

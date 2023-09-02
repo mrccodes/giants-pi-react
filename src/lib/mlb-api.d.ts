@@ -97,6 +97,115 @@ declare module 'mlb-api' {
     abbreviation: string;
   }
 
+  export interface SeasonStats {
+    batting: {
+      atBats: number;
+      atBatsPerHomeRun: string;
+      avg: string;
+      babip: string;
+      baseOnBalls: number;
+      catchersInterference: number;
+      caughtStealing: number;
+      doubles: number;
+      flyOuts: number;
+      gamesPlayed: number;
+      groundIntoDoublePlay: number;
+      groundIntoTriplePlay: number;
+      groundOuts: number;
+      hitByPitch: number;
+      hits: number;
+      homeRuns: number;
+      intentionalWalks: number;
+      leftOnBase: number;
+      obp: string;
+      ops: string;
+      pickoffs: number;
+      plateAppearances: number;
+      rbi: number;
+      runs: number;
+      sacBunts: number;
+      sacFlies: number;
+      slg: string;
+      stolenBasePercentage: string;
+      stolenBases: number;
+      strikeOuts: number;
+      totalBases: number;
+      triples: number;
+    };
+    fielding: {
+      assists: number;
+      caughtStealing: number;
+      chances: number;
+      errors: number;
+      fielding: string;
+      passedBall: number;
+      pickoffs: number;
+      putOuts: number;
+      stolenBasePercentage: string;
+      stolenBases: string;
+    };
+    pitching: {
+      airOuts: number;
+      atBats: number;
+      balks: number;
+      balls: number;
+      baseOnBalls: number;
+      battersFaced: number;
+      blownSaves: number;
+      catchersInterference: number;
+      caughtStealing: number;
+      completeGames: number;
+      doubles: number;
+      earnedRuns: number;
+      era: string;
+      gamesFinished: number;
+      gamesPitched: number;
+      gamesPlayed: number;
+      gamesStarted: number;
+      groundOuts: number;
+      groundOutsToAirouts: string;
+      hitBatsmen: number;
+      hitByPitch: number;
+      hits: number;
+      hitsPer9Inn: string;
+      holds: number;
+      homeRuns: number;
+      homeRunsPer9: string;
+      inheritedRunners: number;
+      inheritedRunnersScored: number;
+      inningsPitched: string;
+      intentionalWalks: number;
+      losses: number;
+      numberOfPitches: number;
+      obp: string;
+      outs: number;
+      passedBall: number;
+      pickoffs: number;
+      pitchesPerInning: string;
+      rbi: number;
+      runs: number;
+      runsScoredPer9: string;
+      sacBunts: number;
+      sacFlies: number;
+      saveOpportunities: number;
+      saves: number;
+      shutouts: number;
+      stolenBasePercentage: string;
+      stolenBases: number;
+      strikeOuts: number;
+      strikePercentage: string;
+      strikeoutWalkRatio: string;
+      strikeoutsPer9Inn: string;
+      strikes: number;
+      triples: number;
+      walksPer9Inn: string;
+      whip: string;
+      wildPitches: number;
+      winPercentage: string;
+      wins: number;
+    };
+  };
+
   interface TeamFullData {
     abbreviation: string;
     active: boolean;
@@ -119,7 +228,7 @@ declare module 'mlb-api' {
       leagueGamesBack: string;
       leagueRecord: RecordWithTies;
       losses: number;
-      records: object;
+      records: Object;
       sportGamesBack: string;
       springLeaguesGamesBack: string;
       wildCardGamesBack: string;
@@ -143,42 +252,45 @@ declare module 'mlb-api' {
     active: boolean;
     batSide: {
       code: 'L' | 'R' | 'S';
-      description: 'left' | 'right' | 'switch';
-      birthCity: string;
-      birthCountry: string;
-      birthDate: string;
-      birthStateProvince: string;
-      boxscoreName: string;
-      currentAge: number;
-      draftYear: number;
-      firstLastName: string;
-      firstName: string;
-      fullFMLName: string;
-      fullLFMName: string;
-      fullName: string;
-      gender: 'M' | 'F';
-      height: string;
-      id: number;
-      initLastName: string;
-      isPlayer: boolean;
-      isVerified: boolean;
-      lastFirstName: string;
-      lastInitName: string;
-      lastName: string;
-      link: string;
-      middleName: string;
-      mlbDebutDate: string;
-      nameFirstLast: string;
-      nameSlug: string;
-      nickName: string;
-      pitchHand: BasicStatus;
-      primaryNumber: string;
-      primaryPosition: Position;
-      strikeZoneBottom: number;
-      strikeZoneTop: number;
-      useName: string;
-      weight: number;
+      description: 'Left' | 'Right' | 'Dwitch';
     };
+    birthCity: string;
+    birthCountry: string;
+    birthDate: string;
+    birthStateProvince: string;
+    boxscoreName: string;
+    currentAge: number;
+    draftYear: number;
+    firstLastName: string;
+    firstName: string;
+    fullFMLName: string;
+    fullLFMName: string;
+    fullName: string;
+    gender: 'M' | 'F';
+    height: string;
+    id: number;
+    initLastName: string;
+    isPlayer: boolean;
+    isVerified: boolean;
+    lastFirstName: string;
+    lastInitName: string;
+    lastName: string;
+    link: string;
+    middleName: string;
+    mlbDebutDate: string;
+    nameFirstLast: string;
+    nameSlug: string;
+    nameMatrilineal?: string;
+    nickName?: string;
+    pitchHand: BasicStatus;
+    primaryNumber: string;
+    pronunciation?: string;
+    primaryPosition: Position;
+    strikeZoneBottom: number;
+    strikeZoneTop: number;
+    useName?: string;
+    useLastName?: string;
+    weight: number;
   }
   interface Person {
     fullName: string;
@@ -204,117 +316,10 @@ declare module 'mlb-api' {
     parentTeamId: number;
     person: Person;
     position: Position;
-    seasonStats: {
-      batting: {
-        atBats: number;
-        atBatsPerHomeRun: string;
-        avg: string;
-        babip: string;
-        baseOnBalls: number;
-        catchersInterference: number;
-        caughtStealing: number;
-        doubles: number;
-        flyOuts: number;
-        gamesPlayed: number;
-        groundIntoDoublePlay: number;
-        groundIntoTriplePlay: number;
-        groundOuts: number;
-        hitByPitch: number;
-        hits: number;
-        homeRuns: number;
-        intentionalWalks: number;
-        leftOnBase: number;
-        obp: string;
-        ops: string;
-        pickoffs: number;
-        plateAppearances: number;
-        rbi: number;
-        runs: number;
-        sacBunts: number;
-        sacFlies: number;
-        slg: string;
-        stolenBasePercentage: string;
-        stolenBases: number;
-        strikeOuts: number;
-        totalBases: number;
-        triples: number;
-      };
-      fielding: {
-        assists: number;
-        caughtStealing: number;
-        chances: number;
-        errors: number;
-        fielding: string;
-        passedBall: number;
-        pickoffs: number;
-        putOuts: number;
-        stolenBasePercentage: string;
-        stolenBases: string;
-      };
-      pitching: {
-        airOuts: number;
-        atBats: number;
-        balks: number;
-        balls: number;
-        basOnBalls: number;
-        battersFaces: number;
-        blownSaves: number;
-        catchersInterference: number;
-        caughtStealing: number;
-        completeGames: number;
-        doubles: number;
-        earnedRuns: number;
-        era: string;
-        gamesFinished: number;
-        gamesPitched: number;
-        gamesPlayed: number;
-        gamesStarted: number;
-        groundOuts: number;
-        groundOutsToAirouts: string;
-        hitBatsmen: number;
-        hitByBitch: number;
-        hits: number;
-        hitsPer9Inn: string;
-        holds: number;
-        homeRuns: number;
-        homeRunsPer9: string;
-        inheritedRunners: number;
-        inheritedRunnersScored: number;
-        inningsPitched: string;
-        intentionalWalks: number;
-        losses: number;
-        numberOfPitches: number;
-        obp: string;
-        outs: number;
-        passedBall: number;
-        pickoffs: number;
-        pitchesPerInning: string;
-        pitchesThrown: number;
-        rbi: number;
-        runs: number;
-        runsScoredPer9: string;
-        sacBunts: number;
-        sacFlies: number;
-        saveOpportunites: number;
-        saves: number;
-        shutouts: number;
-        stolenBasePercentage: string;
-        stolenBases: number;
-        strikeOuts: number;
-        strikePercentage: string;
-        strikeoutWalkRatio: string;
-        strikeoutsPer9Inn: string;
-        strikes: number;
-        triples: number;
-        walksPer9Inn: string;
-        whip: string;
-        wildPitches: number;
-        winPercentage: string;
-        wins: number;
-      };
-    };
+    seasonStats: SeasonStats;
     stats: {
-      // currently unknown
+      // @TODO try to find types from API
+      // these empty values may be only available with api creds (stat cast data)
       fielding: object;
       batting: object;
       pitching: object;
@@ -339,7 +344,7 @@ declare module 'mlb-api' {
       city: string;
       country: string;
       defaultCoordinates: {
-        laditude: number;
+        latitude: number;
         longitude: number;
       };
       elevation: number;
@@ -375,8 +380,8 @@ declare module 'mlb-api' {
       id: number;
       link: string;
       name: string;
+      springLeague: SpringLeague;
     };
-    springLeague: SpringLeague;
   }
 
   interface Count {
@@ -385,18 +390,19 @@ declare module 'mlb-api' {
     outs: number;
   }
 
-  interface PlayEvent {
+  
+  interface PlayEventBase {
     count: Count;
-    details: {
-      awayScore: number;
-      description: string;
-      event: string;
-      eventType: string;
-      hasReview: boolean;
-      homeScore: number;
-      isOut: boolean;
-      isScoringPlay: boolean;
-    };
+    // details: {
+    //   awayScore: number;
+    //   description: string;
+    //   event: string;
+    //   eventType: string;
+    //   hasReview: boolean;
+    //   homeScore: number;
+    //   isOut: boolean;
+    //   isScoringPlay: boolean;
+    // };
     endTime: string;
     index: number;
     isPitch: boolean;
@@ -404,9 +410,70 @@ declare module 'mlb-api' {
       id: number;
       link: string;
     };
+    playId: string;
     startTime: string;
-    type: string;
+    
   }
+
+  interface PitchData {
+    startSpeed: number,
+    endSpeed: number,
+    strikeZoneTop: number,
+    strikeZoneBottom: number,
+    coordinates: {
+        aY: number,
+        aZ: number,
+        pfxX: number,
+        pfxZ: number,
+        pX: number,
+        pZ: number,
+        vX0: number,
+        vY0: number,
+        vZ0: number,
+        x: number,
+        y: number,
+        x0: number,
+        y0: number,
+        z0: number,
+        aX: number8
+    },
+    breaks: {
+        breakAngle: number ,
+        breakLength: number ,
+        breakY: number ,
+        breakVertical: number ,
+        breakVerticalInduced: number ,
+        breakHorizontal: number ,
+        spinRate: number ,
+        spinDirection: number 
+    },
+    zone: number
+    typeConfidence: number,
+    plateTime: number,
+    extension: number
+  }
+  
+  interface PitchPlayEvent extends PlayEventBase {
+    type: 'pitch';
+    playId: string;
+    pitchNumber: number;
+    pitchData:  PitchData;
+    details: {
+        call: BasicStatus,
+        description: string,
+        code: string,
+        ballColor: string,
+        trailColor: string,
+        isInPlay: boolean,
+        isStrike: boolean,
+        isBall: boolean,
+        type: BasicStatus,
+        isOut: boolean,
+        hasReview: boolean
+    } 
+  }
+
+  type PlayEvent = PitchPlayEvent;
 
   interface TeamScoreData {
     hits: number;
@@ -507,7 +574,7 @@ declare module 'mlb-api' {
     };
     pitchIndex: number[];
     playEndTime: string;
-    playEvents: PlayEvents[];
+    playEvents: [];
     result: {
       awayScore: number;
       description: string;
@@ -600,7 +667,8 @@ declare module 'mlb-api' {
           home: LiveTeamData;
           away: LiveTeamData;
         };
-        // best guess for pitcking notes (empty)
+        // best guess for pitcking notes (empty) @TODO Check pitching notes type from API
+        // these empty values may be only available with api creds (stat cast data)
         pitchingNotes: LabelValue[];
         officials: Official[];
         info: LabelValue[];

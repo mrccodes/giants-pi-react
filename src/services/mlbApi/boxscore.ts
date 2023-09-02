@@ -13,6 +13,7 @@ const getLiveFeedData = async (gamePk: string): Promise<LiveFeedData> => {
   const url = `${MLB_API_BASE_URL}/v1.1/game/${gamePk}/feed/live`;
   try {
     const response = await axios.get(url);
+    console.log('LIVE FEED DATA: ', response.data)
     if (isLiveFeedData(response.data)) {
       return response.data as LiveFeedData;
     } else {

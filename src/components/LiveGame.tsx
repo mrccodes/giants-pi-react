@@ -26,14 +26,21 @@ const LiveGame = ({ game, team, ...rest }: LiveGameProps) => {
     borderColor =
       currentScore.selected.score > currentScore.opposing.score
         ? 'border-green-600'
-        : currentScore.selected.score > currentScore.opposing.score
+        : currentScore.selected.score < currentScore.opposing.score
         ? 'border-red-600'
         : undefined;
   }
   return (
     <Widget borderColor={borderColor} {...rest}>
       <div className="w-full text-center font-extrabold">
-        {getText(opposingTeamName)}
+        {opposingTeamName && <p>Currently facing the {opposingTeamName}</p>}
+        <p className="text-green-500 py-2">
+          {game.status.detailedState === 'In Progress'
+            ? 'Live now!'
+            : game.status.detailedState === 'Warmup'
+            ? 'Warming up!'
+            : 'Starting soon!'}
+        </p>
       </div>
       {currentScore && (
         <Scorecard
@@ -48,13 +55,3 @@ const LiveGame = ({ game, team, ...rest }: LiveGameProps) => {
 };
 
 export default LiveGame;
-
-const getText = (teamName: string | undefined): React.ReactNode =>
-  teamName ? (
-    <>
-      <p>Currently facing the {teamName}</p>
-      <p className="text-green-500 py-2">Live now!</p>
-    </>
-  ) : (
-    'Game is live now!'
-  );

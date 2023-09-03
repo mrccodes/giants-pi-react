@@ -165,6 +165,9 @@ const isPlayData = (obj: any): obj is PlayData => {
     typeof obj?.matchup?.splits?.batter === 'string' &&
     typeof obj?.matchup?.splits?.menOnBase === 'string' &&
     typeof obj?.matchup?.splits?.pitcher === 'string' &&
+    (!obj.matchup?.postOnThird || isPerson(obj.matchup?.postOnThird)) &&
+    (!obj.matchup?.postOnFirst || isPerson(obj.matchup?.postOnFirst)) &&
+    (!obj.matchup?.postOnSecond || isPerson(obj.matchup?.postOnSecond)) &&
     isNumberArray(obj?.pitchIndex) &&
     typeof obj?.playEndTime === 'string' &&
     Array.isArray(obj?.playEvents) &&
@@ -977,6 +980,7 @@ const isPlayEventBase = (obj: any): obj is PlayEventBase => {
     typeof obj?.endTime === 'string' &&
     typeof obj?.index === 'number' &&
     typeof obj?.isPitch === 'boolean' &&
+    (!obj?.playId || typeof obj.playId === 'string') &&
     typeof obj?.startTime === 'string' &&
     obj?.type;
   !isValid &&
@@ -1134,9 +1138,9 @@ const isNoPitchPlayEvent = (obj: any): obj is NoPitchPlayEvent => {
     obj &&
     typeof obj === 'object' &&
     obj?.type === 'no_pitch' &&
-    typeof obj?.playId === 'string' &&
     typeof obj?.details === 'object' &&
     typeof obj.details?.code === 'string' &&
+    (!obj?.pitchId || typeof obj.pitchId === 'string') &&
     (!obj.detials?.call || isBasicStatus(obj.details?.call)) &&
     (!obj.detials?.hasReview || typeof obj.details?.hasReview === 'boolean') &&
     (!obj.details?.isBall || typeof obj.details.isBall === 'boolean') &&
@@ -1168,7 +1172,7 @@ const isPitchPlayEvent = (obj: any): obj is PitchPlayEvent => {
     obj &&
     typeof obj === 'object' &&
     obj?.type === 'pitch' &&
-    typeof obj?.playId === 'string' &&
+    (!obj?.pitchId || typeof obj.pitchId === 'string') &&
     typeof obj?.pitchNumber === 'number' &&
     typeof obj?.pitchData === 'object' &&
     isPitchData(obj?.pitchData) &&
@@ -1176,11 +1180,11 @@ const isPitchPlayEvent = (obj: any): obj is PitchPlayEvent => {
     isBasicStatus(obj.details?.call) &&
     typeof obj.details?.description === 'string' &&
     typeof obj.details?.code === 'string' &&
-    typeof obj.details?.ballColor === 'string' &&
-    typeof obj.details?.trailColor === 'string' &&
+    (!obj.details?.ballColor || typeof obj.details?.ballColor === 'string') &&
+    (!obj.details?.trailColor || typeof obj.details?.trailColor === 'string') &&
     typeof obj.details?.isInPlay === 'boolean' &&
     typeof obj.details?.isStrike === 'boolean' &&
-    isBasicStatus(obj.details.type) &&
+    (!obj.details.type || isBasicStatus(obj.details.type)) &&
     typeof obj.details?.isOut === 'boolean' &&
     typeof obj.details?.hasReview === 'boolean' &&
     isPlayEventBase(obj);
@@ -1194,39 +1198,42 @@ const isPitchData = (obj: any): obj is PitchData => {
   const isValid =
     obj &&
     typeof obj === 'object' &&
-    typeof obj?.startSpeed === 'number' &&
-    typeof obj?.endSpeed === 'number' &&
     typeof obj?.strikeZoneTop === 'number' &&
     typeof obj?.strikeZoneBottom === 'number' &&
+    (!obj?.zone || typeof obj?.zone === 'number') &&
+    (!obj?.plateTime || typeof obj?.plateTime === 'number') &&
     typeof obj?.coordinates === 'object' &&
-    typeof obj.coordinates?.aX === 'number' &&
-    typeof obj.coordinates?.aY === 'number' &&
-    typeof obj.coordinates?.aZ === 'number' &&
-    typeof obj.coordinates?.pX === 'number' &&
-    typeof obj.coordinates?.pZ === 'number' &&
-    typeof obj.coordinates?.pfxX === 'number' &&
-    typeof obj.coordinates?.pfxZ === 'number' &&
-    typeof obj.coordinates?.vX0 === 'number' &&
-    typeof obj.coordinates?.vY0 === 'number' &&
-    typeof obj.coordinates?.vZ0 === 'number' &&
-    typeof obj.coordinates?.x === 'number' &&
-    typeof obj.coordinates?.y === 'number' &&
-    typeof obj.coordinates?.x0 === 'number' &&
-    typeof obj.coordinates?.y0 === 'number' &&
-    typeof obj.coordinates?.z0 === 'number' &&
+    (!obj?.startSpeed || typeof obj?.startSpeed === 'number') &&
+    (!obj?.endSpeed || typeof obj?.endSpeed === 'number') &&
+    (!obj.coordinates?.aX || typeof obj.coordinates.aX === 'number') &&
+    (!obj.coordinates?.aY || typeof obj.coordinates.aY === 'number') &&
+    (!obj.coordinates?.aZ || typeof obj.coordinates.aZ === 'number') &&
+    (!obj.coordinates?.pX || typeof obj.coordinates.pX === 'number') &&
+    (!obj.coordinates?.pZ || typeof obj.coordinates.pZ === 'number') &&
+    (!obj.coordinates?.pfxX || typeof obj.coordinates.pfxX === 'number') &&
+    (!obj.coordinates?.pfxZ || typeof obj.coordinates.pfxZ === 'number') &&
+    (!obj.coordinates?.vX0 || typeof obj.coordinates.vX0 === 'number') &&
+    (!obj.coordinates?.vY0 || typeof obj.coordinates.vY0 === 'number') &&
+    (!obj.coordinates?.vZ0 || typeof obj.coordinates.vZ0 === 'number') &&
+    (!obj.coordinates?.x || typeof obj.coordinates.x === 'number') &&
+    (!obj.coordinates?.y || typeof obj.coordinates.y === 'number') &&
+    (!obj.coordinates?.x0 || typeof obj.coordinates.x0 === 'number') &&
+    (!obj.coordinates?.y0 || typeof obj.coordinates.y0 === 'number') &&
+    (!obj.coordinates?.z0 || typeof obj.coordinates.z0 === 'number') &&
     typeof obj?.breaks === 'object' &&
-    typeof obj.breaks?.breakAngle === 'number' &&
-    typeof obj.breaks?.breakVertical === 'number' &&
-    typeof obj.breaks?.breakVerticalInduced === 'number' &&
-    typeof obj.breaks?.breakHorizontal === 'number' &&
+    (!obj.breaks?.breakAngle || typeof obj.breaks?.breakAngle === 'number') &&
+    (!obj.breaks?.breakVertical ||
+      typeof obj.breaks?.breakVertical === 'number') &&
+    (!obj.breaks?.breakVerticalInduced ||
+      typeof obj.breaks?.breakVerticalInduced === 'number') &&
+    (!obj.breaks?.breakHorizontal ||
+      typeof obj.breaks?.breakHorizontal === 'number') &&
     (!obj.breaks?.breakY || typeof obj.breaks?.breakY === 'number') &&
     (!obj.breaks?.breakLength || typeof obj.breaks?.breakLength === 'number') &&
     (!obj.break?.spinRate || typeof obj.breaks?.spinRate === 'number') &&
     (!obj.break?.spinDirection ||
       typeof obj.breaks?.spinDirection === 'number') &&
-    typeof obj?.zone === 'number' &&
     (!obj?.typeConfidence || typeof obj?.typeConfidence === 'number') &&
-    typeof obj?.plateTime === 'number' &&
     (!obj?.extension || typeof obj?.extension === 'number');
 
   !isValid &&

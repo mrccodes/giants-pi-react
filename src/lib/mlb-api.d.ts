@@ -395,67 +395,66 @@ declare module 'mlb-api' {
     endTime: string;
     index: number;
     isPitch: boolean;
-    playId: string;
-    playId: string;
+    playId?: string;
     startTime: string;
     type: string;
   }
 
   interface PitchData {
-    startSpeed: number;
-    endSpeed: number;
     strikeZoneTop: number;
     strikeZoneBottom: number;
+    startSpeed?: number;
+    endSpeed?: number;
     coordinates: {
-      aY: number;
-      aZ: number;
-      pfxX: number;
-      pfxZ: number;
-      pX: number;
-      pZ: number;
-      vX0: number;
-      vY0: number;
-      vZ0: number;
-      x: number;
-      y: number;
-      x0: number;
-      y0: number;
-      z0: number;
-      aX: number8;
+      aY?: number;
+      aZ?: number;
+      pfxX?: number;
+      pfxZ?: number;
+      pX?: number;
+      pZ?: number;
+      vX0?: number;
+      vY0?: number;
+      vZ0?: number;
+      x?: number;
+      y?: number;
+      x0?: number;
+      y0?: number;
+      z0?: number;
+      aX?: number8;
     };
     breaks: {
-      breakAngle: number;
+      breakAngle?: number;
       breakLength?: number;
       breakY?: number;
-      breakVertical: number;
-      breakVerticalInduced: number;
-      breakHorizontal: number;
+      breakVertical?: number;
+      breakVerticalInduced?: number;
+      breakHorizontal?: number;
       spinRate?: number;
       spinDirection?: number;
     };
-    zone: number;
+    zone?: number;
     typeConfidence?: number;
-    plateTime: number;
+    plateTime?: number;
     extension?: number;
   }
 
   interface PitchPlayEvent extends PlayEventBase {
     type: 'pitch';
-    playId: string;
     pitchNumber: number;
+    playId?: number;
     pitchData: PitchData;
     details: {
-      ballColor: string;
+      ballColor?: string;
+      trailColor?: string;
+      type?: BasicStatus;
+      hasReview: boolean;
       call: BasicStatus;
       code: string;
       description: string;
-      hasReview: boolean;
       isBall: boolean;
       isInPlay: boolean;
       isOut: boolean;
       isStrike: boolean;
-      type: BasicStatus;
-      trailColor: string;
     };
   }
 
@@ -617,6 +616,9 @@ declare module 'mlb-api' {
       pitchHand: BasicStatus;
       pitcher: Person;
       pitcherHotColdZones: any[];
+      postOnThird?: Person;
+      postOnFirst?: Person;
+      postOnSecond?: Person;
       splits: {
         batter: string;
         menOnBase: string;

@@ -144,8 +144,9 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
           (g) => g.status.abstractGameState === 'Live',
         );
         const startedRecently = today ? gameStartedRecently(today) : false;
+        const startsSoon = today ? gameStartsSoon(today) : false;
 
-        if (startedRecently || liveGameFound) {
+        if (startsSoon || startedRecently || liveGameFound) {
           setShouldCheckForLiveGame(true);
         } else {
           setShouldCheckForLiveGame(false);
@@ -182,6 +183,22 @@ const gameStartedRecently = (today: GameDate, numberOfHours = 3): boolean => {
   return today.games.some((game) => {
     const gameTime = moment.utc(game.gameDate);
     return gameTime.isBefore(now) && gameTime.isAfter(limitTime);
+  });
+};
+/**
+ * Checks if any games on the passed date are scheduled to start within x hours
+ *
+ * @param schedule GameDate - current day
+ * @param numberOfHours number of hours that defines 'recently'
+ * @returns boolean
+ */
+const gameStartsSoon = (today: GameDate, numberOfHours = 1): boolean => {
+  const now = moment();
+  const limitTime = moment().add(numberOfHours, 'hours');
+
+  return today.games.some((game) => {
+    const gameTime = moment.utc(game.gameDate);
+    return gameTime.isAfter(now) && gameTime.isBefore(limitTime);
   });
 };
 

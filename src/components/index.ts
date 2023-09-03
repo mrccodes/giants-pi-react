@@ -9,7 +9,7 @@ import Temp from './Temp';
 import LiveGame from './LiveGame';
 import Scorecard from './Scorecard';
 import SeriesData from './SeriesData';
-
+import MenOnBase from './MenOnBase';
 export {
   Button,
   Dropdown,
@@ -22,4 +22,5 @@ export {
   LiveGame,
   Scorecard,
   SeriesData,
+  MenOnBase,
 };

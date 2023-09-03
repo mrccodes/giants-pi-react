@@ -2,7 +2,7 @@ import { HTMLProps } from 'react';
 import { Count, LiveFeedData } from 'mlb-api';
 
 import { useLiveFeedData } from '../hooks';
-import { ErrorMessage, LoadingSpinner, Widget } from '.';
+import { ErrorMessage, LoadingSpinner, Widget, MenOnBase } from '.';
 import { abbreviateTeam, ensureMinArrayLength, generateKey } from '../utils';
 import { MLBTeam } from '../models';
 
@@ -14,6 +14,10 @@ interface BoxscoreProps extends HTMLProps<HTMLDivElement> {
 const Boxscore = ({ gamePk, team, ...rest }: BoxscoreProps) => {
   const { gameData, liveData, error, loading } = useLiveFeedData(gamePk);
 
+  if (gameData?.status.detailedState !== 'In Progress') {
+    return null;
+  }
+  console.log({ liveData });
   if (error) {
     return (
       <Widget {...rest}>
@@ -43,6 +47,13 @@ const Boxscore = ({ gamePk, team, ...rest }: BoxscoreProps) => {
               outs: liveData.linescore.outs,
             }}
           />
+          <div className="mt-6 mx-2">
+            <MenOnBase
+              first={liveData.plays.currentPlay.matchup?.postOnFirst}
+              second={liveData.plays.currentPlay.matchup?.postOnSecond}
+              third={liveData.plays.currentPlay.matchup?.postOnThird}
+            />
+          </div>
         </div>
       </Widget>
     );
@@ -80,7 +91,7 @@ const createBoxscore = (
             inning={inning.num}
           />
         ) : (
-          <Stack key={generateKey()} inning={idx} />
+          <Stack key={generateKey()} inning={idx + 1} />
         ),
       )}
     </div>

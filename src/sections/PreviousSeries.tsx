@@ -9,19 +9,21 @@ interface PreviousSeriesProps {
   schedule?: GameDate[];
   nextGame?: Game;
   liveGame?: Game;
+  loading?: boolean;
 }
 const PreviousSeries = ({
   schedule,
   team,
   nextGame,
   liveGame,
+  loading,
 }: PreviousSeriesProps) => {
   const allGames = reduceScheduleToGames(schedule ?? []);
   const currentGame = liveGame ?? nextGame;
 
   if (!currentGame || !schedule) {
     return (
-      <Widget>
+      <Widget loading={loading}>
         <p>No Recent Series</p>
       </Widget>
     );
@@ -31,6 +33,7 @@ const PreviousSeries = ({
 
   return (
     <SeriesData
+      loading={loading}
       schedule={schedule}
       selectedTeam={team}
       targetGame={targetGame}

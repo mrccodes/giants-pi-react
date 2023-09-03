@@ -2,10 +2,8 @@ import { useEffect, useState, PropsWithChildren } from 'react';
 
 import { ErrorMessage, LiveGame, LoadingSpinner } from '../components';
 import { MLBTeam } from '../models';
-import NextGameCountdown from './NextGameCountdown';
-import { CurrentSeries, PreviousSeries } from './index';
+import { NextGameCountdown, LiveFeed, CurrentSeries, PreviousSeries } from '.';
 import { useTeamSchedule } from '../hooks';
-import Boxscore from '../components/Boxscore';
 
 interface DashboardProps {
   team: MLBTeam;
@@ -52,7 +50,7 @@ const Dashboard = ({ team }: DashboardProps) => {
   ) : (
     <div className="px-6">
       {liveGame && (
-        <Boxscore
+        <LiveFeed
           className="w-full mb-3"
           team={team}
           gamePk={liveGame.gamePk.toString()}
@@ -70,12 +68,14 @@ const Dashboard = ({ team }: DashboardProps) => {
           />
         )}
         <CurrentSeries
+          loading={!(schedule && nextGame && !loading)}
           schedule={schedule}
           team={team}
           nextGame={nextGame}
           liveGame={liveGame}
         />
         <PreviousSeries
+          loading={!(schedule && nextGame && !loading)}
           schedule={schedule}
           team={team}
           nextGame={nextGame}

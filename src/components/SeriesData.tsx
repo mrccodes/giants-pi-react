@@ -11,6 +11,7 @@ interface SeriesDataProps extends React.HTMLProps<HTMLDivElement> {
   selectedTeam: MLBTeam;
   targetGame: Game;
   label: string;
+  loading?: boolean;
 }
 
 const SeriesData = ({
@@ -18,6 +19,7 @@ const SeriesData = ({
   selectedTeam,
   targetGame,
   label,
+  loading,
   ...rest
 }: SeriesDataProps) => {
   const {
@@ -35,7 +37,7 @@ const SeriesData = ({
       : undefined;
 
   return (
-    <Widget {...rest} borderColor={borderColor}>
+    <Widget loading={loading} {...rest} borderColor={borderColor}>
       <p className="text-center text-xl">{label}</p>
       <Scorecard
         className="py-1"

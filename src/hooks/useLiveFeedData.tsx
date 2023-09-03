@@ -36,7 +36,6 @@ const useLiveFeedData = (gamePk: string): useLiveFeedDataReturnType => {
         setLiveData(liveFeedData.liveData);
         setGameData(liveFeedData.gameData);
         setMetaData(liveFeedData.metaData);
-        setLoading(false);
       } catch (err) {
         if (isAxiosError(err) || err instanceof Error) {
           setError(err.message);
@@ -45,8 +44,8 @@ const useLiveFeedData = (gamePk: string): useLiveFeedDataReturnType => {
           DEBUG_MODE &&
             logError(error, 'useLiveFeedData -> useEffect -> fetchData');
         }
-        setLoading(false);
       }
+      setLoading(false);
     };
     if (initialRender.current === true) {
       // On initial render, set loading and init immediately.

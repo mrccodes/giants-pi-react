@@ -97,7 +97,9 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
           updateLiveGame(res);
           setError(undefined);
         })
-        .catch((err) => setError(err))
+        .catch((err) => {
+          setError(err);
+        })
         .finally(() => setLoading(false));
     };
 

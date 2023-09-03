@@ -10,6 +10,8 @@ import LiveGame from './LiveGame';
 import Scorecard from './Scorecard';
 import SeriesData from './SeriesData';
 import MenOnBase from './MenOnBase';
+import Boxscore from './Boxscore';
+import CountDisplay from './CountDisplay';
 export {
   Button,
   Dropdown,
@@ -23,4 +25,6 @@ export {
   Scorecard,
   SeriesData,
   MenOnBase,
+  Boxscore,
+  CountDisplay,
 };

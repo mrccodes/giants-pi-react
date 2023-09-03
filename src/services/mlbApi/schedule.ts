@@ -7,6 +7,15 @@ import { MLBTeam } from '../../models';
 
 const apiDateFormat = 'YYYY-MM-DD';
 
+interface getScheduleReturnType {
+  copyright: string;
+  dates: GameDate[];
+  totalEvents: number;
+  totalGames: number;
+  totalGamesInProgress: number;
+  totalItems: number;
+}
+
 /**
  * Returns 2 weeks of teams schedule starting from 1 week ago, to 1 week away by default
  */
@@ -14,7 +23,7 @@ export const getSchedule = async (
   team: MLBTeam,
   startDate: moment.Moment = moment().subtract(1, 'week'),
   endDate: moment.Moment = moment().add(1, 'week'),
-) => {
+): Promise<getScheduleReturnType> => {
   const url = `${MLB_API_BASE_URL}/v1/schedule?sportId=1&teamId=${
     team.id
   }&startDate=${startDate.format(apiDateFormat)}&endDate=${endDate.format(

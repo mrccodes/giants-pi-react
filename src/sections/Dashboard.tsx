@@ -18,7 +18,6 @@ const Dashboard = ({ team }: DashboardProps) => {
     nextGame,
     schedule,
     loading,
-    // mostRecentGame,
     error: scheduleError,
   } = useTeamSchedule(team);
 
@@ -43,9 +42,16 @@ const Dashboard = ({ team }: DashboardProps) => {
   return error ? (
     <ErrorMessage message={error} />
   ) : (
-    <Wrapper>
-      <>
-        {nextGame && <Boxscore gamePk={nextGame.gamePk.toString()} />}
+    <div className="px-6">
+      {liveGame && (
+        <Boxscore
+          className="w-full mb-3"
+          team={team}
+          gamePk={liveGame.gamePk.toString()}
+        />
+      )}
+
+      <Wrapper>
         {liveGame ? (
           <LiveGame game={liveGame} team={team} />
         ) : (
@@ -67,8 +73,8 @@ const Dashboard = ({ team }: DashboardProps) => {
           nextGame={nextGame}
           liveGame={liveGame}
         />
-      </>
-    </Wrapper>
+      </Wrapper>
+    </div>
   );
 };
 
@@ -77,7 +83,7 @@ const Wrapper = ({ children }: PropsWithChildren) => {
     <div>
       <section
         id="main-content"
-        className="grid lg:grid-cols-3 lg:grid-rows-3 md:grid-cols-1 lg:grid-rows-auto gap-4 px-6"
+        className="grid lg:grid-cols-3 lg:grid-rows-3 md:grid-cols-1 lg:grid-rows-auto gap-4"
       >
         {children}
       </section>

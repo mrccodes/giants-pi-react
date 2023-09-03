@@ -39,7 +39,7 @@ import {
   VenueExtended,
 } from 'mlb-api';
 
-import { DEBUG_MODE } from '../config';
+import { DEBUG_MODE } from '../../config';
 
 export const isLiveFeedData = (obj: any): obj is LiveFeedData => {
   if (!obj || typeof obj !== 'object') return false;
@@ -146,15 +146,15 @@ const isPlayData = (obj: any): obj is PlayData => {
     typeof obj?.about?.captivatingIndex === 'number' &&
     typeof obj?.about?.endTime === 'string' &&
     typeof obj?.about?.halfInning === 'string' &&
-    typeof obj?.about?.hasOut === 'boolean' &&
+    (!obj?.about?.hasOut || typeof obj?.about?.hasOut === 'boolean') &&
     (!obj.about?.hasReview || typeof obj?.about?.hasReview === 'boolean') &&
     typeof obj?.about?.inning === 'number' &&
     typeof obj?.about?.isComplete === 'boolean' &&
-    typeof obj?.about?.isScoringPlay === 'boolean' &&
+    (!obj?.about?.isScoringPlay ||
+      typeof obj?.about?.isScoringPlay === 'boolean') &&
     typeof obj?.about?.isTopInning === 'boolean' &&
     typeof obj?.about?.startTime === 'string' &&
     isNumberArray(obj?.actionIndex) &&
-    typeof obj?.atBatIndex === 'number' &&
     isCount(obj?.count) &&
     isBasicStatus(obj?.matchup?.batSide) &&
     isPerson(obj?.matchup?.batter) &&
@@ -170,13 +170,14 @@ const isPlayData = (obj: any): obj is PlayData => {
     Array.isArray(obj?.playEvents) &&
     obj?.playEvents.every(isPlayEvent) &&
     typeof obj?.result?.awayScore === 'number' &&
-    typeof obj?.result?.description === 'string' &&
-    typeof obj?.result?.event === 'string' &&
-    typeof obj?.result?.eventType === 'string' &&
     typeof obj?.result?.homeScore === 'number' &&
-    typeof obj?.result?.isOut === 'boolean' &&
-    typeof obj?.result?.rbi === 'number' &&
     typeof obj?.result?.type === 'string' &&
+    (!obj?.result?.description ||
+      typeof obj?.result?.description === 'string') &&
+    (!obj?.result?.event || typeof obj?.result?.event === 'string') &&
+    (!obj?.result?.eventType || typeof obj?.result?.eventType === 'string') &&
+    (!obj?.result?.isOut || typeof obj?.result?.isOut === 'boolean') &&
+    (!obj?.result?.rbi || typeof obj?.result?.rbi === 'number') &&
     Array.isArray(obj?.runnerIndex) &&
     Array.isArray(obj?.runners) &&
     obj?.runners.every(isRunnerData);
@@ -1078,7 +1079,8 @@ const isPitcherActionPlayEvent = (obj: any): obj is PitcherActionPlayEvent => {
     obj?.details &&
     typeof obj.details?.description === 'string' &&
     typeof obj.details?.code === 'string' &&
-    typeof obj.details?.disengagementNum === 'number' &&
+    (!obj.details?.disengagementNum ||
+      typeof obj.details?.disengagementNum === 'number') &&
     typeof obj.details?.fromCatcher === 'boolean' &&
     typeof obj.details?.hasReview === 'boolean' &&
     typeof obj.details?.isOut === 'boolean' &&
@@ -1214,16 +1216,16 @@ const isPitchData = (obj: any): obj is PitchData => {
     typeof obj.coordinates?.z0 === 'number' &&
     typeof obj?.breaks === 'object' &&
     typeof obj.breaks?.breakAngle === 'number' &&
-    typeof obj.breaks?.breakLength === 'number' &&
-    typeof obj.breaks?.breakY === 'number' &&
     typeof obj.breaks?.breakVertical === 'number' &&
     typeof obj.breaks?.breakVerticalInduced === 'number' &&
     typeof obj.breaks?.breakHorizontal === 'number' &&
+    (!obj.breaks?.breakY || typeof obj.breaks?.breakY === 'number') &&
+    (!obj.breaks?.breakLength || typeof obj.breaks?.breakLength === 'number') &&
     (!obj.break?.spinRate || typeof obj.breaks?.spinRate === 'number') &&
     (!obj.break?.spinDirection ||
       typeof obj.breaks?.spinDirection === 'number') &&
     typeof obj?.zone === 'number' &&
-    typeof obj?.typeConfidence === 'number' &&
+    (!obj?.typeConfidence || typeof obj?.typeConfidence === 'number') &&
     typeof obj?.plateTime === 'number' &&
     (!obj?.extension || typeof obj?.extension === 'number');
 

@@ -425,8 +425,8 @@ declare module 'mlb-api' {
     };
     breaks: {
       breakAngle: number;
-      breakLength: number;
-      breakY: number;
+      breakLength?: number;
+      breakY?: number;
       breakVertical: number;
       breakVerticalInduced: number;
       breakHorizontal: number;
@@ -434,7 +434,7 @@ declare module 'mlb-api' {
       spinDirection?: number;
     };
     zone: number;
-    typeConfidence: number;
+    typeConfidence?: number;
     plateTime: number;
     extension?: number;
   }
@@ -462,14 +462,15 @@ declare module 'mlb-api' {
   interface NoPitchPlayEvent extends PlayEventBase {
     type: 'no_pitch';
     details: {
-      call: BasicStatus;
+      call?: BasicStatus;
       code: string;
       description: string;
-      hasReview: boolean;
-      isBall: boolean;
-      isInPlay: boolean;
-      isOut: boolean;
+      hasReview?: boolean;
+      isBall?: boolean;
+      isInPlay?: boolean;
+      isOut?: boolean;
       isStrike?: boolean;
+      disengagementNum?: number;
       violation?: {
         type: string;
         description: string;
@@ -503,7 +504,7 @@ declare module 'mlb-api' {
     details: {
       description: string;
       code: string;
-      disengagementNum: number;
+      disengagementNum?: number;
       fromCatcher: boolean;
       hasReview: boolean;
       isOut: boolean;
@@ -627,12 +628,12 @@ declare module 'mlb-api' {
     playEvents: [];
     result: {
       awayScore: number;
-      description: string;
-      event: string;
-      eventType: string;
+      description?: string;
+      event?: string;
+      eventType?: string;
       homeScore: number;
-      isOut: boolean;
-      rbi: number;
+      isOut?: boolean;
+      rbi?: number;
       type: string;
     };
     runnerIndex: number[];

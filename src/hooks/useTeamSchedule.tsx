@@ -71,23 +71,41 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     [schedule?.data, setSchedule],
   );
 
+  const updateLiveGame = useCallback(
+    (newGame?: Game) => {
+      if (!isEqual(newGame, liveGame)) {
+        setLiveGame(newGame);
+      }
+    },
+    [liveGame, setLiveGame],
+  );
+
   useEffect(() => {
-    if (!shouldCheckForLiveGame || !schedule) {
+    if (!shouldCheckForLiveGame) {
       return;
     }
     const fetchData = () => {
       // Only set loading state if initial load
-      liveGame === null && setLoading(true);
+      !liveGame && setLoading(true);
       checkForLiveGame(team, undefined, updateStoredSchedule)
-        .then((res) => setLiveGame(res))
+        .then((res) => {
+          updateLiveGame(res);
+          setError(undefined);
+        })
         .catch((err) => setError(err))
         .finally(() => setLoading(false));
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 60000);
+    const intervalId = setInterval(fetchData, 2000);
     return () => clearInterval(intervalId);
-  }, [shouldCheckForLiveGame, schedule, liveGame, team, updateStoredSchedule]);
+  }, [
+    shouldCheckForLiveGame,
+    updateLiveGame,
+    updateStoredSchedule,
+    liveGame,
+    team,
+  ]);
 
   useEffect(() => {
     const fetchData = () => {
@@ -97,7 +115,6 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
           .then((res) => {
             const gameDates: GameDate[] = res.dates;
             const { nextGame, mostRecentGame } = findRelevantGames(gameDates);
-            console.log(mostRecentGame, nextGame);
             updateStoredSchedule(gameDates);
             setNextGame(nextGame);
             setMostRecentGame(mostRecentGame);
@@ -120,6 +137,8 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
 
         if (today && (gameStartedRecently(today) || liveGameFound)) {
           setShouldCheckForLiveGame(true);
+        } else {
+          setShouldCheckForLiveGame(false);
         }
       }
     };

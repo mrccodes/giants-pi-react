@@ -29,6 +29,14 @@ const Dashboard = ({ team }: DashboardProps) => {
     () => setError(null);
   }, [team]);
 
+  useEffect(() => {
+    if (team.logo.logoPath === '') {
+      setError('Error initializing app for selected team.');
+    }
+
+    () => setError(null);
+  }, [team]);
+
   if (loading) {
     return (
       <Wrapper>
@@ -39,8 +47,8 @@ const Dashboard = ({ team }: DashboardProps) => {
     );
   }
 
-  return error ? (
-    <ErrorMessage message={error} />
+  return error || scheduleError ? (
+    <ErrorMessage message={error ?? scheduleError ?? 'Unknown error.'} />
   ) : (
     <div className="px-6">
       {liveGame && (

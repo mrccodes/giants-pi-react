@@ -30,7 +30,7 @@ const SeriesData = ({
   const borderColor =
     selectedTeamScore > opposingTeamScore
       ? 'border-green-600'
-      : selectedTeamScore > opposingTeamScore
+      : selectedTeamScore < opposingTeamScore
       ? 'border-red-600'
       : undefined;
 

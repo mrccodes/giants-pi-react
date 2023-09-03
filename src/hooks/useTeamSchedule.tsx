@@ -81,7 +81,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
   );
 
   useEffect(() => {
-    if (!shouldCheckForLiveGame) {
+    if (!shouldCheckForLiveGame || !schedule) {
       return;
     }
     const fetchData = () => {
@@ -105,6 +105,7 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     updateStoredSchedule,
     liveGame,
     team,
+    schedule,
   ]);
 
   useEffect(() => {

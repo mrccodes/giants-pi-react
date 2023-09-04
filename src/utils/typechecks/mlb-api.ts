@@ -5,8 +5,10 @@ import {
   ActionPlayEvent,
   BaseData,
   BasicStatus,
+  CompletedGame,
   Count,
   Credit,
+  Game,
   GameStatus,
   Hit,
   LabelValue,
@@ -1254,6 +1256,49 @@ const isCredit = (obj: any): obj is Credit => {
   !isValid &&
     DEBUG_MODE &&
     console.error('isCredit -> Error: invalid object passed /n/n', obj);
+
+  return isValid;
+};
+
+const isScheduleGame = (obj: any): obj is Game => {
+  const isValid =
+    obj &&
+    typeof obj?.calendarEventID === 'string' &&
+    typeof obj?.content === 'object' &&
+    typeof obj?.content?.link === 'string' &&
+    isDayNight(obj?.dayNight) &&
+    isYN(obj?.doubleHeader) &&
+    typeof obj?.gameDate === 'string' &&
+    typeof obj?.gameGuid === 'string' &&
+    typeof obj?.gameNumber === 'number' &&
+    typeof obj?.gamePk === 'number';
+  !isValid &&
+    DEBUG_MODE &&
+    console.error('isScheduleGame -> Error: invalid object passed /n/n', obj);
+
+  return isValid;
+};
+
+export const isCompletedScheduleGame = (
+  obj: any,
+  logErrors: boolean,
+): obj is CompletedGame => {
+  if (logErrors === undefined) {
+    logErrors = true;
+  }
+  const isValid =
+    obj &&
+    typeof obj?.status === 'object' &&
+    obj.status?.abstractGameState === 'Final' &&
+    isScheduleGame(obj);
+
+  !isValid &&
+    DEBUG_MODE &&
+    logErrors &&
+    console.error(
+      'isCompletedScheduleGame -> Error: invalid object passed /n/n',
+      obj,
+    );
 
   return isValid;
 };

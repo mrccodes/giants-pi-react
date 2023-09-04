@@ -1,13 +1,32 @@
 import ErrorIcon from '@mui/icons-material/Error';
-const ErrorMessage: React.FC<{ message: string; customClasses?: string }> = ({
-  message,
-  customClasses,
-}) => {
-  const classes = `flex items-center space-x-2 text-red-600 bg-red-100 p-3 rounded ${customClasses} `;
+import React from 'react';
 
+interface ErrorMessageProps extends React.HTMLProps<HTMLDivElement> {
+  message: string;
+  warn?: boolean;
+}
+
+/**
+ * ErrorMessage Component
+ *
+ * Used to render an error div complete with error icon and error message, styled red-n-scary
+ * - or you can pass warn=true for yellow-n-less-scary
+ */
+const ErrorMessage = ({
+  message,
+  warn,
+  className,
+  ...rest
+}: ErrorMessageProps) => {
+  const colors = warn
+    ? 'text-yellow-600 bg-yellow-100'
+    : 'text-red-600 bg-red-100';
   return (
-    <div className={classes}>
-      <ErrorIcon className="text-red-600" />
+    <div
+      {...rest}
+      className={`flex items-center space-x-2 p-3 rounded ${colors} ${className}`}
+    >
+      <ErrorIcon className="text-inherit" />
       <span>{message}</span>
     </div>
   );

@@ -15,6 +15,12 @@ interface LiveFeedProps extends HTMLProps<HTMLDivElement> {
   team: MLBTeam;
 }
 
+// @TODO add play-by-play
+/**
+ * LiveFeed Component
+ *
+ * Gets and renders live feed data in the form of a line/boxscore, men-on-base diagram, and balls/outs/strikes data
+ */
 const LiveFeed = ({ gamePk, team, ...rest }: LiveFeedProps) => {
   const { gameData, liveData, error, loading } = useLiveFeedData(gamePk);
 

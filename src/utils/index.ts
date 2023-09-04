@@ -13,6 +13,7 @@ import { isLiveFeedData } from './typechecks/mlb-api';
 import logError from './logError';
 import ensureMinArrayLength from './ensureArrayMinLength';
 import generateKey from './generateKey';
+import { isCompletedScheduleGame } from './typechecks/mlb-api';
 export {
   verifyVector3D,
   generateKey,
@@ -28,5 +29,6 @@ export {
   findEndOfPreviousSeriesGame,
   sortGamesByDate,
   isLiveFeedData,
+  isCompletedScheduleGame,
   logError,
 };

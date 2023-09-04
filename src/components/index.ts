@@ -12,6 +12,7 @@ import SeriesData from './SeriesData';
 import MenOnBase from './MenOnBase';
 import Boxscore from './Boxscore';
 import CountDisplay from './CountDisplay';
+import SeriesPreview from './SeriesPreview';
 export {
   Button,
   Dropdown,
@@ -27,4 +28,5 @@ export {
   MenOnBase,
   Boxscore,
   CountDisplay,
+  SeriesPreview,
 };

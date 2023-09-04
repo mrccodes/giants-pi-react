@@ -5,6 +5,16 @@ interface CountDisplayProps extends HTMLProps<HTMLDivElement> {
   count: Count;
 }
 
+/**
+ * CountDisplay Component
+ *
+ * Renders balls/strikes/outs
+ *
+ * @example
+ * B: 3
+ * S: 2
+ * O: 2
+ */
 const CountDisplay = ({ count, ...rest }: CountDisplayProps) => {
   return (
     <div {...rest}>

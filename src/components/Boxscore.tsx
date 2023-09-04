@@ -8,6 +8,19 @@ interface BoxscoreProps {
   selectedTeam: MLBTeam;
 }
 
+/**
+ * Boxscore Compoment (linescore)
+ *
+ * Component to display game data in the form of a linescore
+ *
+ * @example
+ *
+ *       1   2   3   4   5   6   7   8   9
+ *     -------------------------------------
+ *  SF | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+ *  SD | 2 | 0 | 0 | 4 | 1 | 0 | 3 | 0 | 1 |
+ *     -------------------------------------
+ */
 const Boxscore = ({ data, selectedTeam }: BoxscoreProps): React.ReactNode => {
   const innings = ensureMinArrayLength(data.linescore.innings, 9, null);
   const selectedTeamLoc =

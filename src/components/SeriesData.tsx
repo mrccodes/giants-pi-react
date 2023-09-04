@@ -2,8 +2,7 @@ import { Game, GameDate } from 'mlb-api';
 
 import { MLBTeam } from '../models';
 import { abbreviateTeam } from '../utils';
-import { Scorecard, Widget } from '.';
-import { SeriesPreview } from './SeriesPreview';
+import { Scorecard, Widget, SeriesPreview } from '.';
 import { useSeriesData } from '../hooks';
 
 interface SeriesDataProps extends React.HTMLProps<HTMLDivElement> {
@@ -46,13 +45,7 @@ const SeriesData = ({
         opposingTeamScore={opposingTeamScore}
         selectedTeamScore={selectedTeamScore}
       />
-      {selectedTeamScore === 0 && opposingTeamScore === 0 ? (
-        <div className="py-3">
-          <p className="text-center">No games completed yet!</p>
-        </div>
-      ) : (
-        <SeriesPreview selectedTeam={selectedTeam} series={seriesSchedule} />
-      )}
+      <SeriesPreview selectedTeam={selectedTeam} series={seriesSchedule} />
     </Widget>
   );
 };

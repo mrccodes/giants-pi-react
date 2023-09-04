@@ -8,6 +8,8 @@ interface CountdownProps extends HTMLProps<HTMLDivElement> {
 const TIMER_FINISHED = '00:00:00';
 
 /**
+ * Countdown Component
+ *
  * Renders a HH:MM:SS countdown to the target date
  */
 const Countdown = ({ targetDate, ...rest }: CountdownProps) => {

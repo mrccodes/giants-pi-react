@@ -2,17 +2,25 @@ import React, { useState } from 'react';
 
 import { DropdownOption } from '../models';
 
-interface DropdownProps {
-  options: DropdownOption[];
+interface DropdownProps
+  extends Omit<React.HTMLProps<HTMLDivElement>, 'onSelect'> {
   onSelect: (selectedOption: DropdownOption) => void;
   hideDefaultOption?: boolean;
+  options: DropdownOption[];
 }
 
-const Dropdown: React.FC<DropdownProps> = ({
+/**
+ * Dropdown Component
+ *
+ * Custom dropdown used for teamselect. It could probably be way simplified and improved.
+ */
+const Dropdown = ({
   options,
   onSelect,
   hideDefaultOption = false,
-}) => {
+  className,
+  ...rest
+}: DropdownProps) => {
   const defaultValue: DropdownOption = hideDefaultOption
     ? options[0]
     : { value: 'select', label: 'Select Team' };
@@ -27,7 +35,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="relative max-w-md mx-auto">
+    <div {...rest} className={`relative max-w-md mx-auto ${className}`}>
       <div
         onClick={() => setIsOpen(!isOpen)}
         className="cursor-pointer border text-base bg-slate-700 p-2 rounded shadow"

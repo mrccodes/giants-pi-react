@@ -537,7 +537,7 @@ const isPlayer = (input: any): input is Player => {
     typeof input?.lastInitName === 'string' &&
     typeof input?.lastName === 'string' &&
     typeof input?.link === 'string' &&
-    typeof input?.mlbDebutDate === 'string' &&
+    (!input?.mlbDebutDate || typeof input?.mlbDebutDate === 'string') &&
     typeof input?.nameFirstLast === 'string' &&
     typeof input?.nameSlug === 'string' &&
     isBasicStatus(input?.pitchHand) &&

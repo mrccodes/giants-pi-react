@@ -31,10 +31,10 @@ const Boxscore = ({ data, selectedTeam }: BoxscoreProps): React.ReactNode => {
     <div className="flex flex-nowrap text-lg font-light">
       <div className="grid-cols-1 grid-rows-3">
         <div className="w-8 text-sm">&nbsp;</div>
-        <div className="w-8 aspect-square flex items-center justify-center">
+        <div className="w-8 aspect-square mr-2 flex items-center justify-center">
           {abbreviateTeam(data.boxscore.teams[selectedTeamLoc].team.name)}
         </div>
-        <div className="w-8 aspect-square flex items-center justify-center">
+        <div className="w-8 aspect-square flex mr-2 items-center justify-center">
           {abbreviateTeam(data.boxscore.teams[opposingTeamLoc].team.name)}
         </div>
       </div>

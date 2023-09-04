@@ -277,7 +277,7 @@ declare module 'mlb-api' {
     lastName: string;
     link: string;
     middleName: string;
-    mlbDebutDate: string;
+    mlbDebutDate?: string;
     nameFirstLast: string;
     nameSlug: string;
     nameMatrilineal?: string;

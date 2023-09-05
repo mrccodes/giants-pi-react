@@ -13,6 +13,7 @@ import MenOnBase from './MenOnBase';
 import Boxscore from './Boxscore';
 import CountDisplay from './CountDisplay';
 import SeriesPreview from './SeriesPreview';
+import PlayByPlay from './PlayByPlay';
 export {
   Button,
   Dropdown,
@@ -29,4 +30,5 @@ export {
   Boxscore,
   CountDisplay,
   SeriesPreview,
+  PlayByPlay,
 };

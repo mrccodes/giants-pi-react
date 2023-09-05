@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 import moment from 'moment';
 import isEqual from 'lodash/isEqual';
 
-import { MLBTeam } from '../models';
 import { checkForLiveGame, getSchedule } from '../services/mlbApi';
 import { findRelevantGames, reduceScheduleToGames } from '../utils';
 import useLocalStorage from './useLocalStorage';
@@ -43,7 +43,7 @@ interface StoredSchedule {
   data: GameDate[];
 }
 
-function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
+function useTeamSchedule(team: Team): useTeamScheduleReturnType {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [schedule, setSchedule] = useLocalStorage<StoredSchedule | null>(
@@ -158,7 +158,10 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
 
     fetchData();
     const intervalId = setInterval(fetchData, 60000);
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      setSchedule(null);
+    };
   }, [team, schedule, setSchedule, updateStoredSchedule]);
 
   return {

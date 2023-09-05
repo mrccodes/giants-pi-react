@@ -7,6 +7,9 @@ interface DropdownProps
   onSelect: (selectedOption: DropdownOption) => void;
   hideDefaultOption?: boolean;
   options: DropdownOption[];
+  dropdownButtonId?: string;
+  dropdownButtonClass?: string;
+  dropdownOptionClass?: string;
 }
 
 /**
@@ -19,6 +22,9 @@ const Dropdown = ({
   onSelect,
   hideDefaultOption = false,
   className,
+  dropdownButtonClass,
+  dropdownButtonId,
+  dropdownOptionClass,
   ...rest
 }: DropdownProps) => {
   const defaultValue: DropdownOption = hideDefaultOption
@@ -28,17 +34,20 @@ const Dropdown = ({
   const [selectedOption, setSelectedOption] =
     useState<DropdownOption>(defaultValue);
 
-  const handleSelect = (option: { value: string; label: string }) => {
+  const handleSelect = (option: { value: number | string; label: string }) => {
     onSelect(option);
     setSelectedOption(option);
     setIsOpen(false);
   };
 
   return (
-    <div {...rest} className={`relative max-w-md mx-auto ${className}`}>
+    <div {...rest} className={`relative max-w-md mx-auto ${className ?? ''}`}>
       <div
+        {...(dropdownButtonId ? { id: dropdownButtonId } : {})}
         onClick={() => setIsOpen(!isOpen)}
-        className="cursor-pointer border text-base bg-slate-700 p-2 rounded shadow"
+        className={`cursor-pointer border text-base bg-slate-700 p-2 rounded shadow ${
+          dropdownButtonClass ?? ''
+        }`}
       >
         {selectedOption.label}
       </div>
@@ -58,8 +67,15 @@ const Dropdown = ({
           {options.map((option, index) => (
             <div
               key={index}
+              id={
+                typeof option.value === 'number'
+                  ? option.value.toString()
+                  : option.value
+              }
               onClick={() => handleSelect(option)}
-              className="text-base cursor-pointer p-2 hover:bg-gray-700"
+              className={`text-base cursor-pointer p-2 hover:bg-gray-700 ${
+                dropdownOptionClass ?? ''
+              }`}
             >
               {option.label}
             </div>

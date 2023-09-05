@@ -1,4 +1,4 @@
-import { Game } from 'mlb-api';
+import { Game } from 'mlb-api/schedule';
 import moment from 'moment';
 
 import { GameScore } from '../models';

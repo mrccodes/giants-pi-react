@@ -1,4 +1,4 @@
-import { LiveFeedData } from 'mlb-api';
+import { LiveFeedData } from 'mlb-api/live-feed';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { isAxiosError } from 'axios';
 

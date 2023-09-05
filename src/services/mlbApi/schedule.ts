@@ -1,9 +1,9 @@
 import moment from 'moment';
 import axios from 'axios';
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
 import { MLB_API_BASE_URL } from '.';
-import { MLBTeam } from '../../models';
 
 const apiDateFormat = 'YYYY-MM-DD';
 
@@ -20,7 +20,7 @@ interface getScheduleReturnType {
  * Returns 2 weeks of teams schedule starting from 1 week ago, to 1 week away by default
  */
 export const getSchedule = async (
-  team: MLBTeam,
+  team: Team,
   startDate: moment.Moment = moment().subtract(1, 'week'),
   endDate: moment.Moment = moment().add(1, 'week'),
 ): Promise<getScheduleReturnType> => {
@@ -45,7 +45,7 @@ export const checkForLiveGame = async (
   /**
    * The team to fetch the schedule for
    */
-  team: MLBTeam,
+  team: Team,
   /**
    * Optionally use a prefetched schedule
    */

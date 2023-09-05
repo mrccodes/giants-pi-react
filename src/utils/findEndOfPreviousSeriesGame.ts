@@ -1,6 +1,6 @@
-import { Game } from 'mlb-api';
+import { Game } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
-import { MLBTeam } from '../models';
 import findOpposingTeam from './findOpposingTeam';
 
 /**
@@ -13,7 +13,7 @@ import findOpposingTeam from './findOpposingTeam';
  * @returns
  */
 const findEndOfPreviousSeriesGame = (
-  selectedTeam: MLBTeam,
+  selectedTeam: Team,
   currentGame: Game,
   allGames: Game[],
 ): Game => {

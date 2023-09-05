@@ -1,4 +1,4 @@
-import { LiveFeedData } from 'mlb-api';
+import { LiveFeedData } from 'mlb-api/live-feed';
 import axios from 'axios';
 
 import { MLB_API_BASE_URL } from '.';

@@ -1,4 +1,4 @@
-import { Team, Game } from 'mlb-api';
+import { Team, Game } from 'mlb-api/schedule';
 
 /**
  * Gets the winning team of a game

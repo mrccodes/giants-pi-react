@@ -1,4 +1,4 @@
-import { Count } from 'mlb-api';
+import { Count } from 'mlb-api/live-feed';
 import { HTMLProps } from 'react';
 
 interface CountDisplayProps extends HTMLProps<HTMLDivElement> {

@@ -1,39 +1,17 @@
-import { useEffect, useState, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
+import { Team } from 'mlb-api/teams';
 
 import { ErrorMessage, LiveGame, LoadingSpinner } from '../components';
-import { MLBTeam } from '../models';
 import { NextGameCountdown, LiveFeed, CurrentSeries, PreviousSeries } from '.';
 import { useTeamSchedule } from '../hooks';
 
 interface DashboardProps {
-  team: MLBTeam;
+  team: Team;
 }
 
 const Dashboard = ({ team }: DashboardProps) => {
-  const [error, setError] = useState<string | null>(null);
-  const {
-    liveGame,
-    nextGame,
-    schedule,
-    loading,
-    error: scheduleError,
-  } = useTeamSchedule(team);
-
-  useEffect(() => {
-    if (team.logo.logoPath === '') {
-      setError('Error initializing app for selected team.');
-    }
-
-    () => setError(null);
-  }, [team]);
-
-  useEffect(() => {
-    if (team.logo.logoPath === '') {
-      setError('Error initializing app for selected team.');
-    }
-
-    () => setError(null);
-  }, [team]);
+  const { liveGame, nextGame, schedule, loading, error } =
+    useTeamSchedule(team);
 
   if (loading) {
     return (
@@ -45,8 +23,8 @@ const Dashboard = ({ team }: DashboardProps) => {
     );
   }
 
-  return error || scheduleError ? (
-    <ErrorMessage message={error ?? scheduleError ?? 'Unknown error.'} />
+  return error ? (
+    <ErrorMessage message={error ?? 'Unknown error.'} />
   ) : (
     <div className="px-6">
       {liveGame && (
@@ -61,11 +39,7 @@ const Dashboard = ({ team }: DashboardProps) => {
         {liveGame ? (
           <LiveGame game={liveGame} team={team} />
         ) : (
-          <NextGameCountdown
-            team={team}
-            nextGame={nextGame}
-            error={scheduleError}
-          />
+          <NextGameCountdown team={team} nextGame={nextGame} />
         )}
         <CurrentSeries
           loading={!(schedule && nextGame && !loading)}

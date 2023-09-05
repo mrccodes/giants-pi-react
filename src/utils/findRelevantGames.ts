@@ -1,4 +1,4 @@
-import { GameDate, Game } from 'mlb-api';
+import { GameDate, Game } from 'mlb-api/schedule';
 import moment from 'moment';
 
 import reduceScheduleToGames from './reduceScheduleToGames';

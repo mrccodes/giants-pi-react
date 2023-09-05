@@ -14,6 +14,7 @@ import logError from './logError';
 import ensureMinArrayLength from './ensureArrayMinLength';
 import generateKey from './generateKey';
 import { isCompletedScheduleGame } from './typechecks/mlb-api';
+import getTeamLogo from './getTeamLogo';
 export {
   verifyVector3D,
   generateKey,
@@ -30,5 +31,6 @@ export {
   sortGamesByDate,
   isLiveFeedData,
   isCompletedScheduleGame,
+  getTeamLogo,
   logError,
 };

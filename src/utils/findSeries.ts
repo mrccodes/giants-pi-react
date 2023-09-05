@@ -1,7 +1,7 @@
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
 import { findOpposingTeam, reduceScheduleToGames } from './index';
-import { MLBTeam } from '../models';
 
 /**
  *
@@ -12,11 +12,12 @@ import { MLBTeam } from '../models';
  */
 const findSeries = (
   schedule: GameDate[],
-  selectedTeam: MLBTeam,
+  selectedTeam: Team,
   targetGame: Game,
 ): Game[] => {
   const games: Game[] = [];
   const allGames: Game[] = reduceScheduleToGames(schedule);
+  console.log({ schedule }, { selectedTeam }, { targetGame });
 
   const targetGameIdx = allGames.findIndex(
     (g) => g.gameGuid === targetGame.gameGuid,

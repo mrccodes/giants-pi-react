@@ -1,24 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 import {
   AMPM,
-  ActionPlayEvent,
   BaseData,
   BasicStatus,
-  CompletedGame,
+  LabelValue,
+  Person,
+  Position,
+  Record,
+  RecordWithTies,
+  UsedRemaining,
+} from 'mlb-api';
+import {
+  ActionPlayEvent,
   Count,
   Credit,
-  Game,
-  GameStatus,
   Hit,
-  LabelValue,
   LiveFeedData,
   LiveFeedGame,
   LiveInningData,
   LiveTeamData,
   LiveTeamDataPlayer,
   NoPitchPlayEvent,
-  Person,
   PickoffPlayEvent,
   PitchData,
   PitchPlayEvent,
@@ -28,18 +30,15 @@ import {
   PlayEvent,
   PlayEventBase,
   Player,
-  Position,
-  Record,
-  RecordWithTies,
   RunnerData,
   SeasonStats,
   SpringLeague,
   StepoffPlayEvent,
-  TeamFullData,
+  LiveFeedTeamData,
   TeamScoreData,
-  UsedRemaining,
   VenueExtended,
-} from 'mlb-api';
+} from 'mlb-api/live-feed';
+import { CompletedGame, Game, GameStatus } from 'mlb-api/schedule';
 
 import { DEBUG_MODE } from '../../config';
 
@@ -287,8 +286,8 @@ const isGameData = (obj: any): obj is LiveFeedData['gameData'] => {
     isPerson(obj?.probablePitchers?.away) &&
     isGameDataReview(obj?.review) &&
     isGameStatus(obj?.status) &&
-    isTeamFullData(obj?.teams.home) &&
-    isTeamFullData(obj?.teams.away) &&
+    isLiveFeedTeamData(obj?.teams.home) &&
+    isLiveFeedTeamData(obj?.teams.away) &&
     isVenueExtended(obj?.venue) &&
     obj?.weather &&
     typeof obj?.weather?.condition === 'string' &&
@@ -332,7 +331,7 @@ const isGameDataReview = (
   return isValid;
 };
 
-export const isTeamFullData = (input: any): input is TeamFullData => {
+export const isLiveFeedTeamData = (input: any): input is LiveFeedTeamData => {
   const isValid =
     typeof input.abbreviation === 'string' &&
     typeof input.active === 'boolean' &&
@@ -373,7 +372,10 @@ export const isTeamFullData = (input: any): input is TeamFullData => {
     isBaseData(input.venue);
   !isValid &&
     DEBUG_MODE &&
-    console.error('isTeamFullData -> Error: Invalid object passed \n\n', input);
+    console.error(
+      'isLiveFeedTeamData -> Error: Invalid object passed \n\n',
+      input,
+    );
   return isValid;
 };
 

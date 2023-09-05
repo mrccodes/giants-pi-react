@@ -1,8 +1,9 @@
-import { Game } from 'mlb-api';
+import { Game } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 import { useState } from 'react';
 
 import { findOpposingTeam } from '../utils';
-import { GameScore, MLBTeam } from '../models';
+import { GameScore } from '../models';
 import { getScore } from '../utils';
 import abbreviateTeam from '../utils/abbreviateTeam';
 import Scorecard from './Scorecard';
@@ -10,7 +11,7 @@ import Widget from './Widget';
 
 interface LiveGameProps extends React.HTMLProps<HTMLDivElement> {
   game: Game;
-  team: MLBTeam;
+  team: Team;
 }
 
 const LiveGame = ({ game, team, ...rest }: LiveGameProps) => {

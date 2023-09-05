@@ -1,103 +1,72 @@
-declare module 'mlb-api' {
-  type YN = 'Y' | 'N';
-  type YesNo = 'yes' | 'no';
-  type DayNight = 'day' | 'night';
-  type AMPM = 'AM' | 'PM';
-  interface BasicStatus {
-    description: string;
-    code: string;
-  }
-  interface LabelValue {
-    label: string;
-    value: string;
-  }
-  interface BaseData {
-    id: number;
-    name: string;
-    link: string;
-  }
-  interface Record {
-    wins: number;
-    losses: number;
-    pct: string;
-  }
-  interface Position {
-    abbreviation: string;
-    code: string;
-    name: string;
-    type: string;
-  }
-  interface RecordWithTies extends LeagueRecord {
-    ties: number;
-  }
-  export interface GameStatus {
-    abstractGameCode: string;
-    abstractGameState: string;
-    codedGameState: string;
-    detailedState: string;
-    startTimeTBD: boolean;
-    statusCode: string;
-  }
-  export interface Team {
-    isWinner: boolean;
-    leagueRecord: Record;
-    score: number;
-    seriesNumber: number;
-    splitSquad: boolean;
-    team: BaseData;
-  }
-  export interface Game {
-    calendarEventId: string;
-    content: { link: string };
-    dayNight: DayNight;
+declare module 'mlb-api/live-feed' {
+  import type { YN, AMPM, DayNight, UsedRemaining, Person } from 'mlb-api';
+  interface LiveFeedGame {
+    calendarEventID: string;
     doubleHeader: YN;
-    gameDate: string;
-    gameGuid: string;
     gameNumber: number;
-    gamePk: number;
-    gameType: string;
-    gamedayType: string;
-    gamesInSeries: number;
-    ifNecessary: string;
-    ifNecessaryDescription: string;
-    inningBreakLength: number;
-    isTie: boolean;
-    link: string;
-    officialDate: string;
-    publicFacing: boolean;
-    recordSource: string;
-    reverseHomeAwayStatus: boolean;
-    scehduledInnings: number;
+    id: string;
+    pk: number;
     season: string;
     seasonDisplay: string;
-    seriesDescription: string;
-    seriesGameNumber: number;
-    status: GameStatus;
-    teams: { away: Team; home: Team };
-    tiebreaker: YN;
-    venue: BaseData;
+    tiebeaker: YN;
+    type: string;
   }
-  export interface GameDate {
-    date: string;
-    events: unknown[];
-    games: Game[];
-    totalEvents: number;
-    totalGames: number;
-    totalGamesInProgress: number;
-    totalItems: number;
-  }
-  interface CompletedGameStatus extends GameStatus {
-    abstractGameState: 'Final';
-  }
-  export interface CompletedGame extends Game {
-    status: CompletedGameStatus;
+
+  interface PlayData {
+    about: {
+      atBatIndex: number;
+      captivatingIndex: number;
+      endTime: string;
+      halfInning: string;
+      hasOut: boolean;
+      hasReview?: boolean;
+      inning: number;
+      isComplete: boolean;
+      isScoringPlay: boolean;
+      isTopInning: boolean;
+      startTime: string;
+    };
+    actionIndex: number[];
+    atBatIndex: number;
+    count: Count;
+    matchup: {
+      batSide: BasicStatus;
+      batter: Person;
+      batterHotColdZones: any[];
+      pitchHand: BasicStatus;
+      pitcher: Person;
+      pitcherHotColdZones: any[];
+      postOnThird?: Person;
+      postOnFirst?: Person;
+      postOnSecond?: Person;
+      splits: {
+        batter: string;
+        menOnBase: string;
+        pitcher: string;
+      };
+    };
+    pitchIndex: number[];
+    playEndTime: string;
+    playEvents: [];
+    result: {
+      awayScore: number;
+      description?: string;
+      event?: string;
+      eventType?: string;
+      homeScore: number;
+      isOut?: boolean;
+      rbi?: number;
+      type: string;
+    };
+    runnerIndex: number[];
+    runners: RunnerData[];
   }
 
   interface SpringLeague extends BaseData {
     abbreviation: string;
   }
 
-  export interface SeasonStats {
+  interface SeasonStats {
     batting: {
       atBats: number;
       atBatsPerHomeRun: string;
@@ -206,188 +175,19 @@ declare module 'mlb-api' {
     };
   }
 
-  interface TeamFullData {
-    abbreviation: string;
-    active: boolean;
-    allStarStatus: YN;
-    clubName: string;
-    division: BaseData;
-    fileCode: string;
-    firstYearOfPlay: string;
-    franchiseName: string;
-    id: number;
-    league: BaseData;
-    link: string;
-    locationName: string;
-    name: string;
-    record: {
-      conferenceGamesBack: string;
-      divisionGamesBack: string;
-      divisionLeader: boolean;
-      gamesPlayed: number;
-      leagueGamesBack: string;
-      leagueRecord: RecordWithTies;
-      losses: number;
-      records: object;
-      sportGamesBack: string;
-      springLeaguesGamesBack: string;
-      wildCardGamesBack: string;
-      winningPercentage: string;
-      wins: number;
-    };
-    season: number;
-    shortName: string;
-    sport: BaseData;
-    springLeague: SpringLeague;
-    springVenue: {
-      id: number;
-      link: string;
-    };
-    teamCode: string;
-    teamName: string;
-    venue: BaseData;
-  }
-
-  interface Player {
-    active: boolean;
-    batSide: {
-      code: 'L' | 'R' | 'S';
-      description: 'Left' | 'Right' | 'Dwitch';
-    };
-    birthCity: string;
-    birthCountry: string;
-    birthDate: string;
-    birthStateProvince: string;
-    boxscoreName: string;
-    currentAge: number;
-    draftYear: number;
-    firstLastName: string;
-    firstName: string;
-    fullFMLName: string;
-    fullLFMName: string;
-    fullName: string;
-    gender: 'M' | 'F';
-    height: string;
-    id: number;
-    initLastName: string;
-    isPlayer: boolean;
-    isVerified: boolean;
-    lastFirstName: string;
-    lastInitName: string;
-    lastName: string;
-    link: string;
-    middleName: string;
-    mlbDebutDate?: string;
-    nameFirstLast: string;
-    nameSlug: string;
-    nameMatrilineal?: string;
-    nickName?: string;
-    pitchHand: BasicStatus;
-    primaryNumber: string;
-    pronunciation?: string;
-    primaryPosition: Position;
-    strikeZoneBottom: number;
-    strikeZoneTop: number;
-    useName?: string;
-    useLastName?: string;
-    weight: number;
-  }
-  interface Person {
-    fullName: string;
-    id: number;
-    link: string;
-  }
-  interface UsedRemaining {
-    used: number;
-    remaining: number;
-  }
-  interface Official {
-    official: Person;
-    officialType: string;
-  }
-  interface LiveTeamDataPlayer {
-    gameStatus: {
-      isCurrentBatter: boolean;
-      isCurrentPitcher: boolean;
-      isOnBench: boolean;
-      isSubstitute: boolean;
-    };
-    jerseyNumber: string;
-    parentTeamId: number;
-    person: Person;
-    position: Position;
-    seasonStats: SeasonStats;
-    stats: {
-      // @TODO try to find types from API
-      // these empty values may be only available with api creds (stat cast data)
-      fielding: object;
-      batting: object;
-      pitching: object;
-    };
-    status: BasicStatus;
-  }
-  interface VenueExtended extends BaseData {
-    active: boolean;
-    fieldInfo: {
-      capacity: number;
-      center: number;
-      leftCenter: number;
-      leftLine: number;
-      rightCenter: number;
-      rightLine: number;
-      roofType: string;
-      turfType: string;
-    };
-    location: {
-      address1: string;
-      azimuthAngle: number;
-      city: string;
-      country: string;
-      defaultCoordinates: {
-        latitude: number;
-        longitude: number;
-      };
-      elevation: number;
-      phone: string;
-      postalCode: string;
-      state: string;
-      stateAbbrev: string;
-    };
-    season: string;
-    timeZone: {
-      id: string;
-      offset: number;
-      offsetAtGameTime: string;
-      tz: string;
-    };
-  }
-  interface LiveTeamData {
-    batters: number[];
-    battingOrder: number[];
-    bench: number[];
-    bullpen: number[];
-    info: {
-      title: string;
-      fieldList: LabelValue[];
-    };
-    note: LabelValue[];
-    pitchers: number[];
-    players: {
-      [key: string]: LiveTeamDataPlayer;
-    };
+  interface Hit {
+    batter: Person;
+    coordinates: { x: number; y: number };
+    description: string;
+    inning: number;
+    pitcher: Person;
     team: {
       allStarStatus: YN;
       id: number;
-      link: string;
       name: string;
       springLeague: SpringLeague;
     };
-  }
-
-  interface Count {
-    balls: number;
-    strikes: number;
-    outs: number;
+    type: string;
   }
 
   interface PlayEventBase {
@@ -481,6 +281,55 @@ declare module 'mlb-api' {
     };
   }
 
+  interface TeamScoreData {
+    hits: number;
+    runs: number;
+    errors: number;
+    leftOnBase: number;
+  }
+  interface LiveInningData {
+    num: number;
+    ordinalNum: string;
+    home: TeamScoreData;
+    away: TeamScoreData;
+  }
+  interface Credit {
+    credit: string;
+    player: {
+      id: string;
+      link: string;
+    };
+    position: Position;
+  }
+
+  interface Count {
+    balls: number;
+    strikes: number;
+    outs: number;
+  }
+
+  interface RunnerData {
+    credits: Credit[];
+    details: {
+      event: string;
+      eventType: string;
+      isScoringEvent: boolean;
+      movementReason: string | null;
+      playIndex: number;
+      rbi: boolean;
+      responsiblePitcher: Person | null;
+      runner: Person;
+      teamUnearned: boolean;
+    };
+    movement: {
+      end: string | null;
+      isOut: boolean;
+      originBase: string | null;
+      outBase: string | null;
+      outNumber: number;
+      start: string | null;
+    };
+  }
   interface ActionPlayEvent extends PlayEventBase {
     type: 'action';
     player?: {
@@ -525,61 +374,91 @@ declare module 'mlb-api' {
     | StepoffPlayEvent
     | PickoffPlayEvent;
 
-  interface TeamScoreData {
-    hits: number;
-    runs: number;
-    errors: number;
-    leftOnBase: number;
-  }
-  interface LiveInningData {
-    num: number;
-    ordinalNum: string;
-    home: TeamScoreData;
-    away: TeamScoreData;
-  }
-  interface Credit {
-    credit: string;
-    player: {
-      id: string;
-      link: string;
+  interface LiveTeamData {
+    batters: number[];
+    battingOrder: number[];
+    bench: number[];
+    bullpen: number[];
+    info: {
+      title: string;
+      fieldList: LabelValue[];
     };
-    position: Position;
-  }
-  interface RunnerData {
-    credits: Credit[];
-    details: {
-      event: string;
-      eventType: string;
-      isScoringEvent: boolean;
-      movementReason: string | null;
-      playIndex: number;
-      rbi: boolean;
-      responsiblePitcher: Person | null;
-      runner: Person;
-      teamUnearned: boolean;
+    note: LabelValue[];
+    pitchers: number[];
+    players: {
+      [key: string]: LiveTeamDataPlayer;
     };
-    movement: {
-      end: string | null;
-      isOut: boolean;
-      originBase: string | null;
-      outBase: string | null;
-      outNumber: number;
-      start: string | null;
-    };
-  }
-  interface Hit {
-    batter: Person;
-    coordinates: { x: number; y: number };
-    description: string;
-    inning: number;
-    pitcher: Person;
     team: {
       allStarStatus: YN;
       id: number;
+      link: string;
       name: string;
       springLeague: SpringLeague;
     };
-    type: string;
+  }
+
+  interface LiveTeamDataPlayer {
+    gameStatus: {
+      isCurrentBatter: boolean;
+      isCurrentPitcher: boolean;
+      isOnBench: boolean;
+      isSubstitute: boolean;
+    };
+    jerseyNumber: string;
+    parentTeamId: number;
+    person: Person;
+    position: Position;
+    seasonStats: SeasonStats;
+    stats: {
+      // @TODO try to find types from API
+      // these empty values may be only available with api creds (stat cast data)
+      fielding: object;
+      batting: object;
+      pitching: object;
+    };
+    status: BasicStatus;
+  }
+
+  interface LiveFeedTeamData {
+    abbreviation: string;
+    active: boolean;
+    allStarStatus: YN;
+    clubName: string;
+    division: BaseData;
+    fileCode: string;
+    firstYearOfPlay: string;
+    franchiseName: string;
+    id: number;
+    league: BaseData;
+    link: string;
+    locationName: string;
+    name: string;
+    record: {
+      conferenceGamesBack: string;
+      divisionGamesBack: string;
+      divisionLeader: boolean;
+      gamesPlayed: number;
+      leagueGamesBack: string;
+      leagueRecord: RecordWithTies;
+      losses: number;
+      records: object;
+      sportGamesBack: string;
+      springLeaguesGamesBack: string;
+      wildCardGamesBack: string;
+      winningPercentage: string;
+      wins: number;
+    };
+    season: number;
+    shortName: string;
+    sport: BaseData;
+    springLeague: SpringLeague;
+    springVenue: {
+      id: number;
+      link: string;
+    };
+    teamCode: string;
+    teamName: string;
+    venue: BaseData;
   }
 
   interface PlayByInning {
@@ -592,69 +471,54 @@ declare module 'mlb-api' {
     startIndex: number;
     top: number[];
   }
-  interface PlayData {
-    about: {
-      atBatIndex: number;
-      captivatingIndex: number;
-      endTime: string;
-      halfInning: string;
-      hasOut: boolean;
-      hasReview?: boolean;
-      inning: number;
-      isComplete: boolean;
-      isScoringPlay: boolean;
-      isTopInning: boolean;
-      startTime: string;
-    };
-    actionIndex: number[];
-    atBatIndex: number;
-    count: Count;
-    matchup: {
-      batSide: BasicStatus;
-      batter: Person;
-      batterHotColdZones: any[];
-      pitchHand: BasicStatus;
-      pitcher: Person;
-      pitcherHotColdZones: any[];
-      postOnThird?: Person;
-      postOnFirst?: Person;
-      postOnSecond?: Person;
-      splits: {
-        batter: string;
-        menOnBase: string;
-        pitcher: string;
-      };
-    };
-    pitchIndex: number[];
-    playEndTime: string;
-    playEvents: [];
-    result: {
-      awayScore: number;
-      description?: string;
-      event?: string;
-      eventType?: string;
-      homeScore: number;
-      isOut?: boolean;
-      rbi?: number;
-      type: string;
-    };
-    runnerIndex: number[];
-    runners: RunnerData[];
+  interface Official {
+    official: Person;
+    officialType: string;
   }
 
-  interface LiveFeedGame {
-    calendarEventID: string;
-    doubleHeader: YN;
-    gameNumber: number;
-    id: string;
-    pk: number;
-    season: string;
-    seasonDisplay: string;
-    tiebeaker: YN;
-    type: string;
+  interface Player extends Person {
+    active: boolean;
+    batSide: {
+      code: 'L' | 'R' | 'S';
+      description: 'Left' | 'Right' | 'Switch';
+    };
+    birthCity: string;
+    birthCountry: string;
+    birthDate: string;
+    birthStateProvince: string;
+    boxscoreName: string;
+    currentAge: number;
+    draftYear: number;
+    firstLastName: string;
+    firstName: string;
+    fullFMLName: string;
+    fullLFMName: string;
+    gender: 'M' | 'F';
+    height: string;
+    initLastName: string;
+    isPlayer: boolean;
+    isVerified: boolean;
+    lastFirstName: string;
+    lastInitName: string;
+    lastName: string;
+    middleName: string;
+    mlbDebutDate?: string;
+    nameFirstLast: string;
+    nameSlug: string;
+    nameMatrilineal?: string;
+    nickName?: string;
+    pitchHand: BasicStatus;
+    primaryNumber: string;
+    pronunciation?: string;
+    primaryPosition: Position;
+    strikeZoneBottom: number;
+    strikeZoneTop: number;
+    useName?: string;
+    useLastName?: string;
+    weight: number;
   }
 
-  export interface LiveFeedData {
+  interface LiveFeedData {
     copyright: string;
     gameData: {
       alerts: [];
@@ -702,8 +566,8 @@ declare module 'mlb-api' {
       };
       status: GameStatus;
       teams: {
-        home: TeamFullData;
-        away: TeamFullData;
+        home: LiveFeedTeamData;
+        away: LiveFeedTeamData;
       };
       venue: VenueExtended;
       weather: {
@@ -787,6 +651,42 @@ declare module 'mlb-api' {
       logicalEvents: string[];
       timeStamp: string;
       wait: number;
+    };
+  }
+
+  interface VenueExtended extends BaseData {
+    active: boolean;
+    fieldInfo: {
+      capacity: number;
+      center: number;
+      leftCenter: number;
+      leftLine: number;
+      rightCenter: number;
+      rightLine: number;
+      roofType: string;
+      turfType: string;
+    };
+    location: {
+      address1: string;
+      azimuthAngle: number;
+      city: string;
+      country: string;
+      defaultCoordinates: {
+        latitude: number;
+        longitude: number;
+      };
+      elevation: number;
+      phone: string;
+      postalCode: string;
+      state: string;
+      stateAbbrev: string;
+    };
+    season: string;
+    timeZone: {
+      id: string;
+      offset: number;
+      offsetAtGameTime: string;
+      tz: string;
     };
   }
 }

@@ -1,11 +1,11 @@
-import { Game } from 'mlb-api';
+import { Game } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
-import { MLBTeam } from '../models';
 import { getScore, getWinner, isCompletedScheduleGame } from '../utils';
 import GamePreview from './GamePreview';
 
 interface SeriesPreviewProps {
-  selectedTeam: MLBTeam;
+  selectedTeam: Team;
   series: Game[];
 }
 const SeriesPreview = ({ selectedTeam, series }: SeriesPreviewProps) => {

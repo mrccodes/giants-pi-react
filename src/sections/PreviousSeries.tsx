@@ -1,11 +1,11 @@
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
 import { SeriesData, Widget } from '../components';
-import { MLBTeam } from '../models';
 import { findEndOfPreviousSeriesGame, reduceScheduleToGames } from '../utils';
 
 interface PreviousSeriesProps {
-  team: MLBTeam;
+  team: Team;
   schedule?: GameDate[];
   nextGame?: Game;
   liveGame?: Game;

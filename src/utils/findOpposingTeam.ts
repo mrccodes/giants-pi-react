@@ -1,6 +1,5 @@
-import { Game, Team } from 'mlb-api';
-
-import { MLBTeam } from '../models';
+import { Game, Team as ScheduleTeam } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
 /**
  * Gets the team scheduled to play in game who is not the selected team
@@ -10,8 +9,8 @@ import { MLBTeam } from '../models';
  */
 const findOpposingTeam = (
   game: Game,
-  selectedTeam: MLBTeam,
-): Team | undefined => {
+  selectedTeam: Team,
+): ScheduleTeam | undefined => {
   const team = Object.values(game.teams).find(
     (team) => team.team.id !== Number(selectedTeam.id),
   );

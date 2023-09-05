@@ -1,13 +1,13 @@
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
-import { MLBTeam } from '../models';
 import { abbreviateTeam } from '../utils';
 import { Scorecard, Widget, SeriesPreview } from '.';
 import { useSeriesData } from '../hooks';
 
 interface SeriesDataProps extends React.HTMLProps<HTMLDivElement> {
   schedule: GameDate[];
-  selectedTeam: MLBTeam;
+  selectedTeam: Team;
   targetGame: Game;
   label: string;
   loading?: boolean;

@@ -7,6 +7,7 @@ import {
   MenOnBase,
   Boxscore,
   CountDisplay,
+  PlayByPlay,
 } from '../components';
 import { MLBTeam } from '../models';
 
@@ -43,7 +44,7 @@ const LiveFeed = ({ gamePk, team, ...rest }: LiveFeedProps) => {
           <>
             <Boxscore selectedTeam={team} data={liveData} />
             <CountDisplay
-              className="pt-4"
+              className="pt-4 shrink-0"
               count={{
                 balls: liveData.linescore.balls,
                 strikes: liveData.linescore.strikes,
@@ -51,11 +52,12 @@ const LiveFeed = ({ gamePk, team, ...rest }: LiveFeedProps) => {
               }}
             />
             <MenOnBase
-              className="mt-7 mx-2"
+              className="mt-7 mx-2 shrink-0"
               first={liveData.plays.currentPlay.matchup?.postOnFirst}
               second={liveData.plays.currentPlay.matchup?.postOnSecond}
               third={liveData.plays.currentPlay.matchup?.postOnThird}
             />
+            <PlayByPlay data={liveData.plays.allPlays} />
           </>
         )}
       </div>

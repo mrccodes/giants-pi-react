@@ -1,11 +1,11 @@
-import { LiveFeedData } from 'mlb-api';
+import { LiveFeedData } from 'mlb-api/live-feed';
+import { Team } from 'mlb-api/teams';
 
-import { MLBTeam } from '../models';
 import { abbreviateTeam, ensureMinArrayLength, generateKey } from '../utils';
 
-interface BoxscoreProps {
+interface BoxscoreProps extends Omit<React.HTMLProps<HTMLDivElement>, 'data'> {
   data: LiveFeedData['liveData'];
-  selectedTeam: MLBTeam;
+  selectedTeam: Team;
 }
 
 /**
@@ -21,14 +21,22 @@ interface BoxscoreProps {
  *  SD | 2 | 0 | 0 | 4 | 1 | 0 | 3 | 0 | 1 |
  *     -------------------------------------
  */
-const Boxscore = ({ data, selectedTeam }: BoxscoreProps): React.ReactNode => {
+const Boxscore = ({
+  data,
+  selectedTeam,
+  className,
+  ...rest
+}: BoxscoreProps): React.ReactNode => {
   const innings = ensureMinArrayLength(data.linescore.innings, 9, null);
   const selectedTeamLoc =
     data.boxscore.teams.home.team.name === selectedTeam.name ? 'home' : 'away';
   const opposingTeamLoc =
     data.boxscore.teams.home.team.name === selectedTeam.name ? 'away' : 'home';
   return (
-    <div className="flex flex-nowrap text-lg font-light">
+    <div
+      {...rest}
+      className={`flex flex-nowrap text-lg font-light ${className}`}
+    >
       <div className="grid-cols-1 grid-rows-3">
         <div className="w-8 text-sm">&nbsp;</div>
         <div className="w-8 aspect-square mr-2 flex items-center justify-center">

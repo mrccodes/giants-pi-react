@@ -32,11 +32,7 @@ const TeamSelect = ({ onSelect }: TeamSelectProps) => {
   }, []);
 
   const onTeamSelect = (option: DropdownOption) => {
-    const val = option.value;
-    console.log({ val }, { teamsResponse });
-    const selected = findTeamById(option.value, teamsResponse);
-    console.log(selected);
-    onSelect(selected);
+    onSelect(findTeamById(option.value, teamsResponse));
   };
 
   if (error) {

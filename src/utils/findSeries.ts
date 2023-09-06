@@ -17,7 +17,6 @@ const findSeries = (
 ): Game[] => {
   const games: Game[] = [];
   const allGames: Game[] = reduceScheduleToGames(schedule);
-  console.log({ schedule }, { selectedTeam }, { targetGame });
 
   const targetGameIdx = allGames.findIndex(
     (g) => g.gameGuid === targetGame.gameGuid,

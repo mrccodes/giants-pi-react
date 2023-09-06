@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
-import { MLBTeam } from '../models';
 import { findOpposingTeam, findSeries, findSeriesScore } from '../utils';
 
 interface useScheduleDataReturnType {
@@ -13,7 +13,7 @@ interface useScheduleDataReturnType {
 
 const useSeriesData = (
   schedule: GameDate[],
-  selectedTeam: MLBTeam,
+  selectedTeam: Team,
   targetGame: Game,
 ): useScheduleDataReturnType => {
   const [seriesSchedule, setSeriesSchedule] = useState<Game[]>(

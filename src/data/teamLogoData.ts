@@ -1,19 +1,20 @@
-import { MLBTeam } from '../models';
+import TeamLogoData from '../models/TeamLogoData';
 
-export const MLBTeams: MLBTeam[] = [
+const teamLogoDatal: TeamLogoData[] = [
   {
-    id: '137',
+    id: 137,
     logo: {
       logoPath: 'src/assets/teamLogos/sf.stl',
       logoColor: 0xfd5a1e,
       logoScale: 0.06,
     },
-    name: 'San Francisco Giants',
     camera: {
       cameraPosition: { x: 0, y: 2, z: 10 },
     },
   },
 ];
+
+export default teamLogoDatal;
 
 // @TODO
 // constTeamsThatNeedSTLs: MLBTeam[] = [

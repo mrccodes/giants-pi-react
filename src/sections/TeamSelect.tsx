@@ -1,27 +1,47 @@
 import { useState, useEffect } from 'react';
+import { Team } from 'mlb-api/teams';
 
-import { Dropdown, LoadingSpinner } from '../components';
-import { MLBTeams } from '../data';
-import { DropdownOption, MLBTeam } from '../models';
+import { Dropdown, ErrorMessage, LoadingSpinner } from '../components';
+// import { MLBTeams } from '../data';
+import { DropdownOption } from '../models';
+import { getTeams } from '../services/mlbApi';
 
 interface TeamSelectProps {
   onSelect:
-    | React.Dispatch<React.SetStateAction<MLBTeam | null>>
-    | ((val: MLBTeam | null) => void);
+    | React.Dispatch<React.SetStateAction<Team | null>>
+    | ((val: Team | null) => void);
 }
 
 const TeamSelect = ({ onSelect }: TeamSelectProps) => {
   const [dropdownOptions, setDropdownOptions] = useState<DropdownOption[]>([]);
+  const [teamsResponse, setTeamsResponse] = useState<Team[]>([]);
+  const [error, setError] = useState<string | null | undefined>(undefined);
 
   useEffect(() => {
-    const options = createMLBDropdownOptions(MLBTeams);
-    setDropdownOptions(options);
+    const init = async () => {
+      getTeams()
+        .then((res) => {
+          setTeamsResponse(res);
+          setDropdownOptions(createMLBDropdownOptions(res));
+        })
+        .catch((err) => {
+          setError(`Error fetching teams: ${err}`);
+        });
+    };
+    init();
   }, []);
 
   const onTeamSelect = (option: DropdownOption) => {
-    const selected = findTeamById(option.value, MLBTeams);
-    onSelect(selected);
+    onSelect(findTeamById(option.value, teamsResponse));
   };
+
+  if (error) {
+    return (
+      <div className="w-full h-full inset-0">
+        <ErrorMessage message={error} />
+      </div>
+    );
+  }
 
   return dropdownOptions.length ? (
     <div
@@ -29,7 +49,11 @@ const TeamSelect = ({ onSelect }: TeamSelectProps) => {
       id="teamSelect"
     >
       <h1 className="text-4xl mb-3 ">Welcome, select your team!</h1>
-      <Dropdown onSelect={onTeamSelect} options={dropdownOptions}></Dropdown>
+      <Dropdown
+        dropdownButtonId="teamDropdown"
+        onSelect={onTeamSelect}
+        options={dropdownOptions}
+      ></Dropdown>
     </div>
   ) : (
     <LoadingSpinner
@@ -39,10 +63,10 @@ const TeamSelect = ({ onSelect }: TeamSelectProps) => {
   );
 };
 
-const createMLBDropdownOptions = (teams: MLBTeam[]): DropdownOption[] =>
+const createMLBDropdownOptions = (teams: Team[]): DropdownOption[] =>
   teams.map(({ name, id }) => ({ label: name, value: id }));
 
-const findTeamById = (id: string, teams: MLBTeam[]) =>
+const findTeamById = (id: string | number, teams: Team[]) =>
   teams.find((t) => t.id === id) ?? null;
 
 export default TeamSelect;

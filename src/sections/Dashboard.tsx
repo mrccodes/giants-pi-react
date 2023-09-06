@@ -1,32 +1,17 @@
-import { useEffect, useState, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
+import { Team } from 'mlb-api/teams';
 
 import { ErrorMessage, LiveGame, LoadingSpinner } from '../components';
-import { MLBTeam } from '../models';
-import NextGameCountdown from './NextGameCountdown';
-import { CurrentSeries, PreviousSeries } from './index';
+import { NextGameCountdown, LiveFeed, CurrentSeries, PreviousSeries } from '.';
 import { useTeamSchedule } from '../hooks';
 
 interface DashboardProps {
-  team: MLBTeam;
+  team: Team;
 }
 
 const Dashboard = ({ team }: DashboardProps) => {
-  const [error, setError] = useState<string | null>(null);
-  const {
-    liveGame,
-    nextGame,
-    schedule,
-    loading,
-    error: scheduleError,
-  } = useTeamSchedule(team);
-
-  useEffect(() => {
-    if (team.logo.logoPath === '') {
-      setError('Error initializing app for selected team.');
-    }
-
-    () => setError(null);
-  }, [team]);
+  const { liveGame, nextGame, schedule, loading, error } =
+    useTeamSchedule(team);
 
   if (loading) {
     return (
@@ -39,33 +24,39 @@ const Dashboard = ({ team }: DashboardProps) => {
   }
 
   return error ? (
-    <ErrorMessage message={error} />
+    <ErrorMessage message={error ?? 'Unknown error.'} />
   ) : (
-    <Wrapper>
-      <>
+    <div className="px-6">
+      {liveGame && (
+        <LiveFeed
+          className="w-full mb-3"
+          team={team}
+          gamePk={liveGame.gamePk.toString()}
+        />
+      )}
+
+      <Wrapper>
         {liveGame ? (
           <LiveGame game={liveGame} team={team} />
         ) : (
-          <NextGameCountdown
-            team={team}
-            nextGame={nextGame}
-            error={scheduleError}
-          />
+          <NextGameCountdown team={team} nextGame={nextGame} />
         )}
         <CurrentSeries
+          loading={!(schedule && nextGame && !loading)}
           schedule={schedule}
           team={team}
           nextGame={nextGame}
           liveGame={liveGame}
         />
         <PreviousSeries
+          loading={!(schedule && nextGame && !loading)}
           schedule={schedule}
           team={team}
           nextGame={nextGame}
           liveGame={liveGame}
         />
-      </>
-    </Wrapper>
+      </Wrapper>
+    </div>
   );
 };
 
@@ -74,7 +65,7 @@ const Wrapper = ({ children }: PropsWithChildren) => {
     <div>
       <section
         id="main-content"
-        className="grid grid-cols-3 grid-rows-3 gap-4 px-6"
+        className="grid lg:grid-cols-3 lg:grid-rows-3 md:grid-cols-1 lg:grid-rows-auto gap-4"
       >
         {children}
       </section>

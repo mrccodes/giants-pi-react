@@ -1,4 +1,4 @@
-import { CompletedGame, Game } from 'mlb-api';
+import { CompletedGame, Game } from 'mlb-api/schedule';
 
 import getWinner from './getWinner';
 

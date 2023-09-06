@@ -1,16 +1,16 @@
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 
-import { MLBTeam } from '../models';
 import { abbreviateTeam } from '../utils';
-import { Scorecard, Widget } from '.';
-import { SeriesPreview } from './SeriesPreview';
+import { Scorecard, Widget, SeriesPreview } from '.';
 import { useSeriesData } from '../hooks';
 
 interface SeriesDataProps extends React.HTMLProps<HTMLDivElement> {
   schedule: GameDate[];
-  selectedTeam: MLBTeam;
+  selectedTeam: Team;
   targetGame: Game;
   label: string;
+  loading?: boolean;
 }
 
 const SeriesData = ({
@@ -18,6 +18,7 @@ const SeriesData = ({
   selectedTeam,
   targetGame,
   label,
+  loading,
   ...rest
 }: SeriesDataProps) => {
   const {
@@ -30,12 +31,12 @@ const SeriesData = ({
   const borderColor =
     selectedTeamScore > opposingTeamScore
       ? 'border-green-600'
-      : selectedTeamScore > opposingTeamScore
+      : selectedTeamScore < opposingTeamScore
       ? 'border-red-600'
       : undefined;
 
   return (
-    <Widget {...rest} borderColor={borderColor}>
+    <Widget loading={loading} {...rest} borderColor={borderColor}>
       <p className="text-center text-xl">{label}</p>
       <Scorecard
         className="py-1"
@@ -44,13 +45,7 @@ const SeriesData = ({
         opposingTeamScore={opposingTeamScore}
         selectedTeamScore={selectedTeamScore}
       />
-      {selectedTeamScore === 0 && opposingTeamScore === 0 ? (
-        <div className="py-3">
-          <p className="text-center">No games completed yet!</p>
-        </div>
-      ) : (
-        <SeriesPreview selectedTeam={selectedTeam} series={seriesSchedule} />
-      )}
+      <SeriesPreview selectedTeam={selectedTeam} series={seriesSchedule} />
     </Widget>
   );
 };

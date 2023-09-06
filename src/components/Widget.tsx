@@ -18,7 +18,9 @@ const Widget = ({
     } px-4 py-3 rounded-md h-full text-slate-100 ` + className;
 
   return loading ? (
-    <LoadingSpinner className="mx-auto my-0 h-full w-auto" />
+    <div {...rest} className={classes}>
+      <LoadingSpinner variant="linear" className="mx-auto my-0 h-full w-auto" />
+    </div>
   ) : (
     <div {...rest} className={classes}>
       {children}

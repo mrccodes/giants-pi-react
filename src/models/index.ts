@@ -2,7 +2,7 @@ import Vector3D from './Vector3D';
 import { Vector3DOrScalar } from './Vector3DorScalar';
 import CameraOptions from './CameraOptions';
 import LogoOptions from './LogoOptions';
-import MLBTeam from './MLBTeam';
+import TeamLogoData from './TeamLogoData';
 import { DropdownOption } from './DropdownOption';
 import GameScore from './GameScore';
 import TeamScore from './TeamScore';
@@ -13,7 +13,7 @@ export type {
   CameraOptions,
   LogoOptions,
   DropdownOption,
-  MLBTeam,
+  TeamLogoData,
   GameScore,
   TeamScore,
 };

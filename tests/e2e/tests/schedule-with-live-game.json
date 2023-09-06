@@ -1,0 +1,93 @@
+{
+  "copyright": "Copyright 2023 MLB Advanced Media, L.P.  Use of any content on this page acknowledges agreement to the terms posted here http://gdx.mlb.com/components/copyright.txt",
+  "totalItems": 1,
+  "totalEvents": 0,
+  "totalGames": 1,
+  "totalGamesInProgress": 1,
+  "dates": [
+    {
+      "date": "2023-09-04",
+      "totalItems": 1,
+      "totalEvents": 0,
+      "totalGames": 1,
+      "totalGamesInProgress": 1,
+      "games": [
+        {
+          "gamePk": 716724,
+          "gameGuid": "9990b8de-7e40-4e29-bc68-840c07fbc472",
+          "link": "/api/v1.1/game/716724/feed/live",
+          "gameType": "R",
+          "season": "2023",
+          "gameDate": "2023-09-04T20:05:00Z",
+          "officialDate": "2023-09-04",
+          "status": {
+            "abstractGameState": "Live",
+            "codedGameState": "I",
+            "detailedState": "In Progress",
+            "statusCode": "I",
+            "startTimeTBD": false,
+            "abstractGameCode": "L"
+          },
+          "teams": {
+            "away": {
+              "leagueRecord": {
+                "wins": 77,
+                "losses": 61,
+                "pct": ".558"
+              },
+              "score": 5,
+              "team": {
+                "id": 117,
+                "name": "Houston Astros",
+                "link": "/api/v1/teams/117"
+              },
+              "splitSquad": false,
+              "seriesNumber": 45
+            },
+            "home": {
+              "leagueRecord": {
+                "wins": 76,
+                "losses": 60,
+                "pct": ".559"
+              },
+              "score": 5,
+              "team": {
+                "id": 140,
+                "name": "Texas Rangers",
+                "link": "/api/v1/teams/140"
+              },
+              "splitSquad": false,
+              "seriesNumber": 45
+            }
+          },
+          "venue": {
+            "id": 5325,
+            "name": "Globe Life Field",
+            "link": "/api/v1/venues/5325"
+          },
+          "content": {
+            "link": "/api/v1/game/716724/content"
+          },
+          "gameNumber": 1,
+          "publicFacing": true,
+          "doubleHeader": "N",
+          "gamedayType": "P",
+          "tiebreaker": "N",
+          "calendarEventID": "14-716724-2023-09-04",
+          "seasonDisplay": "2023",
+          "dayNight": "day",
+          "scheduledInnings": 9,
+          "reverseHomeAwayStatus": false,
+          "inningBreakLength": 120,
+          "gamesInSeries": 3,
+          "seriesGameNumber": 1,
+          "seriesDescription": "Regular Season",
+          "recordSource": "S",
+          "ifNecessary": "N",
+          "ifNecessaryDescription": "Normal Game"
+        }
+      ],
+      "events": []
+    }
+  ]
+}

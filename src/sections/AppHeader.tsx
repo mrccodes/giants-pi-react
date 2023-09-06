@@ -1,27 +1,31 @@
+import { Team } from 'mlb-api/teams';
+
 import { STLComponent } from '../components';
-import { MLBTeam } from '../models';
 import { useScreenDimensions } from '../hooks';
+import { getTeamLogo } from '../utils';
 
 interface AppHeaderProps {
-  team: MLBTeam;
+  team: Team;
 }
 
 const AppHeader = ({ team }: AppHeaderProps) => {
-  const logoPath = team.logo.logoPath;
+  const logoData = getTeamLogo(team.id);
   const defaultLogoHeightWidth = 100;
   const { width } = useScreenDimensions();
 
   return (
     <section id="header" className="flex flex-col">
-      {logoPath && (
+      {logoData ? (
         <STLComponent
-          cameraOptions={team.camera}
-          logoOptions={team.logo}
+          cameraOptions={logoData.camera}
+          logoOptions={logoData.logo}
           height={defaultLogoHeightWidth}
           width={width}
-          fileUrl={logoPath}
+          fileUrl={logoData.logo.logoPath}
           className="relative w-full mb-2"
         />
+      ) : (
+        <div className="m-6"></div>
       )}
       <div
         style={{ height: defaultLogoHeightWidth + 'px' }}

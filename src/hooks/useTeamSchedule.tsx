@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
-import { Game, GameDate } from 'mlb-api';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Game, GameDate } from 'mlb-api/schedule';
+import { Team } from 'mlb-api/teams';
 import moment from 'moment';
 import isEqual from 'lodash/isEqual';
 
-import { MLBTeam } from '../models';
 import { checkForLiveGame, getSchedule } from '../services/mlbApi';
 import { findRelevantGames, reduceScheduleToGames } from '../utils';
 import useLocalStorage from './useLocalStorage';
@@ -43,7 +43,7 @@ interface StoredSchedule {
   data: GameDate[];
 }
 
-function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
+function useTeamSchedule(team: Team): useTeamScheduleReturnType {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [schedule, setSchedule] = useLocalStorage<StoredSchedule | null>(
@@ -58,6 +58,8 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
   const [shouldCheckForLiveGame, setShouldCheckForLiveGame] = useState<
     boolean | null
   >(null);
+  const intitalCheckForLiveGame = useRef<boolean>(true);
+  const intitalCheckForSchedule = useRef<boolean>(true);
 
   const updateStoredSchedule = useCallback(
     (newSchedule: GameDate[]) => {
@@ -71,33 +73,59 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
     [schedule?.data, setSchedule],
   );
 
+  const updateLiveGame = useCallback(
+    (newGame?: Game) => {
+      if (!isEqual(newGame, liveGame)) {
+        setLiveGame(newGame);
+      }
+    },
+    [liveGame, setLiveGame],
+  );
+
   useEffect(() => {
     if (!shouldCheckForLiveGame || !schedule) {
       return;
     }
     const fetchData = () => {
       // Only set loading state if initial load
-      liveGame === null && setLoading(true);
+      if (intitalCheckForLiveGame.current) {
+        setLoading(true);
+        intitalCheckForLiveGame.current = false;
+      }
       checkForLiveGame(team, undefined, updateStoredSchedule)
-        .then((res) => setLiveGame(res))
-        .catch((err) => setError(err))
+        .then((res) => {
+          updateLiveGame(res);
+          setError(undefined);
+        })
+        .catch((err) => {
+          setError(err);
+        })
         .finally(() => setLoading(false));
     };
 
     fetchData();
-    const intervalId = setInterval(fetchData, 60000);
+    const intervalId = setInterval(fetchData, 2000);
     return () => clearInterval(intervalId);
-  }, [shouldCheckForLiveGame, schedule, liveGame, team, updateStoredSchedule]);
+  }, [
+    shouldCheckForLiveGame,
+    updateLiveGame,
+    updateStoredSchedule,
+    intitalCheckForLiveGame,
+    team,
+    schedule,
+  ]);
 
   useEffect(() => {
     const fetchData = () => {
       if (!schedule || moment().diff(moment(schedule.lastChecked), 'h') >= 24) {
-        setLoading(true);
+        if (intitalCheckForSchedule.current) {
+          setLoading(true);
+          intitalCheckForSchedule.current = false;
+        }
         getSchedule(team)
           .then((res) => {
             const gameDates: GameDate[] = res.dates;
             const { nextGame, mostRecentGame } = findRelevantGames(gameDates);
-            console.log(mostRecentGame, nextGame);
             updateStoredSchedule(gameDates);
             setNextGame(nextGame);
             setMostRecentGame(mostRecentGame);
@@ -117,16 +145,23 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
         const liveGameFound = allGames.some(
           (g) => g.status.abstractGameState === 'Live',
         );
+        const startedRecently = today ? gameStartedRecently(today) : false;
+        const startsSoon = today ? gameStartsSoon(today) : false;
 
-        if (today && (gameStartedRecently(today) || liveGameFound)) {
+        if (startsSoon || startedRecently || liveGameFound) {
           setShouldCheckForLiveGame(true);
+        } else {
+          setShouldCheckForLiveGame(false);
         }
       }
     };
 
     fetchData();
     const intervalId = setInterval(fetchData, 60000);
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      setSchedule(null);
+    };
   }, [team, schedule, setSchedule, updateStoredSchedule]);
 
   return {
@@ -140,17 +175,36 @@ function useTeamSchedule(team: MLBTeam): useTeamScheduleReturnType {
 }
 
 /**
- * Checks if a
+ * Checks if any games on the passed date were scheduled to start less than x hours ago
+ *
  * @param schedule GameDate - current day
  * @param numberOfHours number of hours that defines 'recently'
  * @returns boolean
  */
 const gameStartedRecently = (today: GameDate, numberOfHours = 3): boolean => {
-  return today
-    ? today.games.some(
-        (game) => moment().diff(moment(game.gameDate), 'h') < numberOfHours,
-      )
-    : false;
+  const now = moment();
+  const limitTime = moment().subtract(numberOfHours, 'hours');
+
+  return today.games.some((game) => {
+    const gameTime = moment.utc(game.gameDate);
+    return gameTime.isBefore(now) && gameTime.isAfter(limitTime);
+  });
+};
+/**
+ * Checks if any games on the passed date are scheduled to start within x hours
+ *
+ * @param schedule GameDate - current day
+ * @param numberOfHours number of hours that defines 'recently'
+ * @returns boolean
+ */
+const gameStartsSoon = (today: GameDate, numberOfHours = 1): boolean => {
+  const now = moment();
+  const limitTime = moment().add(numberOfHours, 'hours');
+
+  return today.games.some((game) => {
+    const gameTime = moment.utc(game.gameDate);
+    return gameTime.isAfter(now) && gameTime.isBefore(limitTime);
+  });
 };
 
 export default useTeamSchedule;

@@ -1,32 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Team } from 'mlb-api/teams';
 
-import { ErrorMessage, Temp } from './components';
+import { Temp } from './components';
 import { AppHeader, Dashboard, TeamSelect } from './sections';
-import { MLBTeam } from './models';
+import { DEBUG_MODE, PI_MODE } from './config';
+
+if (DEBUG_MODE !== 'true') {
+  console.log(
+    'Debug mode disabled. To enable, start the app with VITE_DEBUG=true or use npm run start:debug',
+  );
+}
+
+if (PI_MODE !== 'true') {
+  console.log(
+    'Raspberry Pi features disabled. To enable, start the app with VITE_PI=true or use npm run start:bash',
+  );
+}
 
 export function App() {
-  const [team, setTeam] = useState<MLBTeam | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!team) return;
-
-    if (team.logo.logoPath === '') {
-      setError('Error initializing app for selected team.');
-    }
-
-    () => setError(null);
-  }, [team]);
-
-  if (error) {
-    return (
-      <div className="GiantsPi overflow-hidden">
-        <Temp />
-        {team && <AppHeader team={team} />}
-        <ErrorMessage message={error} />
-      </div>
-    );
-  }
+  const [team, setTeam] = useState<Team | null>(null);
 
   return team ? (
     <div className="GiantsPi overflow-hidden">

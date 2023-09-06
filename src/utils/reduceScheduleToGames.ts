@@ -1,4 +1,4 @@
-import { Game, GameDate } from 'mlb-api';
+import { Game, GameDate } from 'mlb-api/schedule';
 
 import sortGamesByDate from './sortGamesByDate';
 

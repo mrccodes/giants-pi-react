@@ -1,3 +1,3 @@
-import { MLBTeams } from './MLBTeams';
+import teamLogoData from './teamLogoData';
 
-export { MLBTeams };
+export { teamLogoData };

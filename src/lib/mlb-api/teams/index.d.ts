@@ -1,6 +1,6 @@
 declare module 'mlb-api/teams' {
   import { BaseData, YN } from 'mlb-api';
-  interface Team {
+  interface Team extends BaseData {
     abbreviation: string;
     active: boolean;
     allStarStatus: YN;
@@ -9,11 +9,8 @@ declare module 'mlb-api/teams' {
     fileCode: string;
     firstYearOfPlay: string;
     franchiseName: string;
-    id: number;
     league: BaseData;
-    link: string;
     locationName: string;
-    name: string;
     parentOrgId: number;
     parentOrgName: string;
     season: number;

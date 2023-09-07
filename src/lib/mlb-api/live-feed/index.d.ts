@@ -1,5 +1,12 @@
 declare module 'mlb-api/live-feed' {
-  import type { YN, AMPM, DayNight, UsedRemaining, Person } from 'mlb-api';
+  import type {
+    YN,
+    AMPM,
+    DayNight,
+    UsedRemaining,
+    Person,
+    LinkAndID,
+  } from 'mlb-api';
   interface LiveFeedGame {
     calendarEventID: string;
     doubleHeader: YN;
@@ -273,10 +280,7 @@ declare module 'mlb-api/live-feed' {
       violation?: {
         type: string;
         description: string;
-        player: {
-          id: number;
-          link: string;
-        };
+        player: LinkAndID;
       };
     };
   }
@@ -295,10 +299,7 @@ declare module 'mlb-api/live-feed' {
   }
   interface Credit {
     credit: string;
-    player: {
-      id: string;
-      link: string;
-    };
+    player: LinkAndID;
     position: Position;
   }
 
@@ -332,10 +333,7 @@ declare module 'mlb-api/live-feed' {
   }
   interface ActionPlayEvent extends PlayEventBase {
     type: 'action';
-    player?: {
-      id: string;
-      link: string;
-    };
+    player?: LinkAndID;
     details: {
       awayScore: number;
       description: string;
@@ -452,10 +450,7 @@ declare module 'mlb-api/live-feed' {
     shortName: string;
     sport: BaseData;
     springLeague: SpringLeague;
-    springVenue: {
-      id: number;
-      link: string;
-    };
+    springVenue: LinkAndID;
     teamCode: string;
     teamName: string;
     venue: BaseData;
@@ -547,10 +542,7 @@ declare module 'mlb-api/live-feed' {
         away: UsedRemaining;
       };
       officialScorer: Person;
-      officialVenue: {
-        id: number;
-        link: string;
-      };
+      officialVenue: LinkAndID;
       players: {
         [key: string]: Player;
       };

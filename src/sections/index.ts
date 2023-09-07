@@ -5,6 +5,7 @@ import NextGameCountdown from './NextGameCountdown';
 import PreviousSeries from './PreviousSeries';
 import CurrentSeries from './CurrentSeries';
 import LiveFeed from './LiveFeed';
+import TeamStats from './TeamStats';
 
 export {
   AppHeader,
@@ -14,4 +15,5 @@ export {
   TeamSelect,
   LiveFeed,
   Dashboard,
+  TeamStats,
 };

@@ -2,7 +2,13 @@ import { PropsWithChildren } from 'react';
 import { Team } from 'mlb-api/teams';
 
 import { ErrorMessage, LiveGame, LoadingSpinner } from '../components';
-import { NextGameCountdown, LiveFeed, CurrentSeries, PreviousSeries } from '.';
+import {
+  NextGameCountdown,
+  LiveFeed,
+  CurrentSeries,
+  PreviousSeries,
+  TeamStats,
+} from '.';
 import { useTeamSchedule } from '../hooks';
 
 interface DashboardProps {
@@ -55,6 +61,7 @@ const Dashboard = ({ team }: DashboardProps) => {
           nextGame={nextGame}
           liveGame={liveGame}
         />
+        <TeamStats team={team} />
       </Wrapper>
     </div>
   );

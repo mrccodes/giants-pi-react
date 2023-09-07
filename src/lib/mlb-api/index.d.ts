@@ -3,6 +3,10 @@ declare module 'mlb-api' {
   type YesNo = 'yes' | 'no';
   type DayNight = 'day' | 'night';
   type AMPM = 'AM' | 'PM';
+  interface LinkAndID {
+    link: string;
+    id: number;
+  }
   interface BasicStatus {
     description: string;
     code: string;
@@ -11,10 +15,8 @@ declare module 'mlb-api' {
     label: string;
     value: string;
   }
-  interface BaseData {
-    id: number;
+  interface BaseData extends LinkAndID {
     name: string;
-    link: string;
   }
   interface Record {
     wins: number;
@@ -30,10 +32,8 @@ declare module 'mlb-api' {
   interface RecordWithTies extends LeagueRecord {
     ties: number;
   }
-  interface Person {
+  interface Person extends LinkAndID {
     fullName: string;
-    id: number;
-    link: string;
   }
   interface UsedRemaining {
     used: number;

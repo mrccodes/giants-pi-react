@@ -19,17 +19,17 @@ const Scorecard = ({
     <div
       {...rest}
       className={
-        'flex justify-center gap-2 text-center content-center flex-wrap ' +
+        'flex justify-center gap-3 text-center content-center flex-wrap ' +
         className
       }
     >
-      <p className="text-sm self-center">{selectedTeamName}</p>
-      <div className="flex text-3xl gap-2 self-center">
+      <p className="text-xl self-center">{selectedTeamName}</p>
+      <div className="flex text-5xl gap-3 self-center">
         <span>{selectedTeamScore}</span>
         <span>-</span>
         <span>{opposingTeamScore}</span>
       </div>
-      <p className="text-sm self-center">{opposingTeamName}</p>
+      <p className="text-xl self-center">{opposingTeamName}</p>
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Team } from 'mlb-api/teams';
 import { Game } from 'mlb-api/schedule';
 
 import { Countdown, ErrorMessage, Widget } from '../components';
-import { findOpposingTeam } from '../utils';
+import { abbreviateTeam, findOpposingTeam } from '../utils';
 
 interface NextGameCountdownProps extends React.HTMLProps<HTMLDivElement> {
   team: Team;
@@ -32,13 +32,24 @@ const NextGameCountdown = ({
   ) : nextGame ? (
     <Widget {...rest}>
       <>
-        <p className="text-sm font-light mb-2">
-          {opposingTeamName
-            ? `${team.name} VS ${opposingTeamName} in`
-            : 'Next game starts in'}
+        <p className="text-2xl font-bold text-center">Upcoming Game</p>
+        <p className="text-3xl text-center font-light my-6">
+          {opposingTeamName ? (
+            <span className="flex align-center justify-center">
+              <span className="text-4xl font-medium">
+                {abbreviateTeam(team.name)}
+              </span>
+              &nbsp;&nbsp;vs&nbsp;&nbsp;
+              <span className="text-4xl font-medium">
+                {abbreviateTeam(opposingTeamName)}
+              </span>
+            </span>
+          ) : (
+            'Next game starts in'
+          )}
         </p>
         <Countdown
-          className="text-4xl"
+          className="text-6xl text-center"
           targetDate={moment(nextGame.gameDate)}
         />
       </>

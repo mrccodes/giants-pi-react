@@ -55,14 +55,16 @@ const Dashboard = ({ team }: DashboardProps) => {
           nextGame={nextGame}
           liveGame={liveGame}
         />
-        <PreviousSeries
-          loading={scheduleLoading}
-          schedule={schedule}
-          team={team}
-          error={scheduleError}
-          nextGame={nextGame}
-          liveGame={liveGame}
-        />
+        {!liveGame && (
+          <PreviousSeries
+            loading={scheduleLoading}
+            schedule={schedule}
+            team={team}
+            error={scheduleError}
+            nextGame={nextGame}
+            liveGame={liveGame}
+          />
+        )}
         <TeamStats
           standings={standings}
           loading={standingsLoading}

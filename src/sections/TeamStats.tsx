@@ -31,38 +31,41 @@ const TeamStats = ({ team, standings, error, loading }: TeamStatsProps) => {
       {error ? (
         <ErrorMessage message={error} />
       ) : (
-        <table className="table-fixed border-collapse w-full">
-          <tbody>
-            <tr className="border-b border-slate-600">
-              <th className="text-left text-xs">Wins</th>
-              <th className="text-lg text-right">{teamStats.wins}</th>
-            </tr>
-            <tr className="border-b border-slate-600">
-              <th className="text-left text-xs">Losses</th>
-              <th className="text-lg text-right">{teamStats.losses}</th>
-            </tr>
-            <tr className="border-b border-slate-600">
-              <th className="text-left text-xs">Win Percent</th>
-              <th className="text-lg text-right">
-                {teamStats.winningPercentage}
-              </th>
-            </tr>
-            <tr className="border-b border-slate-600">
-              <th className="text-left text-xs">Games Back</th>
-              <th className="text-lg text-right">{teamStats.gamesBack}</th>
-            </tr>
-            <tr className="border-b border-slate-600">
-              <th className="text-left text-xs">Run Diff</th>
-              <th className="text-lg text-right">
-                {teamStats.runDifferential}
-              </th>
-            </tr>
-            <tr>
-              <th className="text-left text-xs">League Rank</th>
-              <th className="text-lg text-right">{teamStats.leagueRank}</th>
-            </tr>
-          </tbody>
-        </table>
+        <>
+          <p className="text-center text-2xl font-bold">Team Base Stats</p>
+          <table className="table-fixed border-collapse w-full">
+            <tbody>
+              <tr className="border-b border-slate-600">
+                <th className="text-left text-lg">Wins</th>
+                <th className="text-xl text-right">{teamStats.wins}</th>
+              </tr>
+              <tr className="border-b border-slate-600">
+                <th className="text-left text-lg">Losses</th>
+                <th className="text-xl text-right">{teamStats.losses}</th>
+              </tr>
+              <tr className="border-b border-slate-600">
+                <th className="text-left text-lg">Win Percent</th>
+                <th className="text-xl text-right">
+                  {teamStats.winningPercentage}
+                </th>
+              </tr>
+              <tr className="border-b border-slate-600">
+                <th className="text-left text-lg">Games Back</th>
+                <th className="text-xl text-right">{teamStats.gamesBack}</th>
+              </tr>
+              <tr className="border-b border-slate-600">
+                <th className="text-left text-lg">Run Diff</th>
+                <th className="text-xl text-right">
+                  {teamStats.runDifferential}
+                </th>
+              </tr>
+              <tr>
+                <th className="text-left text-lg">League Rank</th>
+                <th className="text-xl text-right">{teamStats.leagueRank}</th>
+              </tr>
+            </tbody>
+          </table>
+        </>
       )}
     </Widget>
   );

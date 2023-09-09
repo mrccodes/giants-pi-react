@@ -20,14 +20,14 @@ const GamePreview = ({
   } 
     ${
       !noBorder ? 'border-b border-slate-600' : ''
-    } bg-opacity-25 px-2 flex justify-center gap-3`;
+    } bg-opacity-25 px-8 text-xl flex justify-between gap-3`;
 
   return (
     <div className={classes}>
       <span>{moment(game.gameDate).format('MM/DD')}</span>
       {isWin !== undefined ? (
         <span>
-          {isWin ? 'Win' : 'Loss'} {formatScore(score)}
+          {isWin ? 'Win' : 'Loss'}&nbsp;&nbsp;&nbsp;&nbsp;{formatScore(score)}
         </span>
       ) : (
         <span>TBD</span>

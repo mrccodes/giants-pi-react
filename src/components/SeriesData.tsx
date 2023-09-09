@@ -37,9 +37,9 @@ const SeriesData = ({
 
   return (
     <Widget loading={loading} {...rest} borderColor={borderColor}>
-      <p className="text-center text-xl">{label}</p>
+      <p className="text-center font-bold text-2xl">{label}</p>
       <Scorecard
-        className="py-1"
+        className="py-4"
         selectedTeamName={abbreviateTeam(selectedTeam.name)}
         opposingTeamName={abbreviateTeam(opposingTeamName)}
         opposingTeamScore={opposingTeamScore}

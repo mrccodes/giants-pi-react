@@ -38,27 +38,21 @@ const LeagueStandings = ({
   return (
     <>
       {standings.records
-        .sort((a, b) =>
-          a.division.id === team.division.id
-            ? -1
-            : b.division.id === team.division.id
-            ? 1
-            : 0,
-        )
+        .filter((d) => d.division.id === team.division.id)
         .map((r) => (
           <Widget key={r.league.id} {...rest}>
             <>
-              <p className="font-bold pb-2 text-center">
-                {getDivisionName(r.division.id)}
+              <p className="font-bold text-2xl pb-1 text-center">
+                {getDivisionName(r.division.id)} Standings
               </p>
               <table className="table-auto border-collapse w-full">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <th className="text-xs">Rank</th>
-                    <th className="text-xs">Name</th>
-                    <th className="text-xs">W-L</th>
-                    <th className="text-xs">GB</th>
-                    <th className="text-xs">League Rank</th>
+                    <th className="text-lg">Rank</th>
+                    <th className="text-lg">Name</th>
+                    <th className="text-lg">W-L</th>
+                    <th className="text-lg">GB</th>
+                    <th className="text-lg">L. Rank</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -83,7 +77,7 @@ const TeamRecords = ({ records }: TeamRecordsProps) => {
   return sorted.map((r, idx) => (
     <tr
       key={r.team.id}
-      className={`text-xs  ${
+      className={`text-lg  ${
         idx === sorted.length - 1 ? '' : 'border-b border-slate-700'
       }`}
     >

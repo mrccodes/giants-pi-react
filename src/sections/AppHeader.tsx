@@ -10,7 +10,7 @@ interface AppHeaderProps {
 
 const AppHeader = ({ team }: AppHeaderProps) => {
   const logoData = getTeamLogo(team.id);
-  const defaultLogoHeightWidth = 100;
+  const defaultLogoHeightWidth = 150;
   const { width } = useScreenDimensions();
 
   return (
@@ -25,15 +25,12 @@ const AppHeader = ({ team }: AppHeaderProps) => {
           className="relative w-full mb-2"
         />
       ) : (
-        <div className="m-6"></div>
+        <div className="m-8"></div>
       )}
-      <div
-        style={{ height: defaultLogoHeightWidth + 'px' }}
-        className="inset-0 w-full text-center"
-      >
+      <div className="inset-0 my-2 w-full text-center">
         <h1
           style={{ top: '50%', transform: 'translateY(-50%)' }}
-          className="inset-0 align-center text-slate-100 text-2xl"
+          className="inset-0 align-center text-slate-100 font-semibold text-3xl"
         >
           {team.name}
         </h1>

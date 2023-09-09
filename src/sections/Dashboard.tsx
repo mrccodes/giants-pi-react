@@ -1,37 +1,37 @@
 import { PropsWithChildren } from 'react';
 import { Team } from 'mlb-api/teams';
 
-import { ErrorMessage, LiveGame, LoadingSpinner } from '../components';
+import { LiveGame } from '../components';
 import {
   NextGameCountdown,
   LiveFeed,
   CurrentSeries,
   PreviousSeries,
   TeamStats,
+  LeagueStandings,
 } from '.';
 import { useTeamSchedule } from '../hooks';
+import { useTeamStandings } from '../hooks/useTeamStandings';
 
 interface DashboardProps {
   team: Team;
 }
 
 const Dashboard = ({ team }: DashboardProps) => {
-  const { liveGame, nextGame, schedule, loading, error } =
-    useTeamSchedule(team);
+  const {
+    liveGame,
+    nextGame,
+    schedule,
+    loading: scheduleLoading,
+    error: scheduleError,
+  } = useTeamSchedule(team);
+  const {
+    standings,
+    error: standingsError,
+    loading: standingsLoading,
+  } = useTeamStandings(team, liveGame);
 
-  if (loading) {
-    return (
-      <Wrapper>
-        <CardLoader />
-        <CardLoader />
-        <CardLoader />
-      </Wrapper>
-    );
-  }
-
-  return error ? (
-    <ErrorMessage message={error ?? 'Unknown error.'} />
-  ) : (
+  return (
     <div className="px-6">
       {liveGame && (
         <LiveFeed
@@ -48,20 +48,33 @@ const Dashboard = ({ team }: DashboardProps) => {
           <NextGameCountdown team={team} nextGame={nextGame} />
         )}
         <CurrentSeries
-          loading={!(schedule && nextGame && !loading)}
+          loading={scheduleLoading}
           schedule={schedule}
           team={team}
+          error={scheduleError}
           nextGame={nextGame}
           liveGame={liveGame}
         />
         <PreviousSeries
-          loading={!(schedule && nextGame && !loading)}
+          loading={scheduleLoading}
           schedule={schedule}
           team={team}
+          error={scheduleError}
           nextGame={nextGame}
           liveGame={liveGame}
         />
-        <TeamStats team={team} />
+        <TeamStats
+          standings={standings}
+          loading={standingsLoading}
+          error={standingsError}
+          team={team}
+        />
+        <LeagueStandings
+          team={team}
+          standings={standings}
+          loading={standingsLoading}
+          error={standingsError}
+        />
       </Wrapper>
     </div>
   );
@@ -76,14 +89,6 @@ const Wrapper = ({ children }: PropsWithChildren) => {
       >
         {children}
       </section>
-    </div>
-  );
-};
-
-const CardLoader = () => {
-  return (
-    <div className="w-full h-36 rounded flex justify-center content-center border border-slate-100">
-      <LoadingSpinner className="flex items-center h-full" variant="linear" />
     </div>
   );
 };

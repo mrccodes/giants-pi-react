@@ -33,8 +33,6 @@ const LeagueStandings = ({
       </Widget>
     );
 
-  console.log({ standings });
-
   return (
     <>
       {standings.records

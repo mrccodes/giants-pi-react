@@ -21,7 +21,7 @@ const TeamSelect = ({ onSelect }: TeamSelectProps) => {
   const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    if (!teamsResponse) return;
+    if (teamsResponse.length === 0) return;
     const teamId = searchParams.get('teamId');
     if (!teamId) {
       return;
@@ -31,6 +31,7 @@ const TeamSelect = ({ onSelect }: TeamSelectProps) => {
       console.error('Invalid param passed for teamId: teamId must be a number');
       return;
     }
+
     const selected = teamsResponse.find((team) => team.id === teamIdNum);
 
     if (!selected) {

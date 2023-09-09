@@ -6,7 +6,7 @@ import {
   LabelValue,
   Person,
   Position,
-  Record,
+  RecordBase,
   RecordWithTies,
   UsedRemaining,
 } from 'mlb-api';
@@ -401,7 +401,7 @@ const isGameDataMoundVisits = (
   return isValid;
 };
 
-const isRecord = (obj: any): obj is Record => {
+const isRecordBase = (obj: any): obj is RecordBase => {
   const isValid =
     obj &&
     typeof obj === 'object' &&
@@ -410,12 +410,12 @@ const isRecord = (obj: any): obj is Record => {
     typeof obj?.pct === 'string';
   !isValid &&
     DEBUG_MODE &&
-    console.error('isRecord -> Error: invalid obj passed \n\n', obj);
+    console.error('isRecordBase -> Error: invalid obj passed \n\n', obj);
   return isValid;
 };
 
 const isRecordWithTies = (obj: any): obj is RecordWithTies => {
-  const isValid = typeof obj?.ties === 'number' && isRecord(obj);
+  const isValid = typeof obj?.ties === 'number' && isRecordBase(obj);
   !isValid &&
     DEBUG_MODE &&
     console.error('isRecordWithTies -> Error: invalid obj passed \n\n', obj);

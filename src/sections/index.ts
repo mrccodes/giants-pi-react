@@ -6,6 +6,7 @@ import PreviousSeries from './PreviousSeries';
 import CurrentSeries from './CurrentSeries';
 import LiveFeed from './LiveFeed';
 import TeamStats from './TeamStats';
+import LeagueStandings from './LeagueStandings';
 
 export {
   AppHeader,
@@ -16,4 +17,5 @@ export {
   LiveFeed,
   Dashboard,
   TeamStats,
+  LeagueStandings,
 };

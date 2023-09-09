@@ -1,13 +1,14 @@
 import { Game, GameDate } from 'mlb-api/schedule';
 import { Team } from 'mlb-api/teams';
 
-import { SeriesData, Widget } from '../components';
+import { ErrorMessage, SeriesData, Widget } from '../components';
 
 interface CurrentSeriesProps {
   team: Team;
   schedule?: GameDate[];
   nextGame?: Game;
   liveGame?: Game;
+  error?: string;
   loading?: boolean;
 }
 const CurrentSeries = ({
@@ -15,9 +16,17 @@ const CurrentSeries = ({
   team,
   nextGame,
   liveGame,
+  error,
   loading,
 }: CurrentSeriesProps) => {
   const targetGame = liveGame ?? nextGame;
+
+  if (error)
+    return (
+      <Widget>
+        <ErrorMessage message={error} />
+      </Widget>
+    );
 
   return schedule && targetGame ? (
     <SeriesData

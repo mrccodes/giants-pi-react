@@ -33,8 +33,8 @@ function Temp() {
 
   return socketOpen && temp ? (
     <div className="absolute px-3 items-center top-2 right-2 z-10 text-3xl">
-      {temp && temp < 60 && <p className="text-slate-100">{temp}°C</p>}
-      {temp && temp >= 60 && <p className="text-red-500">{temp}°C</p>}
+      {temp < 60 && <p className="text-slate-100">{temp}°C</p>}
+      {temp >= 60 && <p className="text-red-500">{temp}°C</p>}
     </div>
   ) : null;
 }

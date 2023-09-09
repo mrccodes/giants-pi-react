@@ -8,6 +8,7 @@ const SOCKET_PORT = 4444;
 function Temp() {
   const [temp, setTemp] = useState<number | null>(null);
   const [socketOpen, setSocketOpen] = useState<boolean>(false);
+
   useEffect(() => {
     if (!PI_MODE) {
       return;
@@ -30,13 +31,10 @@ function Temp() {
     };
   }, []);
 
-  return socketOpen && temp && temp >= 0 ? (
-    <div
-      style={{ height: '100px', width: '100px' }}
-      className="absolute flex justify-center items-center top-0 right-12 text-4xl"
-    >
-      {temp && <p className="text-slate-100">{temp}°C</p>}
-      {temp >= 70 && <p className="text-red-500">{temp}°C</p>}
+  return socketOpen && temp ? (
+    <div className="absolute px-3 items-center top-2 right-2 z-10 text-3xl">
+      {temp && temp < 60 && <p className="text-slate-100">{temp}°C</p>}
+      {temp && temp >= 60 && <p className="text-red-500">{temp}°C</p>}
     </div>
   ) : null;
 }

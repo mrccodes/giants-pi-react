@@ -10,9 +10,7 @@ interface SplashHitsProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 const SplashHits = ({ liveFeedData }: SplashHitsProps) => {
-  const { list, total, error, loading } = useSplashHits(
-    liveFeedData ? [liveFeedData] : [],
-  );
+  const { list, total, error, loading } = useSplashHits(liveFeedData);
 
   if (error)
     return (

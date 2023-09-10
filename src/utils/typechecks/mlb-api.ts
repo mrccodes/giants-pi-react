@@ -519,7 +519,7 @@ const isPlayer = (input: any): input is Player => {
     (batSide?.description === 'Left' ||
       batSide?.description === 'Right' ||
       batSide?.description === 'Switch') &&
-    typeof input?.birthCity === 'string' &&
+    (!input?.birthCity || typeof input?.birthCity === 'string') &&
     typeof input?.birthCountry === 'string' &&
     typeof input?.birthDate === 'string' &&
     typeof input?.boxscoreName === 'string' &&

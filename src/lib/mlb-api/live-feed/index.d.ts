@@ -477,7 +477,7 @@ declare module 'mlb-api/live-feed' {
       code: 'L' | 'R' | 'S';
       description: 'Left' | 'Right' | 'Switch';
     };
-    birthCity: string;
+    birthCity?: string;
     birthCountry: string;
     birthDate: string;
     birthStateProvince: string;

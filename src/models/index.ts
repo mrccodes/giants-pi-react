@@ -6,8 +6,10 @@ import TeamLogoData from './TeamLogoData';
 import { DropdownOption } from './DropdownOption';
 import GameScore from './GameScore';
 import TeamScore from './TeamScore';
+import SplashHit from './SplashHit';
 
 export type {
+  SplashHit,
   Vector3D,
   Vector3DOrScalar,
   CameraOptions,

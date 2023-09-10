@@ -5,7 +5,7 @@ import { Standings } from 'mlb-api/standings';
 import { useEffect, useState } from 'react';
 
 import { logError } from '../utils';
-import { getStandings } from '../services/mlbApi';
+import { getStandings } from '../services';
 
 interface useTeamStandingsReturnType {
   standings?: Standings;

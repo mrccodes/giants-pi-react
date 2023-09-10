@@ -15,10 +15,10 @@ const Widget = ({
   const classes =
     `border border-solid ${
       borderColor ?? 'border-slate-100'
-    } px-4 py-3 rounded-md h-full text-slate-100 ` + className;
+    } px-4 py-3 rounded-md h-full text-slate-100 ` + className ?? '';
 
   return loading ? (
-    <div {...rest} className={classes}>
+    <div {...rest} className={`${classes} flex justify-center items-center`}>
       <LoadingSpinner variant="linear" className="mx-auto my-0 h-full w-auto" />
     </div>
   ) : (

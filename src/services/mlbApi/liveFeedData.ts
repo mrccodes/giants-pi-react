@@ -1,7 +1,7 @@
 import { LiveFeedData } from 'mlb-api/live-feed';
 import axios from 'axios';
 
-import { MLB_API_BASE_URL } from '.';
+import { MLB_API_BASE_URL } from '..';
 import { isLiveFeedData } from '../../utils';
 import { DEBUG_MODE } from '../../config';
 

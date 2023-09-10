@@ -2,7 +2,7 @@ import { LiveFeedData } from 'mlb-api/live-feed';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { isAxiosError } from 'axios';
 
-import { getLiveFeedData } from '../services/mlbApi';
+import { getLiveFeedData } from '../services';
 import { logError } from '../utils';
 import { DEBUG_MODE } from '../config';
 

@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Dropdown, ErrorMessage, LoadingSpinner } from '../components';
 // import { MLBTeams } from '../data';
 import { DropdownOption } from '../models';
-import { getTeams } from '../services/mlbApi';
+import { getTeams } from '../services';
 
 interface TeamSelectProps {
   onSelect:

@@ -3,6 +3,7 @@ import useThreeSetup from './useThreeSetup';
 import useScreenDimensions from './useScreenDimensions';
 import useSeriesData from './useSeriesData';
 import useLiveFeedData from './useLiveFeedData';
+import useSplashHits from './useSplashHits';
 
 export {
   useTeamSchedule,
@@ -10,4 +11,5 @@ export {
   useScreenDimensions,
   useSeriesData,
   useLiveFeedData,
+  useSplashHits,
 };

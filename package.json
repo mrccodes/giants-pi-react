@@ -22,7 +22,7 @@
     "three": "^0.155.0"
   },
   "scripts": {
-    "start:vite": "vite  --port 3000",
+    "start:vite": "concurrently \"node splashHits.jsm\" \"vite --port 3000\"",
     "start:debug": "VITE_DEBUG=true vite  --port 3000",
     "start:electron": "DISPLAY=:0 electron ./electron.jsm ",
     "start:socket": "node ./socket.jsm",
@@ -77,6 +77,7 @@
     "@types/three": "^0.155.1",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.15",
+    "concurrently": "^8.2.1",
     "cypress": "^10.3.0",
     "eslint": "^8.48.0",
     "eslint-config-codely": "^3.0.0",

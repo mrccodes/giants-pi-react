@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Game, GameDate } from 'mlb-api/schedule';
 import { Team } from 'mlb-api/teams';
 
-import { MLB_API_BASE_URL } from '.';
+import { MLB_API_BASE_URL } from '..';
 
 const apiDateFormat = 'YYYY-MM-DD';
 

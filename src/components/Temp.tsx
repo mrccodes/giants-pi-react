@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 
-import { PI_MODE } from '../config';
-
-const SOCKET_PORT = 4444;
+import { HOST, PI_MODE, SOCKET_PORT } from '../config';
 
 function Temp() {
   const [temp, setTemp] = useState<number | null>(null);
@@ -13,7 +11,7 @@ function Temp() {
     if (!PI_MODE) {
       return;
     }
-    const socket = io(`http://localhost:${SOCKET_PORT}`, {
+    const socket = io(`${HOST}:${SOCKET_PORT}`, {
       reconnectionAttempts: 5,
     });
 

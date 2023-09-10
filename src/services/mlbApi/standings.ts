@@ -2,7 +2,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { Standings } from 'mlb-api/standings';
 
-import { MLB_API_BASE_URL } from '.';
+import { MLB_API_BASE_URL } from '..';
 
 const getStandings = async (
   leagueId?: number | string,

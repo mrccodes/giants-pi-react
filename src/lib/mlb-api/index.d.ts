@@ -18,18 +18,18 @@ declare module 'mlb-api' {
   interface BaseData extends LinkAndID {
     name: string;
   }
-  interface Record {
-    wins: number;
-    losses: number;
-    pct: string;
-  }
   interface Position {
     abbreviation: string;
     code: string;
     name: string;
     type: string;
   }
-  interface RecordWithTies extends LeagueRecord {
+  interface RecordBase {
+    wins: number;
+    losses: number;
+    pct: string;
+  }
+  interface RecordWithTies extends RecordBase {
     ties: number;
   }
   interface Person extends LinkAndID {

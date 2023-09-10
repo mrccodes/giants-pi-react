@@ -4,7 +4,7 @@ import { Team } from 'mlb-api/teams';
 import moment from 'moment';
 import isEqual from 'lodash/isEqual';
 
-import { checkForLiveGame, getSchedule } from '../services/mlbApi';
+import { checkForLiveGame, getSchedule } from '../services';
 import { findRelevantGames, reduceScheduleToGames } from '../utils';
 import useLocalStorage from './useLocalStorage';
 

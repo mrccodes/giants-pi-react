@@ -1,5 +1,5 @@
 declare module 'mlb-api/schedule' {
-  import type { DayNight, YN, BaseData } from 'mlb-api';
+  import type { DayNight, YN, BaseData, RecordBase } from 'mlb-api';
   interface GameDate {
     date: string;
     events: unknown[];
@@ -50,7 +50,7 @@ declare module 'mlb-api/schedule' {
   }
   interface Team {
     isWinner: boolean;
-    leagueRecord: Record;
+    leagueRecord: RecordBase;
     score: number;
     seriesNumber: number;
     splitSquad: boolean;

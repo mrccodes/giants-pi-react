@@ -8,6 +8,7 @@ import {
   PreviousSeries,
   TeamStats,
   LeagueStandings,
+  SplashHits,
 } from '.';
 import { useTeamSchedule } from '../hooks';
 import { useTeamStandings } from '../hooks/useTeamStandings';
@@ -68,6 +69,7 @@ const Dashboard = ({ team }: DashboardProps) => {
           loading={standingsLoading}
           error={standingsError}
         />
+        {team.id === 137 && !liveGame && <SplashHits />}
       </Wrapper>
     </div>
   );

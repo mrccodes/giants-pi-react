@@ -9,6 +9,10 @@ import abbreviateTeam from '../utils/abbreviateTeam';
 import Scorecard from './Scorecard';
 import Widget from './Widget';
 
+/**
+ * Currently unused, replaced by LiveFeed component
+ */
+
 interface LiveGameProps extends React.HTMLProps<HTMLDivElement> {
   game: Game;
   team: Team;

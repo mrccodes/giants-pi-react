@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react';
 import { Team } from 'mlb-api/teams';
 
-import { LiveGame } from '../components';
 import {
   NextGameCountdown,
   LiveFeed,
@@ -34,19 +33,11 @@ const Dashboard = ({ team }: DashboardProps) => {
   return (
     <div className="px-6">
       {liveGame && (
-        <LiveFeed
-          className="w-full mb-3"
-          team={team}
-          gamePk={liveGame.gamePk.toString()}
-        />
+        <LiveFeed className="w-full mb-3" team={team} game={liveGame} />
       )}
 
       <Wrapper>
-        {liveGame ? (
-          <LiveGame game={liveGame} team={team} />
-        ) : (
-          <NextGameCountdown team={team} nextGame={nextGame} />
-        )}
+        {!liveGame && <NextGameCountdown team={team} nextGame={nextGame} />}
         <CurrentSeries
           loading={scheduleLoading}
           schedule={schedule}

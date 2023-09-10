@@ -14,8 +14,8 @@ interface useLiveFeedDataReturnType {
   loading: boolean;
 }
 
-const useLiveFeedData = (gamePk: string): useLiveFeedDataReturnType => {
-  const memoGamePk = useMemo<string>(() => gamePk, [gamePk]);
+const useLiveFeedData = (gamePk: number): useLiveFeedDataReturnType => {
+  const memoGamePk = useMemo<number>(() => gamePk, [gamePk]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
   const [liveData, setLiveData] = useState<
@@ -32,7 +32,7 @@ const useLiveFeedData = (gamePk: string): useLiveFeedDataReturnType => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const liveFeedData = await getLiveFeedData(memoGamePk);
+        const liveFeedData = await getLiveFeedData(memoGamePk.toString());
         setLiveData(liveFeedData.liveData);
         setGameData(liveFeedData.gameData);
         setMetaData(liveFeedData.metaData);

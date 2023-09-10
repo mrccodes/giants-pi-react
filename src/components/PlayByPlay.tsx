@@ -8,7 +8,7 @@ interface PlayByPlayProps
   data: PlayData[];
 }
 
-const PlayByPlay = ({ data }: PlayByPlayProps) => {
+const PlayByPlay = ({ data, className, ...rest }: PlayByPlayProps) => {
   const memoData = useMemo(() => data, [data]);
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [lastFour, setLastFour] = useState<PlayData[]>(
@@ -27,8 +27,9 @@ const PlayByPlay = ({ data }: PlayByPlayProps) => {
   return (
     <>
       <div
+        {...rest}
         ref={containerRef}
-        className="relative flex-wrap w-full grid grid-columns-1 gap-2 pl-2"
+        className={`relative flex-wrap grid grid-columns-1 gap-2 pl-2 ${className}`}
       >
         {lastFour.map((play) => (
           <div key={play.result.description} className="flex flex-nowrap">

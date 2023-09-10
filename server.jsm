@@ -9,7 +9,6 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const envPath = `.env.${isProduction ? 'production' : 'development'}`;
 dotenv.config({ path: envPath });
-console.log(process.env);
 
 const HOST = process.env.VITE_HOST;
 const NODE_SERVER_PORT = process.env.VITE_NODE_SERVER_PORT;

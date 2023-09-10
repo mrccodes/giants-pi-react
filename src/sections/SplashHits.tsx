@@ -21,7 +21,7 @@ const SplashHits = ({ liveFeedData }: SplashHitsProps) => {
 
   return (
     <Widget loading={loading}>
-      <p className="text-2xl font-bold text-center">Splash Hits 💦</p>
+      <p className="text-2xl font-bold text-center">Splash Hits</p>
       {total && (
         <p className="text-5xl font-semibold py-2 text-center">{total}</p>
       )}

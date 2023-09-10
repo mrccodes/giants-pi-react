@@ -12,7 +12,7 @@ dotenv.config({ path: envPath });
 
 const HOST = process.env.VITE_HOST;
 const NODE_SERVER_PORT = process.env.VITE_NODE_SERVER_PORT;
-const VITE_PORT = process.env.VITE_NODE_SERVER_PORT;
+const VITE_PORT = process.env.VITE_PORT;
 
 var corsOptions = {
   origin: `${HOST}:${VITE_PORT}`,

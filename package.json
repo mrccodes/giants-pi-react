@@ -27,6 +27,7 @@
     "start:electron": "DISPLAY=:0 electron ./electron.jsm ",
     "start:socket": "node ./socket.jsm",
     "start:bash": "bash start.sh",
+    "start:node": "node ./splashHits.jsm",
     "build": "vite  build",
     "test": "vitest --config=vitest.config.ts",
     "cy:open": "cypress open",

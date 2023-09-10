@@ -1,10 +1,16 @@
 const express = require('express');
 const { exec } = require('child_process');
 const http = require('http');
+const dotenv = require('dotenv');
 
-const HOST = 'http://localhost';
-const SOCKET_PORT = 4444;
-const VITE_PORT = 3000;
+const isProduction = process.env.NODE_ENV === 'production';
+
+const envPath = `.env.${isProduction ? 'production' : 'development'}`;
+dotenv.config({ path: envPath });
+
+const HOST = process.env.VITE_HOST;
+const SOCKET_PORT = process.env.VITE_SOCKET_PORT;
+const VITE_PORT = process.env.VITE_PORT;
 
 const app = express();
 const server = http.Server(app);

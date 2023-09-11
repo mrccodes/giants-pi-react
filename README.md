@@ -22,12 +22,11 @@ An intuitive MLB dashboard that leverages the MLB Stats API, offering a real-tim
 
 ### Production
 
-This app is created to run on a raspberry pi using Electron JS to run in kiosk mode. To get the app workong on a pi you will need to:
+This app is created to run on a raspberry pi using Electron JS to run in kiosk mode. To get the app up and running on a pi you will need to:
 
 - Clone the repo to your Pi
 - cd into the project directory
-- `npm install`
-- `npm start:prod`
+- `npm run start:prod`
 
 This will use a bash script to first build the Vite app for production.
 
@@ -43,7 +42,7 @@ To start the app for development:
 
 - Clone the project to your local machine
 - `npm install`
-- `npm start:dev`
+- `npm run start:dev`
 
 This will start the Vite dev server in development mode. It uses flags in `.env.development` to turn on debug mode which logs extra data about failing mlb-api typechecks, and disables the Pi monitoring socket connection.
 

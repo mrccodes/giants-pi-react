@@ -4,6 +4,10 @@
 # Load production env variables
 export $(grep -v '^#' ./.env.production | xargs)
 
+echo "Installing dependencies..."
+npm install
+echp "Dependencies installed successfully."
+
 # Build Vite
 echo "Starting Vite app for production..."
 npm run build 

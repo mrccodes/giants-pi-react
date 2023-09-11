@@ -38,13 +38,23 @@ import {
 } from 'react-router-dom';
 
 import { App } from './App';
+import { VITE_MODE } from './config';
 
 const router = createBrowserRouter(
   createRoutesFromElements(<Route path="/" element={<App />}></Route>),
 );
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+console.log(`App is running in ${VITE_MODE} mode.`);
+
+const elToRender =
+  VITE_MODE === 'production' ? (
     <RouterProvider router={router} />
-  </React.StrictMode>,
+  ) : (
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  );
+
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  elToRender,
 );

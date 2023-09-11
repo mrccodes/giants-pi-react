@@ -8,7 +8,7 @@ function Temp() {
   const [socketOpen, setSocketOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!PI_MODE) {
+    if (PI_MODE === 'false') {
       return;
     }
     const socket = io(`${HOST}:${SOCKET_PORT}`, {

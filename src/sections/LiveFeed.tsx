@@ -41,9 +41,8 @@ const LiveFeed = ({ game, team, className, ...rest }: LiveFeedProps) => {
     );
   }
 
-  if (gameData && gameData.status.detailedState !== 'In Progress') {
-    return null;
-  }
+  const inProgress =
+    gameData && gameData.status.detailedState === 'In Progress';
 
   return (
     <Widget
@@ -51,8 +50,12 @@ const LiveFeed = ({ game, team, className, ...rest }: LiveFeedProps) => {
       className={`relative ${className}`}
       loading={!liveData || !gameData || !opposingTeamName || loading}
     >
-      <div className="absolute border rounded border-green-400/75 px-2 py-1">
-        Live!
+      <div
+        className={`absolute border rounded px-2 py-1 ${
+          inProgress ? 'border-green-400/75' : 'border-blue-400/75'
+        }`}
+      >
+        {inProgress ? 'Live!' : gameData?.status.detailedState}
       </div>
       <div className="flex gap-2">
         {liveData && (

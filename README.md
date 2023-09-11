@@ -15,8 +15,36 @@ An intuitive MLB dashboard that leverages the MLB Stats API, offering a real-tim
 - [Tailwindcss](https://tailwindcss.com/) for quick and easy styling
 - [Electron.js](https://www.electronjs.org/) to render the React app fullscreen in kiosk mode
 - [Socket.IO](https://socket.io/) to enable real-time polling and rendering of performance stats for Raspberry Pi
-- [Express](https://expressjs.com/) to create a server infrastructure that handles the WebSocket connections
+- [Express](https://expressjs.com/) to create a server infrastructure that handles the WebSocket connections and serving the production app
 - [Threejs](https://threejs.org/) with for 3D rendering of team logos
+
+## Running the app
+
+### Production
+
+This app is created to run on a raspberry pi using Electron JS to run in kiosk mode. To get the app up and running on a pi you will need to:
+
+- Clone the repo to your Pi
+- cd into the project directory
+- `npm run start:prod`
+
+This will use a bash script to first build the Vite app for production.
+
+Then, it will start up the SocketIO server which feeds the app temperature data about the Pi. This can be turned off by setting `VITE_PI=false` inside `.env.production`
+
+Next, it spins up an Express server which used to retrieve Splash Hit data, as well as hosts the app.
+
+Finally, Electron is started to render the now running Vite app.
+
+### Development
+
+To start the app for development:
+
+- Clone the project to your local machine
+- `npm install`
+- `npm run start:dev`
+
+This will start the Vite dev server in development mode. It uses flags in `.env.development` to turn on debug mode which logs extra data about failing mlb-api typechecks, and disables the Pi monitoring socket connection.
 
 ## ✅ Testing
 

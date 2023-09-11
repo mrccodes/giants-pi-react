@@ -1,13 +1,18 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const path = require('path');
+const dotenv = require('dotenv');
 const moment = require('moment');
 const { default: axios } = require('axios');
+const isProduction = process.env.NODE_ENV === 'production';
 
-const HOST = 'http://localhost';
+const envPath = `.env.${isProduction ? 'production' : 'development'}`;
+dotenv.config({ path: envPath });
 
-const NODE_SERVER_PORT = 3001;
-const VITE_PORT = 3000;
+const HOST = process.env.VITE_HOST;
+const NODE_SERVER_PORT = process.env.VITE_NODE_SERVER_PORT;
+const VITE_PORT = process.env.VITE_PORT;
 
 var corsOptions = {
   origin: `${HOST}:${VITE_PORT}`,
@@ -64,6 +69,14 @@ app.get('/splash-hits', async (req, res) => {
     list: allSplashHits,
   });
 });
+
+if (isProduction) {
+  app.use(express.static(path.resolve(__dirname, 'dist')));
+
+  app.get('/', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+  });
+}
 
 app.listen(NODE_SERVER_PORT, () => {
   console.log(`Node server listening on port ${NODE_SERVER_PORT}`);

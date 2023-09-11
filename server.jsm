@@ -20,6 +20,11 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.setHeader('ngrok-skip-browser-warning', 'true');
+  next();
+});
+
 app.get('/splash-hits', async (req, res) => {
   const url = 'https://www.mlb.com/giants/ballpark/splash-hits';
   const axiosRes = await axios.get(url);

@@ -25,8 +25,6 @@
   "scripts": {
     "start:dev": "concurrently \"NODE_ENV=development node server.jsm\" \"vite --port 3000\"",
     "start:prod": "bash start.sh",
-    "start:socket-prod": "NODE_ENV=production node ./socket.jsm",
-    "start:node-prod": "NODE_ENV=production node ./server.jsm",
     "start:electron": "DISPLAY=:0 electron ./electron.jsm ",
     "build": "vite  build",
     "test": "vitest --config=vitest.config.ts",
@@ -36,6 +34,8 @@
     "format": "prettier --write .",
     "lint:fix": "prettier --write . && eslint --fix . && stylelint  --fix **/*.scss",
     "preview": "vite  preview",
+    "start:socket-prod": "NODE_ENV=production node ./socket.jsm",
+    "start:node-prod": "NODE_ENV=production node ./server.jsm",
     "prepare": "husky install"
   },
   "browserslist": {

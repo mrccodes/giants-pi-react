@@ -4,8 +4,13 @@
 # Load production env variables
 export $(grep -v '^#' ./.env.production | xargs)
 
+# Build Vite
+echo "Starting Vite app for production..."
+npm run build 
+echo "Build complete. Starting Node Server..."
 
-# Start Node server
+
+# Start socket server
 npm run start:socket-prod &
 socket_pid=$!
 # Wait for Socket to be accessible
@@ -21,10 +26,7 @@ while true; do
   sleep 1
 done 
 
-echo "Socket is open! Building Vite app"
-# Build Vite
-npm run build 
-echo "Build complete. Starting Node Server..."
+echo "Socket is open! Starting Node server"
 
 npm run start:node-prod &
 node_pid=$!
@@ -40,9 +42,8 @@ while true; do
   sleep 1
 done 
 
+
 echo "Starting Electron..."
-
-
 # Start Electron
 npm run start:electron
 
